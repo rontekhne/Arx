@@ -218,6 +218,8 @@ void addBlueSoulPods(int x, int y)
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
     e->x -= e->w / e->frames / 2;
     e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doCyanSoulPods(void)
@@ -268,6 +270,8 @@ void addCyanSoulPods(int x, int y)
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
     e->x -= e->w / e->frames / 2;
     e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doGreenSoulPods(void)
@@ -318,6 +322,8 @@ void addGreenSoulPods(int x, int y)
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
     e->x -= e->w / e->frames / 2;
     e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doYellowSoulPods(void)
@@ -368,6 +374,8 @@ void addYellowSoulPods(int x, int y)
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
     e->x -= e->w / e->frames / 2;
     e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doOrangeSoulPods(void)
@@ -418,6 +426,8 @@ void addOrangeSoulPods(int x, int y)
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
     e->x -= e->w / e->frames / 2;
     e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doRedSoulPods(void)
@@ -468,6 +478,8 @@ void addRedSoulPods(int x, int y)
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
     e->x -= e->w / e->frames / 2;
     e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doPinkSoulPods(void)
@@ -518,6 +530,8 @@ void addPinkSoulPods(int x, int y)
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
     e->x -= e->w / e->frames / 2;
     e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void drawEnergyPods(void)
