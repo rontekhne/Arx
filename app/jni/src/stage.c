@@ -1,0 +1,909 @@
+/* stage.c: the game main stage */
+
+#include "common.h"
+#include "draw.h"
+#include "sound.h"
+#include "util.h"
+#include "text.h"
+#include "background.h"
+#include "highscores.h"
+#include "drops.h"
+#include "stage.h"
+
+extern App app;
+extern Highscores highscores;
+extern Stage stage;
+extern Touch touch;
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
+extern char lang;
+extern int id;
+extern unsigned long long int *Timer;
+
+/* logic */
+static void initPlayer(void);
+static void resetStage(void);
+static void logic(void);
+static void doPlayer(void);
+static void doEnemies(void);
+static void firePower(void);
+static void fireEnemyPower(Entity *e);
+static int powerHitFighter(Entity *p);
+static void doPower(void);
+static void doFighters(void);
+static void spawnEnemies(void);
+static void doDebris(void);
+static void addDebris(Entity *e);
+
+static void clipPlayer(void);
+/* draw */
+static void draw(void);
+static void drawFighters(void);
+static void drawPower(void);
+static void drawDebris(void);
+static void drawBtn(void);
+static void drawHud(void);
+
+static int calculateTotalScore(void);
+
+/* Entities */
+Entity *player;
+
+// Textures
+static SDL_Texture *fireBtnTexture;
+static SDL_Texture *directionsBtnTexture;
+static SDL_Texture *playerTexture;
+static SDL_Texture *powerTexture;
+/* enemies textures */
+static SDL_Texture *violetTexture;
+static SDL_Texture *violetPowerTexture;
+static SDL_Texture *blueTexture;
+static SDL_Texture *bluePowerTexture;
+static SDL_Texture *cyanTexture;
+static SDL_Texture *cyanPowerTexture;
+static SDL_Texture *greenTexture;
+static SDL_Texture *greenPowerTexture;
+static SDL_Texture *yellowTexture;
+static SDL_Texture *yellowPowerTexture;
+static SDL_Texture *orangeTexture;
+static SDL_Texture *orangePowerTexture;
+static SDL_Texture *redTexture;
+static SDL_Texture *redPowerTexture;
+static SDL_Texture *pinkTexture;
+static SDL_Texture *pinkPowerTexture;
+/* boss */
+static SDL_Texture *bossTexture;
+static SDL_Texture *bossPowerTexture;
+/* Drop textures */
+SDL_Texture *energyTexture;
+SDL_Texture *magicTexture;
+SDL_Texture *violetSoulTexture;
+SDL_Texture *blueSoulTexture;
+SDL_Texture *cyanSoulTexture;
+SDL_Texture *greenSoulTexture;
+SDL_Texture *yellowSoulTexture;
+SDL_Texture *orangeSoulTexture;
+SDL_Texture *redSoulTexture;
+SDL_Texture *pinkSoulTexture;
+
+// control
+static int enemySpawnTimer;
+static int bossSpawnTimer;
+static int stageResetTimer;
+static int playerEnergy;
+static int playerMagic;
+Time t;
+
+/* tracks died enemies */
+static int violetDead;
+static int blueDead;
+static int cyanDead;
+static int greenDead;
+static int yellowDead;
+static int orangeDead;
+static int redDead;
+static int pinkDead;
+static int bossDead;
+
+/* tracks souls */
+static int playerVioletSoul;
+static int playerBlueSoul;
+static int playerCyanSoul;
+static int playerGreenSoul;
+static int playerYellowSoul;
+static int playerOrangeSoul;
+static int playerRedSoul;
+static int playerPinkSoul;
+
+void initStage(void)
+{
+    app.delegate.logic = logic;
+    app.delegate.draw = draw;
+
+    fireBtnTexture = loadTexture("img/fire_btn.png");
+    directionsBtnTexture = loadTexture("img/directions_btn.png");
+    playerTexture = loadTexture("img/arx.png");
+    powerTexture = loadTexture("img/playerPower.png");
+    violetTexture = loadTexture("img/violet.png");
+    violetPowerTexture = loadTexture("img/violetPower.png");
+    blueTexture = loadTexture("img/blue.png");
+    bluePowerTexture = loadTexture("img/bluePower.png");
+    cyanTexture = loadTexture("img/cyan.png");
+    cyanPowerTexture = loadTexture("img/cyanPower.png");
+    greenTexture = loadTexture("img/green.png");
+    greenPowerTexture = loadTexture("img/greenPower.png");
+    yellowTexture = loadTexture("img/yellow.png");
+    yellowPowerTexture = loadTexture("img/yellowPower.png");
+    orangeTexture = loadTexture("img/orange.png");
+    orangePowerTexture = loadTexture("img/orangePower.png");
+    redTexture = loadTexture("img/red.png");
+    redPowerTexture = loadTexture("img/redPower.png");
+    pinkTexture = loadTexture("img/pink.png");
+    pinkPowerTexture = loadTexture("img/pinkPower.png");
+    bossTexture = loadTexture("img/rainbow.png");
+    bossPowerTexture = loadTexture("img/bossPowerTexture.png");
+    energyTexture = loadTexture("img/energy.png");
+    magicTexture = loadTexture("img/magic.png");
+    violetSoulTexture = loadTexture("img/violetSoul.png");
+    blueSoulTexture = loadTexture("img/blueSoul.png");
+    cyanSoulTexture = loadTexture("img/cyanSoul.png");
+    greenSoulTexture = loadTexture("img/greenSoul.png");
+    yellowSoulTexture = loadTexture("img/yellowSoul.png");
+    orangeSoulTexture = loadTexture("img/orangeSoul.png");
+    redSoulTexture = loadTexture("img/redSoul.png");
+    pinkSoulTexture = loadTexture("img/pinkSoul.png");
+
+    memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
+
+    resetStage();
+    initPlayer();
+    stageResetTimer = FPS * 3;
+    bossSpawnTimer = 3500;
+    *Timer = 0;
+    stage.score = 0;
+
+    violetDead = 0;
+    blueDead = 0;
+    cyanDead = 0;
+    greenDead = 0;
+    yellowDead = 0;
+    orangeDead = 0;
+    redDead = 0;
+    pinkDead = 0;
+    bossDead = 0;
+}
+
+static void resetStage(void)
+{
+    Entity *e;
+    Explosion *ex;
+    Debris *d;
+
+    while (stage.fighterHead.next) {
+        e = stage.fighterHead.next;
+        stage.fighterHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.powerHead.next) {
+        e = stage.powerHead.next;
+        stage.powerHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.debrisHead.next) {
+        d = stage.debrisHead.next;
+        stage.debrisHead.next = d->next;
+        free(d);
+    }
+
+    while (stage.energyHead.next) {
+        e = stage.energyHead.next;
+        stage.energyHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.magicHead.next) {
+        e = stage.magicHead.next;
+        stage.magicHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.violetSoulHead.next) {
+        e = stage.violetSoulHead.next;
+        stage.violetSoulHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.blueSoulHead.next) {
+        e = stage.blueSoulHead.next;
+        stage.blueSoulHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.cyanSoulHead.next) {
+        e = stage.cyanSoulHead.next;
+        stage.cyanSoulHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.greenSoulHead.next) {
+        e = stage.greenSoulHead.next;
+        stage.greenSoulHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.yellowSoulHead.next) {
+        e = stage.yellowSoulHead.next;
+        stage.yellowSoulHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.orangeSoulHead.next) {
+        e = stage.orangeSoulHead.next;
+        stage.orangeSoulHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.redSoulHead.next) {
+        e = stage.redSoulHead.next;
+        stage.redSoulHead.next = e->next;
+        free(e);
+    }
+
+    while (stage.pinkSoulHead.next) {
+        e = stage.pinkSoulHead.next;
+        stage.pinkSoulHead.next = e->next;
+        free(e);
+    }
+
+    memset(&stage, 0, sizeof(Stage));
+    stage.fighterTail = &stage.fighterHead;
+    stage.powerTail = &stage.powerHead;
+    stage.debrisTail = &stage.debrisHead;
+    stage.energyTail = &stage.energyHead;
+    stage.magicTail = &stage.magicHead;
+    stage.violetSoulTail = &stage.violetSoulHead;
+    stage.blueSoulTail = &stage.blueSoulHead;
+    stage.cyanSoulTail = &stage.cyanSoulHead;
+    stage.greenSoulTail = &stage.greenSoulHead;
+    stage.yellowSoulTail = &stage.yellowSoulHead;
+    stage.orangeSoulTail = &stage.orangeSoulHead;
+    stage.redSoulTail = &stage.redSoulHead;
+    stage.pinkSoulTail = &stage.pinkSoulHead;
+}
+
+static void initPlayer()
+{
+    player = malloc(sizeof(Entity));
+    memset(player, 0, sizeof(Entity));
+    stage.fighterTail->next = player;
+    stage.fighterTail = player;
+
+    player->id = 0;
+    player->frames = 8;
+    player->species = 0;
+    player->energy = 500;
+    player->magic = 300;
+    player->violetSoul = 0;
+    player->blueSoul = 0;
+    player->cyanSoul = 0;
+    player->greenSoul = 0;
+    player->yellowSoul = 0;
+    player->orangeSoul = 0;
+    player->redSoul = 0;
+    player->pinkSoul = 0;
+    player->x = 100;
+    player->y = 100;
+    player->texture = playerTexture;
+    player->side = SIDE_PLAYER;
+    SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
+}
+
+static int calculateTotalScore(void) {
+    int playerDrops[] = {playerVioletSoul, playerBlueSoul, playerCyanSoul, playerGreenSoul,
+                          playerYellowSoul, playerOrangeSoul, playerRedSoul, playerPinkSoul};
+
+    int totalScore;
+    int bonusPoints = 0;
+    int i, j;
+
+    // has bonus? Give it
+    for (i = 0; playerDrops[i] > 0; i++) {
+        if (i == 7) {
+            i = -1;
+            bonusPoints += 15;
+            for (j = 0; j < 8; j++) {
+                playerDrops[j] -= 1;
+            }
+        }
+    }
+
+    // get remaining points from drops
+    for (i = 0; i < 8; i++) {
+        bonusPoints += playerDrops[i];
+    }
+
+    // get total score
+    totalScore = violetDead + blueDead + cyanDead +
+            greenDead + yellowDead + orangeDead +
+            redDead + pinkDead + bonusPoints;
+
+    // check if boss is dead
+    if (bossDead) {
+        totalScore += 25;
+    }
+
+    return totalScore;
+}
+
+static void logic(void)
+{
+    if (player == NULL && --stageResetTimer <= 0) {
+        *Timer = 0;
+        stage.score = calculateTotalScore();
+        addHighscore(stage.score);
+        initHighscores();
+    }
+
+    doBackground();
+    doStarfield();
+    doPlayer();
+    doEnemies();
+    doFighters();
+    spawnEnemies();
+    doPower();
+    doDebris();
+    doEnergyPods();
+    doMagicPods();
+    doVioletSoulPods();
+    doBlueSoulPods();
+    doCyanSoulPods();
+    doGreenSoulPods();
+    doYellowSoulPods();
+    doOrangeSoulPods();
+    doRedSoulPods();
+    doPinkSoulPods();
+    clipPlayer();
+
+    if (player != NULL) {
+        if (player->energy < 0) {
+            player->energy = 0;
+        }
+        if (player->magic < 0) {
+            player->magic = 0;
+        }
+        playerEnergy = player->energy;
+        playerMagic = player->magic;
+        playerVioletSoul = player->violetSoul;
+        playerBlueSoul = player->blueSoul;
+        playerCyanSoul = player->cyanSoul;
+        playerGreenSoul = player->greenSoul;
+        playerYellowSoul = player->yellowSoul;
+        playerOrangeSoul = player->orangeSoul;
+        playerRedSoul = player->redSoul;
+        playerPinkSoul = player->pinkSoul;
+    }
+
+    (*Timer)++;
+}
+
+static void doPlayer(void)
+{
+    if (player != NULL) {
+        player->dx = player->dy = 0;
+
+        if (player->reload > 0) {
+            player->reload--;
+        }
+
+        if (app.keyboard[SDL_SCANCODE_UP] || touch.up) {
+            player->dy = -PLAYER_SPEED;
+        }
+        if (app.keyboard[SDL_SCANCODE_DOWN] || touch.down) {
+            player->dy = PLAYER_SPEED;
+        }
+        if (app.keyboard[SDL_SCANCODE_LEFT] || touch.left) {
+            player->dx = -PLAYER_SPEED;
+        }
+        if (app.keyboard[SDL_SCANCODE_RIGHT] || touch.right) {
+            player->dx = PLAYER_SPEED;
+        }
+        if (app.keyboard[SDL_SCANCODE_LCTRL] || touch.fire && player->reload == 0) {
+            if (player != NULL) {
+                if (player->magic > 0) {
+                    playSound(SND_PLAYER_POWER, CH_PLAYER);
+                    firePower();
+                    player->magic--;
+                }else {
+                    player->magic = 0;
+                }
+            }
+        }
+    }
+}
+
+static void doEnemies(void)
+{
+    Entity *e;
+
+    for (e = stage.fighterHead.next; e != NULL; e = e->next) {
+        if (e != player) {
+            e->y = MIN(MAX(e->y, 0), SCREEN_HEIGHT - e->h);
+
+            if (player != NULL && --e->reload <= 0) {
+                fireEnemyPower(e);
+                playSound(SND_ENEMY_POWER, CH_ENEMY_POWER);
+            }
+        }
+    }
+}
+
+static void firePower(void)
+{
+    Entity *power;
+
+    power = malloc(sizeof(Entity));
+    memset(power, 0, sizeof(Entity));
+    stage.powerTail->next = power;
+    stage.powerTail = power;
+
+    power->x = player->x + player->w / player->frames / 2;
+    power->y = player->y;
+    power->side = SIDE_PLAYER;
+    power->dx = PLAYER_POWER_SPEED;
+    power->energy = 1;
+    power->texture = powerTexture;
+    SDL_QueryTexture(power->texture, NULL, NULL, &power->w, &power->h);
+
+    power->y += (player->h / 2) - (power->h / 2);
+
+    player->reload = 8; // reload the power timer
+}
+
+static void fireEnemyPower(Entity *e)
+{
+    Entity *power;
+
+    power = malloc(sizeof(Entity));
+    memset(power, 0, sizeof(Entity));
+    stage.powerTail->next = power;
+    stage.powerTail = power;
+
+    power->x = e->x;
+    power->y = e->y;
+    power->energy = 1;
+
+    switch (e->species) {
+        case 1: power->texture = violetPowerTexture; break;
+        case 2: power->texture = bluePowerTexture; break;
+        case 3: power->texture = cyanPowerTexture; break;
+        case 4: power->texture = greenPowerTexture; break;
+        case 5: power->texture = yellowPowerTexture; break;
+        case 6: power->texture = orangePowerTexture; break;
+        case 7: power->texture = redPowerTexture; break;
+        case 8: power->texture = pinkPowerTexture; break;
+        case 9: power->texture = bossPowerTexture; break;
+    }
+
+    power->side = SIDE_ENEMY;
+    SDL_QueryTexture(power->texture, NULL, NULL, &power->w, &power->h);
+
+    power->x += (e->w / e->frames / 2) - (power->w / e->frames / 2);
+    power->y += (e->h / 2) - (power->h / 2);
+
+    calcSlope(player->x + (player->w / player->frames / 2), player->y + (player->h / 2), e->x, e->y, &power->dx, &power->dy);
+
+    power->dx *= ENEMY_POWER_SPEED;
+    power->dy *= ENEMY_POWER_SPEED;
+
+    e->reload = (rand() % FPS * 4);
+}
+
+static int powerHitFighter(Entity *p)
+{
+    Entity *e;
+
+    for (e = stage.fighterHead.next; e != NULL; e = e->next) {
+        if (e->side != p->side &&
+            collision(p->x, p->y, p->w, p->h, e->x, e->y, e->w / e->frames, e->h)) {
+            p->energy = 0;
+            --e->energy;
+
+            if (e == player) {
+                addDebris(e);
+                playSound(SND_PLAYER_DIE, CH_PLAYER);
+            }else {
+                switch (e->species) {
+                    case 1: violetDead++; break;
+                    case 2: blueDead++; break;
+                    case 3: cyanDead++; break;
+                    case 4: greenDead++; break;
+                    case 5: yellowDead++; break;
+                    case 6: orangeDead++; break;
+                    case 7: redDead++; break;
+                    case 8: pinkDead++; break;
+                    case 9:
+                        if (e->energy == 0) {
+                            bossDead = 1;
+                        }
+                }
+
+                if (e->energy == 0 && e->species == 9) { // boss drops
+                    for (int i = 0; i < 20; i++) {
+                        switch(rand() % 10) {
+                            case 0: addVioletSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 1: addBlueSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 2: addCyanSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 3: addGreenSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 4: addYellowSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 5: addOrangeSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 6: addRedSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 7: addPinkSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 8: addEnergyPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            case 9: addMagicPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                        }
+                    }
+                }
+
+                if (e->species != 9) {
+                    switch(rand() % 8) { // enemy drop
+                        case 0: addVioletSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                        case 1: addBlueSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                        case 2: addCyanSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                        case 3: addGreenSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                        case 4: addYellowSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                        case 5: addOrangeSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                        case 6: addRedSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                        case 7: addPinkSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                    }
+
+                    switch(rand() % 2) {
+                        case 0:
+                            switch(rand() % 2) {
+                                case 0:
+                                    addEnergyPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                case 1:
+                                    addMagicPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                            }
+                    }
+                }
+
+                playSound(SND_ENEMY_DIE, CH_ANY);
+            }
+
+            if (e->energy == 0) {
+                addDebris(e);
+            }
+
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static void doPower(void)
+{
+    Entity *p, *prev;
+
+    prev = &stage.powerHead;
+
+    for (p = stage.powerHead.next; p != NULL; p = p->next) {
+        p->x += p->dx;
+        p->y += p->dy;
+
+        if (powerHitFighter(p) || p->x < -p->w || p->y < -p->h || p->x > SCREEN_WIDTH || p->y > SCREEN_HEIGHT) {
+            if (p == stage.powerTail) {
+                stage.powerTail = prev;
+            }
+            prev->next = p->next;
+            free(p);
+            p = prev;
+        }
+        prev = p;
+    }
+}
+
+static void doFighters(void)
+{
+    Entity *e, *prev;
+
+    prev = &stage.fighterHead;
+
+    for (e = stage.fighterHead.next; e != NULL; e = e->next) {
+        e->x += e->dx;
+        e->y += e->dy;
+
+        if (e != player && e->x < -e->w) {
+            e->energy = 0;
+        }
+
+        if (e->energy == 0) {
+            if (e == player) {
+                player = NULL;
+            }
+
+            if (e == stage.fighterTail) {
+                stage.fighterTail = prev;
+            }
+            prev->next = e->next;
+            free(e);
+            e = prev;
+        }
+        prev = e;
+    }
+}
+
+static void spawnEnemies(void)
+{
+    Entity *enemy, *boss;
+    int species;
+
+    if (--enemySpawnTimer <= 0) {
+        enemy = malloc(sizeof(Entity));
+        memset(enemy, 0, sizeof(Entity));
+        stage.fighterTail->next = enemy;
+        stage.fighterTail = enemy;
+
+        enemy->id = id;
+        enemy->frames = 8;
+        enemy->energy = 1;
+        species = 1 + rand() % 9;
+
+        switch (species) {
+            case 1:
+                enemy->species = 1;
+                enemy->texture = violetTexture;
+                break;
+            case 2:
+                enemy->species = 2;
+                enemy->texture = blueTexture;
+                break;
+            case 3:
+                enemy->species = 3;
+                enemy->texture = cyanTexture;
+                break;
+            case 4:
+                enemy->species = 4;
+                enemy->texture = greenTexture;
+                break;
+            case 5:
+                enemy->species = 5;
+                enemy->texture = yellowTexture;
+                break;
+            case 6:
+                enemy->species = 6;
+                enemy->texture = orangeTexture;
+                break;
+            case 7:
+                enemy->species = 7;
+                enemy->texture = redTexture;
+                break;
+            case 8:
+                enemy->species = 8;
+                enemy->texture = pinkTexture;
+                break;
+        }
+
+        enemy->x = SCREEN_WIDTH;
+        enemy->y = rand() % SCREEN_HEIGHT;
+        enemy->side = SIDE_ENEMY;
+
+        SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
+
+        if (bossDead) {
+            enemy->dx = -(2 + (rand() % 2)); // crazy lazy speed
+            enemy->reload = FPS / 2; // crazy reload fire
+            enemySpawnTimer = 30; // crazy spawn time
+        }else {
+            enemy->dx = -(2 + (rand() % 4)); // normal speed
+            enemy->reload = FPS * (1 + (rand() % 3)); // reload fire
+            // between 30 and 89 milliseconds (meaning a new enemy is created between 0.5 and 1.5 seconds)
+            enemySpawnTimer = 30 + (rand() % 60);
+        }
+
+        enemy->dy = -100 + (rand() % 200);
+        enemy->dy /= 100;
+
+        ++id;
+    }
+
+    if (!bossDead && --bossSpawnTimer <= 0) {
+        boss = malloc(sizeof(Entity));
+        memset(boss, 0, sizeof(Entity));
+        stage.fighterTail->next = boss;
+        stage.fighterTail = boss;
+
+        boss->id = id;
+        boss->frames = 8;
+        boss->energy = 100;
+        boss->species = 9;
+        boss->texture = bossTexture;
+
+        boss->x = SCREEN_WIDTH;
+        boss->y = rand() % SCREEN_HEIGHT;
+        boss->side = SIDE_ENEMY;
+
+        SDL_QueryTexture(boss->texture, NULL, NULL, &boss->w, &boss->h);
+        // enemy->dx = -(2 + (rand() % t.s)); // crazy speed
+        boss->dx = -(2 + (rand() % 4)); // enemy speed
+        boss->dy = -100 + (rand() % 200);
+        boss->dy /= 100;
+
+        // between 30 and 89 milliseconds (meaning a new enemy is created between 0.5 and 1.5 seconds)
+        bossSpawnTimer = FPS * 99999;
+        boss->reload = FPS * (1 + (rand() % 3));
+
+        ++id;
+    }
+}
+
+static void doDebris(void)
+{
+    Debris *d, *prev;
+
+    prev = &stage.debrisHead;
+
+    for (d = stage.debrisHead.next; d != NULL; d = d->next) {
+        d->x += d->dx;
+        d->y += d->dy;
+
+        //d->dy += 0.5; gravity
+
+        if (--d->life <= 0) {
+            if (d == stage.debrisTail) {
+                stage.debrisTail = prev;
+            }
+            prev->next = d->next;
+            free(d);
+            d = prev;
+        }
+        prev = d;
+    }
+}
+
+static void addDebris(Entity *e)
+{
+    Debris *d;
+    int x, y, w, h;
+
+    if (e == player && player->energy > 0) {
+        w = e->w / e->frames / 4;
+        h = e->h / 4;
+    }else {
+        w = e->w / e->frames / 2;
+        h = e->h / 2;
+    }
+
+    for (y = 0; y <= h; y++) {
+        for (x = 0; x <= w; x++) {
+            d = malloc(sizeof(Debris));
+            memset(d, 0, sizeof(Debris));
+            stage.debrisTail->next = d;
+            stage.debrisTail = d;
+
+            d->x = e->x + x;
+            d->y = e->y + y;
+            // expansion rate 0.01, less is slower
+            d->dx = (((rand() % 21) - 10) * 0.1) + (x - w / 2) * ((rand() % 10) * 0.01);
+            d->dy = (((rand() % 21) - 10) * 0.1) + (y - h / 2) * ((rand() % 10) * 0.01);
+            d->life = FPS * 4;
+            d->texture = e->texture;
+
+            d->rect.x = x;
+            d->rect.y = y;
+            d->rect.w = 2;
+            d->rect.h = 2;
+        }
+    }
+}
+
+static void clipPlayer(void)
+{
+    if (player != NULL) {
+        if (player->x < 0) {
+            player->x = 0;
+        }
+
+        if (player->y < 0) {
+            player->y = 0;
+        }
+
+        if (player->x > SCREEN_WIDTH - player->w / player->frames) {
+            player->x = SCREEN_WIDTH - player->w / player->frames;
+        }
+
+        if (player->y > SCREEN_HEIGHT - player->h) {
+            player->y = SCREEN_HEIGHT - player->h;
+        }
+    }
+}
+
+static void draw(void)
+{
+    drawBackground();
+    drawStarfield();
+    drawFighters();
+    drawPower();
+    drawDebris();
+    drawEnergyPods();
+    drawMagicPods();
+    drawVioletSoulPods();
+    drawBlueSoulPods();
+    drawCyanSoulPods();
+    drawGreenSoulPods();
+    drawYellowSoulPods();
+    drawOrangeSoulPods();
+    drawRedSoulPods();
+    drawPinkSoulPods();
+    drawBtn();
+    drawHud();
+}
+
+static void drawFighters(void)
+{
+    Entity *e;
+
+    for (e = stage.fighterHead.next; e != NULL; e = e->next) {
+        if (e->species == 9) {
+            enemyChasePlayer(e);
+        }
+
+        blitSprite(e->texture, e->x, e->y, e->frames, e->id, 6, 0);
+    }
+}
+
+static void drawPower(void)
+{
+    Entity *p;
+
+    for (p = stage.powerHead.next; p != NULL; p = p->next) {
+        blit(p->texture, p->x, p->y);
+    }
+}
+
+static void drawDebris(void)
+{
+    Debris *d;
+
+    for (d = stage.debrisHead.next; d != NULL; d = d->next) {
+        blitRect(d->texture, &d->rect, d->x, d->y);
+    }
+}
+
+static void drawBtn(void)
+{
+    int cellWidth = SCREEN_WIDTH / 6;
+    int cellHeight = SCREEN_HEIGHT / 2;
+    int controlWidth = cellWidth * 3 / 4;  // Largura do controle de direções
+    int controlHeight = cellHeight * 3 / 4;  // Altura do controle de direções
+    int controlX = cellWidth / 2 - controlWidth / 2;  // Posição X do controle de direções
+    int controlY = cellHeight + cellHeight / 2 - controlHeight / 2;  // Posição Y do controle de direções
+
+    int cellWidth2 = SCREEN_WIDTH / 6;
+    int cellHeight2 = SCREEN_HEIGHT / 2;
+    int cell12X = (5 * cellWidth2) + (cellWidth2 / 2) - (240 / 2);  // Ajuste o valor de fireButtonWidth de acordo com a largura do botão de "fire"
+    int cell12Y = cellHeight2 + (cellHeight2 / 2) - (240 / 2);  // Ajuste o valor de fireButtonHeight de acordo com a altura do botão de "fire"
+
+    blit(directionsBtnTexture, controlX, controlY);
+    blit(fireBtnTexture, cell12X, cell12Y);
+}
+
+static void drawHud(void) {
+    t = getTime(Timer);
+
+    drawText(10, 50, 255, 255, 255, TEXT_LEFT, "VS: %03d", playerVioletSoul);
+    drawText(170, 50, 255, 255, 255, TEXT_LEFT, "BS: %03d", playerBlueSoul);
+    drawText(330, 50, 255, 255, 255, TEXT_LEFT, "CS: %03d", playerCyanSoul);
+    drawText(490, 50, 255, 255, 255, TEXT_LEFT, "GS: %03d", playerGreenSoul);
+    drawText(650, 50, 255, 255, 255, TEXT_LEFT, "YS: %03d", playerYellowSoul);
+    drawText(810, 50, 255, 255, 255, TEXT_LEFT, "OS: %03d", playerOrangeSoul);
+    drawText(970, 50, 255, 255, 255, TEXT_LEFT, "RS: %03d", playerRedSoul);
+    drawText(1130, 50, 255, 255, 255, TEXT_LEFT, "PS: %03d", playerPinkSoul);
+
+    drawText(10, 80, 255, 255, 255, TEXT_LEFT, "TEMPO: %02d:%02d:%02d:%02d", t.d, t.h, t.m, t.s);
+    drawText(400, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "ENERGIA: %03d" : "ENERGY: %03d", playerEnergy);
+    drawText(800, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "MAGICA: %03d" : "MAGIC: %03d", playerMagic);
+    drawText(1200, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "PONTOS: %03d" : "SCORE: %03d",
+             violetDead+blueDead+cyanDead+greenDead+yellowDead+orangeDead+redDead+pinkDead);
+}
