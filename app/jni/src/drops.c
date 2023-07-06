@@ -20,6 +20,7 @@ extern SDL_Texture *orangeSoulTexture;
 extern SDL_Texture *redSoulTexture;
 extern SDL_Texture *pinkSoulTexture;
 
+extern unsigned long long int id;
 
 void doEnergyPods(void)
 {
@@ -127,7 +128,7 @@ void doVioletSoulPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->violetSoul++;
             playSound(SND_VIOLET, CH_ANY);
@@ -153,6 +154,8 @@ void addVioletSoulPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.violetSoulTail->next = e;
 
+    e->id = id;
+    e->frames = 16;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -161,8 +164,10 @@ void addVioletSoulPods(int x, int y)
     e->texture = violetSoulTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doBlueSoulPods(void)
@@ -175,7 +180,7 @@ void doBlueSoulPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->blueSoul++;
             playSound(SND_BLUE, CH_ANY);
@@ -201,6 +206,8 @@ void addBlueSoulPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.blueSoulTail->next = e;
 
+    e->id = id;
+    e->frames = 16;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -209,8 +216,8 @@ void addBlueSoulPods(int x, int y)
     e->texture = blueSoulTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
 }
 
 void doCyanSoulPods(void)
@@ -223,7 +230,7 @@ void doCyanSoulPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->cyanSoul++;
             playSound(SND_CYAN, CH_ANY);
@@ -249,6 +256,8 @@ void addCyanSoulPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.cyanSoulTail->next = e;
 
+    e->id = id;
+    e->frames = 16;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -257,8 +266,8 @@ void addCyanSoulPods(int x, int y)
     e->texture = cyanSoulTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
 }
 
 void doGreenSoulPods(void)
@@ -271,7 +280,7 @@ void doGreenSoulPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->greenSoul++;
             playSound(SND_GREEN, CH_ANY);
@@ -297,6 +306,8 @@ void addGreenSoulPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.greenSoulTail->next = e;
 
+    e->id = id;
+    e->frames = 16;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -305,8 +316,8 @@ void addGreenSoulPods(int x, int y)
     e->texture = greenSoulTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
 }
 
 void doYellowSoulPods(void)
@@ -319,7 +330,7 @@ void doYellowSoulPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->yellowSoul++;
             playSound(SND_YELLOW, CH_ANY);
@@ -345,6 +356,8 @@ void addYellowSoulPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.yellowSoulTail->next = e;
 
+    e->id = id;
+    e->frames = 16;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -353,8 +366,8 @@ void addYellowSoulPods(int x, int y)
     e->texture = yellowSoulTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
 }
 
 void doOrangeSoulPods(void)
@@ -367,7 +380,7 @@ void doOrangeSoulPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->orangeSoul++;
             playSound(SND_ORANGE, CH_ANY);
@@ -393,6 +406,8 @@ void addOrangeSoulPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.orangeSoulTail->next = e;
 
+    e->id = id;
+    e->frames = 16;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -401,8 +416,8 @@ void addOrangeSoulPods(int x, int y)
     e->texture = orangeSoulTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
 }
 
 void doRedSoulPods(void)
@@ -415,7 +430,7 @@ void doRedSoulPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->redSoul++;
             playSound(SND_RED, CH_ANY);
@@ -441,6 +456,8 @@ void addRedSoulPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.redSoulTail->next = e;
 
+    e->id = id;
+    e->frames = 16;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -449,8 +466,8 @@ void addRedSoulPods(int x, int y)
     e->texture = redSoulTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
 }
 
 void doPinkSoulPods(void)
@@ -463,7 +480,7 @@ void doPinkSoulPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->pinkSoul++;
             playSound(SND_PINK, CH_ANY);
@@ -489,6 +506,8 @@ void addPinkSoulPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.pinkSoulTail->next = e;
 
+    e->id = id;
+    e->frames = 16;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -497,8 +516,8 @@ void addPinkSoulPods(int x, int y)
     e->texture = pinkSoulTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
 }
 
 void drawEnergyPods(void)
@@ -523,13 +542,24 @@ void drawMagicPods(void)
     }
 }
 
+void drawVioletSoulPods(void)
+{
+    Entity *e;
+
+    for (e = stage.violetSoulHead.next; e != NULL; e = e->next) {
+        if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
+        }
+    }
+}
+
 void drawBlueSoulPods(void)
 {
     Entity *e;
 
     for (e = stage.blueSoulHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
@@ -540,7 +570,7 @@ void drawCyanSoulPods(void)
 
     for (e = stage.cyanSoulHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
@@ -551,7 +581,7 @@ void drawGreenSoulPods(void)
 
     for (e = stage.greenSoulHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
@@ -562,7 +592,7 @@ void drawYellowSoulPods(void)
 
     for (e = stage.yellowSoulHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
@@ -573,7 +603,7 @@ void drawOrangeSoulPods(void)
 
     for (e = stage.orangeSoulHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
@@ -584,7 +614,7 @@ void drawRedSoulPods(void)
 
     for (e = stage.redSoulHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
@@ -595,18 +625,7 @@ void drawPinkSoulPods(void)
 
     for (e = stage.pinkSoulHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
-        }
-    }
-}
-
-void drawVioletSoulPods(void)
-{
-    Entity *e;
-
-    for (e = stage.violetSoulHead.next; e != NULL; e = e->next) {
-        if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
