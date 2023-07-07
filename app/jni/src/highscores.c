@@ -223,7 +223,7 @@ static void drawNameInput(void)
 
     drawText(SCREEN_WIDTH / 2, 70, 255, 255, 255, TEXT_CENTER, lang == 'P' ? "EXCELENTE! VOCE ENTROU PARA O PLACAR!" : "CONGRATULATIONS, YOU'VE GAINED A HIGHSCORE!");
     drawText(SCREEN_WIDTH / 2, 120, 255, 255, 255, TEXT_CENTER, lang == 'P' ? "DIGITE SEU NOME ABAIXO:" : "ENTER YOUR NAME BELOW:");
-    drawText(SCREEN_WIDTH / 2, 250, 128, 255, 128, TEXT_CENTER, newHighscore->name);
+    drawText(SCREEN_WIDTH / 2, 250, 255, 255, 255, TEXT_CENTER, newHighscore->name);
 
     if (cursorBlink < FPS / 2) {
         r.x = ((SCREEN_WIDTH / 2) + (strlen(newHighscore->name) * GLYPH_WIDTH) / 2) + 5;
@@ -231,7 +231,7 @@ static void drawNameInput(void)
         r.w = GLYPH_WIDTH;
         r.h = GLYPH_HEIGHT;
 
-        SDL_SetRenderDrawColor(app.renderer, 0, 255, 0, 255);
+        SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(app.renderer, &r);
     }
 }
@@ -250,7 +250,7 @@ static void drawHighscores(void)
         b = 255;
 
         if (highscores.highscore[i].recent) {
-            b = 0;
+            b = 255;
         }
 
         drawText(SCREEN_WIDTH / 3, y + 70, r, g, b, TEXT_CENTER, "#%d. %-15s ...... %03d", (i + 1), highscores.highscore[i].name, highscores.highscore[i].score);

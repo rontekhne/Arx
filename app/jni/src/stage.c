@@ -1,5 +1,16 @@
 /* stage.c: the game main stage */
 
+/* TO DO:
+ * Keep documenting
+ * Make SOulOfTheTime and Detona drops
+ * Make score Buttons
+ * Change font and font colors
+ * Fix boss drop
+ * Fix bad rendering of Debris
+ * Draw hud and its elements
+ * Create database
+ */
+
 #include "common.h"
 #include "draw.h"
 #include "sound.h"
@@ -283,7 +294,7 @@ static void initPlayer()
     player->id = 0;
     player->frames = 8;
     player->species = 0;
-    player->energy = 500;
+    player->energy = 250;
     player->magic = 300;
     player->violetSoul = 0;
     player->blueSoul = 0;
