@@ -26,6 +26,8 @@ static void drawNameInput(void);
 static void drawVirtualKeyboard(void);
 static void drawBtn(void);
 
+static SDL_Texture *btnLargeTexture;
+static SDL_Texture *btnSmallTexture;
 static SDL_Texture * virtualKeyboard;
 static Highscore *newHighscore;
 static int        cursorBlink;
@@ -52,6 +54,8 @@ void initHighscores(void)
 
     isScoreOn = true;
 
+    btnLargeTexture = loadTexture("img/btn_large.png");
+    btnSmallTexture = loadTexture("img/btn_small.png");
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 }
 
@@ -314,23 +318,37 @@ static void drawVirtualKeyboard(void)
 
 void drawBtn()
 {
+    SDL_Rect mr, qr;
+
+    mr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4;
+    mr.y = SCREEN_HEIGHT / 6;
+
+    qr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 + SCREEN_HEIGHT / 6;
+    qr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
+
+    SDL_QueryTexture(btnLargeTexture, NULL, NULL, &mr.w, &mr.h);
+    SDL_QueryTexture(btnSmallTexture, NULL, NULL, &qr.w, &qr.h);
+
+    blit(btnLargeTexture, mr.x, mr.y);
     drawText(
-            SCREEN_WIDTH - SCREEN_WIDTH / 4,
-            SCREEN_HEIGHT / 5,
-            255,
-            255,
-            255,
+            mr.x + mr.w / 2,
+            mr.y + mr.h / 3,
+            0,
+            0,
+            0,
             TEXT_CENTER,
             "MENU"
     );
+
+    blit(btnSmallTexture, qr.x, qr.y);
     drawText(
-            SCREEN_WIDTH - SCREEN_WIDTH / 4 + SCREEN_HEIGHT / 6,
-            SCREEN_HEIGHT - SCREEN_HEIGHT / 6,
-            255,
-            255,
-            255,
-            TEXT_RIGHT,
-            lang == 'P' ? "S" : "Q"
+            qr.x + qr.w / 2,
+            qr.y + qr.h / 3,
+            0,
+            0,
+            0,
+            TEXT_CENTER,
+            lang == 'P' ? "SAIR" : "QUIT"
     );
 }
 
