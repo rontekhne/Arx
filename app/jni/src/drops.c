@@ -34,7 +34,7 @@ void doEnergyPods(void)
 
         if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
-            player->energy++;
+            player->energy += (1 + rand() % 10);
             playSound(SND_ENERGY, CH_ANY);
         }
 
@@ -82,7 +82,7 @@ void doMagicPods(void)
 
         if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
-            player->magic++;
+            player->magic += (1 + rand() % 30);
             playSound(SND_MAGIC, CH_ANY);
         }
 

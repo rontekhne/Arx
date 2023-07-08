@@ -169,7 +169,7 @@ void initStage(void)
     resetStage();
     initPlayer();
     stageResetTimer = FPS * 3;
-    bossSpawnTimer = 3500;
+    bossSpawnTimer = 15000;
     *Timer = 0;
     stage.score = 0;
 
@@ -294,8 +294,8 @@ static void initPlayer()
     player->id = 0;
     player->frames = 8;
     player->species = 0;
-    player->energy = 250;
-    player->magic = 300;
+    player->energy = 300;
+    player->magic = 500;
     player->violetSoul = 0;
     player->blueSoul = 0;
     player->cyanSoul = 0;
@@ -342,7 +342,7 @@ static int calculateTotalScore(void) {
 
     // check if boss is dead
     if (bossDead) {
-        totalScore += 25;
+        totalScore += 50;
     }
 
     return totalScore;
@@ -526,49 +526,75 @@ static int powerHitFighter(Entity *p)
                 playSound(SND_PLAYER_DIE, CH_PLAYER);
             }else {
                 switch (e->species) {
-                    case 1: violetDead++; break;
-                    case 2: blueDead++; break;
-                    case 3: cyanDead++; break;
-                    case 4: greenDead++; break;
-                    case 5: yellowDead++; break;
-                    case 6: orangeDead++; break;
-                    case 7: redDead++; break;
-                    case 8: pinkDead++; break;
+                    case 1:
+                        if (e->energy == 0) {
+                            violetDead++;
+                            addVioletSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                        }
+                        break;
+                    case 2:
+                        if (e->energy == 0) {
+                            blueDead++;
+                            addBlueSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                        }
+                        break;
+                    case 3:
+                        if (e->energy == 0) {
+                            cyanDead++;
+                            addCyanSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                        }
+                        break;
+                    case 4:
+                        if (e->energy == 0) {
+                            greenDead++;
+                            addGreenSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                        }
+                        break;
+                    case 5:
+                        if (e->energy == 0) {
+                            yellowDead++;
+                            addYellowSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                        }
+                        break;
+                    case 6:
+                        if (e->energy == 0) {
+                            orangeDead++;
+                            addOrangeSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                        }
+                        break;
+                    case 7:
+                        if (e->energy == 0) {
+                            redDead++;
+                            addRedSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                        }
+                        break;
+                    case 8:
+                        if (e->energy == 0) {
+                            pinkDead++;
+                            addPinkSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                        }
+                        break;
                     case 9:
                         if (e->energy == 0) {
+                            for (int i = 0; i < 20; i++) {
+                                switch(rand() % 10) {
+                                    case 0: addVioletSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 1: addBlueSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 2: addCyanSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 3: addGreenSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 4: addYellowSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 5: addOrangeSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 6: addRedSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 7: addPinkSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 8: addEnergyPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                    case 9: addMagicPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
+                                }
+                            }
                             bossDead = 1;
                         }
                 }
 
-                if (e->energy == 0 && e->species == 9) { // boss drops
-                    for (int i = 0; i < 20; i++) {
-                        switch(rand() % 10) {
-                            case 0: addVioletSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 1: addBlueSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 2: addCyanSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 3: addGreenSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 4: addYellowSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 5: addOrangeSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 6: addRedSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 7: addPinkSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 8: addEnergyPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                            case 9: addMagicPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                        }
-                    }
-                }
-
-                if (e->species != 9) {
-                    switch(rand() % 8) { // enemy drop
-                        case 0: addVioletSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                        case 1: addBlueSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                        case 2: addCyanSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                        case 3: addGreenSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                        case 4: addYellowSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                        case 5: addOrangeSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                        case 6: addRedSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                        case 7: addPinkSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
-                    }
-
+                if (e->energy == 0 && e->species != 9) {
                     switch(rand() % 2) {
                         case 0:
                             switch(rand() % 2) {
@@ -658,41 +684,68 @@ static void spawnEnemies(void)
 
         enemy->id = id;
         enemy->frames = 8;
-        enemy->energy = 1;
-        species = 1 + rand() % 9;
+
+        /* logic of enemies spawn */
+        if (t.m == 0 && t.s < 29) {
+            species = 1;
+        }else if (t.m == 0 && t.s < 59) {
+            species = 2;
+        }else if (t.m == 1 && t.s < 29) {
+            species = 3;
+        }else if (t.m == 1 && t.s < 59) {
+            species = 4;
+        }else if (t.m == 2 && t.s < 29) {
+            species = 5;
+        }else if (t.m == 2 && t.s < 59) {
+            species = 6;
+        }else if (t.m == 3 && t.s < 29) {
+            species = 7;
+        }else if (t.m == 3 && t.s < 59) {
+            species = 8;
+        }else {
+            species = 1 + rand() % 9;
+        }
 
         switch (species) {
             case 1:
                 enemy->species = 1;
                 enemy->texture = violetTexture;
+                enemy->energy = 1;
                 break;
             case 2:
                 enemy->species = 2;
                 enemy->texture = blueTexture;
+                enemy->energy = 2;
                 break;
             case 3:
                 enemy->species = 3;
                 enemy->texture = cyanTexture;
+                enemy->energy = 4;
                 break;
             case 4:
                 enemy->species = 4;
                 enemy->texture = greenTexture;
+                enemy->energy = 8;
                 break;
             case 5:
                 enemy->species = 5;
                 enemy->texture = yellowTexture;
+                enemy->energy = 1;
                 break;
             case 6:
                 enemy->species = 6;
                 enemy->texture = orangeTexture;
+                enemy->energy = 2;
                 break;
             case 7:
                 enemy->species = 7;
                 enemy->texture = redTexture;
+                enemy->energy = 4;
                 break;
             case 8:
                 enemy->species = 8;
                 enemy->texture = pinkTexture;
+                enemy->energy = 8;
                 break;
         }
 
@@ -703,9 +756,9 @@ static void spawnEnemies(void)
         SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
 
         if (bossDead) {
-            enemy->dx = -(2 + (rand() % 2)); // crazy lazy speed
+            enemy->dx = -(2 + (rand() % 3)); //  speed
             enemy->reload = FPS / 2; // crazy reload fire
-            enemySpawnTimer = 30; // crazy spawn time
+            enemySpawnTimer = 50; //  spawn time
         }else {
             enemy->dx = -(2 + (rand() % 4)); // normal speed
             enemy->reload = FPS * (1 + (rand() % 3)); // reload fire
@@ -778,7 +831,7 @@ static void addDebris(Entity *e)
     Debris *d;
     int x, y, w, h;
 
-    if (e == player && player->energy > 0) {
+    if (/*e == player && */player->energy > 0) { // gone to lazy down the game...
         w = e->w / e->frames / 4;
         h = e->h / 4;
     }else {
@@ -916,5 +969,5 @@ static void drawHud(void) {
     drawText(400, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "ENERGIA: %03d" : "ENERGY: %03d", playerEnergy);
     drawText(800, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "MAGICA: %03d" : "MAGIC: %03d", playerMagic);
     drawText(1200, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "PONTOS: %03d" : "SCORE: %03d",
-             violetDead+blueDead+cyanDead+greenDead+yellowDead+orangeDead+redDead+pinkDead);
+             calculateTotalScore());
 }
