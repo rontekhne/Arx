@@ -11,6 +11,7 @@ extern Entity *player;
 
 extern SDL_Texture *energyTexture;
 extern SDL_Texture *magicTexture;
+extern SDL_Texture *soulOfTheTimeTexture;
 extern SDL_Texture *violetSoulTexture;
 extern SDL_Texture *blueSoulTexture;
 extern SDL_Texture *cyanSoulTexture;
@@ -116,6 +117,58 @@ void addMagicPods(int x, int y)
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
     e->x -= e->w / 2;
     e->y -= e->h / 2;
+}
+
+void doSoulOfTheTimePods(void)
+{
+    Entity *e, *prev;
+
+    prev = &stage.soulOfTheTomeHead;
+
+    for (e = stage.soulOfTheTomeHead.next; e != NULL; e = e->next) {
+        e->x += e->dx;
+        e->y += e->dy;
+
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            e->energy = 0;
+            player->soulOfTheTime += 1;
+            playSound(SND_SOUL_OF_THE_TIME, CH_ANY);
+        }
+
+        if (--e->energy <= 0) {
+            if (e == stage.soulOfTheTimeTail) {
+                stage.soulOfTheTimeTail = prev;
+            }
+            prev->next = e->next;
+            free(e);
+            e = prev;
+        }
+        prev = e;
+    }
+}
+
+void addSoulOfTheTimePods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.soulOfTheTimeTail->next = e;
+
+    e->id = id;
+    e->frames = 1;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = soulOfTheTimeTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doVioletSoulPods(void)
@@ -552,6 +605,17 @@ void drawMagicPods(void)
     for (e = stage.magicHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
             blit(e->texture, e->x, e->y);
+        }
+    }
+}
+
+void drawSoulOfTheTimePods(void)
+{
+    Entity *e;
+
+    for (e = stage.soulOfTheTomeHead.next; e != NULL; e = e->next) {
+        if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }

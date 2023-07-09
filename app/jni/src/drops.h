@@ -5,6 +5,8 @@ void doEnergyPods(void);
 void addEnergyPods(int x, int y);
 void doMagicPods(void);
 void addMagicPods(int x, int y);
+void doSoulOfTheTimePods(void);
+void addSoulOfTheTimePods(int x, int y);
 // Souls logic functions
 void doVioletSoulPods(void);
 void addVioletSoulPods(int x, int y);
@@ -25,6 +27,7 @@ void addPinkSoulPods(int x, int y);
 // draw functions
 void drawEnergyPods(void);
 void drawMagicPods(void);
+void drawSoulOfTheTimePods(void);
 void drawVioletSoulPods(void);
 void drawBlueSoulPods(void);
 void drawCyanSoulPods(void);

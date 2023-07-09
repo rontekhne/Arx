@@ -3,8 +3,7 @@
 /* TO DO:
  * Keep documenting
  * Make SOulOfTheTime and Detona drops
- * Make score Buttons
- * Change font and font colors
+ * Make detona button
  * Fix boss drop
  * Fix bad rendering of Debris
  * Draw hud and its elements
@@ -88,6 +87,7 @@ static SDL_Texture *bossPowerTexture;
 /* Drop textures */
 SDL_Texture *energyTexture;
 SDL_Texture *magicTexture;
+SDL_Texture *soulOfTheTimeTexture;
 SDL_Texture *violetSoulTexture;
 SDL_Texture *blueSoulTexture;
 SDL_Texture *cyanSoulTexture;
@@ -117,6 +117,7 @@ static int pinkDead;
 static int bossDead;
 
 /* tracks souls */
+static int playerSoulOfTheTime;
 static int playerVioletSoul;
 static int playerBlueSoul;
 static int playerCyanSoul;
@@ -135,6 +136,9 @@ void initStage(void)
     directionsBtnTexture = loadTexture("img/directions_btn.png");
     playerTexture = loadTexture("img/arx.png");
     powerTexture = loadTexture("img/playerPower.png");
+    energyTexture = loadTexture("img/energy.png");
+    magicTexture = loadTexture("img/magic.png");
+    soulOfTheTimeTexture = loadTexture("img/soul_of_the_time.png");
     violetTexture = loadTexture("img/violet.png");
     violetPowerTexture = loadTexture("img/violetPower.png");
     blueTexture = loadTexture("img/blue.png");
@@ -153,8 +157,6 @@ void initStage(void)
     pinkPowerTexture = loadTexture("img/pinkPower.png");
     bossTexture = loadTexture("img/rainbow.png");
     bossPowerTexture = loadTexture("img/bossPowerTexture.png");
-    energyTexture = loadTexture("img/energy.png");
-    magicTexture = loadTexture("img/magic.png");
     violetSoulTexture = loadTexture("img/violetSoul.png");
     blueSoulTexture = loadTexture("img/blueSoul.png");
     cyanSoulTexture = loadTexture("img/cyanSoul.png");
@@ -220,6 +222,12 @@ static void resetStage(void)
         free(e);
     }
 
+    while (stage.soulOfTheTomeHead.next) {
+        e = stage.soulOfTheTomeHead.next;
+        stage.soulOfTheTomeHead.next = e->next;
+        free(e);
+    }
+
     while (stage.violetSoulHead.next) {
         e = stage.violetSoulHead.next;
         stage.violetSoulHead.next = e->next;
@@ -274,6 +282,7 @@ static void resetStage(void)
     stage.debrisTail = &stage.debrisHead;
     stage.energyTail = &stage.energyHead;
     stage.magicTail = &stage.magicHead;
+    stage.soulOfTheTimeTail = &stage.soulOfTheTomeHead;
     stage.violetSoulTail = &stage.violetSoulHead;
     stage.blueSoulTail = &stage.blueSoulHead;
     stage.cyanSoulTail = &stage.cyanSoulHead;
@@ -296,6 +305,7 @@ static void initPlayer()
     player->species = 0;
     player->energy = 300;
     player->magic = 500;
+    player->soulOfTheTime = 0;
     player->violetSoul = 0;
     player->blueSoul = 0;
     player->cyanSoul = 0;
@@ -345,8 +355,16 @@ static int calculateTotalScore(void) {
         totalScore += 50;
     }
 
+    // check if player got soulOfTheTime
+    if (playerSoulOfTheTime > 0) {
+        for (i = 0; i < playerSoulOfTheTime; i++) {
+            totalScore += 250;
+        }
+    }
+
     return totalScore;
 }
+
 
 static void logic(void)
 {
@@ -367,6 +385,7 @@ static void logic(void)
     doDebris();
     doEnergyPods();
     doMagicPods();
+    doSoulOfTheTimePods();
     doVioletSoulPods();
     doBlueSoulPods();
     doCyanSoulPods();
@@ -590,6 +609,7 @@ static int powerHitFighter(Entity *p)
                                     case 9: addMagicPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
                                 }
                             }
+                            addSoulOfTheTimePods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
                             bossDead = 1;
                         }
                 }
@@ -892,6 +912,7 @@ static void draw(void)
     drawDebris();
     drawEnergyPods();
     drawMagicPods();
+    drawSoulOfTheTimePods();
     drawVioletSoulPods();
     drawBlueSoulPods();
     drawCyanSoulPods();

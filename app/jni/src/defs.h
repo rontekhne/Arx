@@ -41,6 +41,7 @@ enum
     SND_ENEMY_DIE,
     SND_ENERGY,
     SND_MAGIC,
+    SND_SOUL_OF_THE_TIME,
     SND_VIOLET,
     SND_BLUE,
     SND_CYAN,

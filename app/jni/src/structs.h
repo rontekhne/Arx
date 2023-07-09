@@ -45,6 +45,7 @@ struct Entity
     float dy;
     int energy;
     int magic;
+    int soulOfTheTime;
     int violetSoul;
     int blueSoul;
     int cyanSoul;
@@ -79,6 +80,7 @@ typedef struct
     Debris debrisHead, *debrisTail;
     Entity energyHead, *energyTail;
     Entity magicHead, *magicTail;
+    Entity soulOfTheTomeHead, *soulOfTheTimeTail;
     Entity violetSoulHead, *violetSoulTail;
     Entity blueSoulHead, *blueSoulTail;
     Entity cyanSoulHead, *cyanSoulTail;
