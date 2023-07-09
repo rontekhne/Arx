@@ -28,6 +28,7 @@ extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern char lang;
 extern int id;
+extern bool isDetonaOn;
 extern unsigned long long int *Timer;
 
 /* logic */
@@ -38,6 +39,7 @@ static void doPlayer(void);
 static void doEnemies(void);
 static void firePower(void);
 static void fireEnemyPower(Entity *e);
+static void fireDetona(void);
 static int powerHitFighter(Entity *p);
 static void doPower(void);
 static void doFighters(void);
@@ -52,6 +54,7 @@ static void drawFighters(void);
 static void drawPower(void);
 static void drawDebris(void);
 static void drawBtn(void);
+static void drawDetonaBtn(void);
 static void drawHud(void);
 
 static int calculateTotalScore(void);
@@ -61,6 +64,7 @@ Entity *player;
 
 // Textures
 static SDL_Texture *fireBtnTexture;
+static SDL_Texture *fireDetonaBtnTexture;
 static SDL_Texture *directionsBtnTexture;
 static SDL_Texture *playerTexture;
 static SDL_Texture *powerTexture;
@@ -88,6 +92,7 @@ static SDL_Texture *bossPowerTexture;
 SDL_Texture *energyTexture;
 SDL_Texture *magicTexture;
 SDL_Texture *soulOfTheTimeTexture;
+SDL_Texture *detonaTexture;
 SDL_Texture *violetSoulTexture;
 SDL_Texture *blueSoulTexture;
 SDL_Texture *cyanSoulTexture;
@@ -118,6 +123,7 @@ static int bossDead;
 
 /* tracks souls */
 static int playerSoulOfTheTime;
+static int playerDetona;
 static int playerVioletSoul;
 static int playerBlueSoul;
 static int playerCyanSoul;
@@ -133,12 +139,14 @@ void initStage(void)
     app.delegate.draw = draw;
 
     fireBtnTexture = loadTexture("img/fire_btn.png");
+    fireDetonaBtnTexture = loadTexture("img/detona_btn.png");
     directionsBtnTexture = loadTexture("img/directions_btn.png");
     playerTexture = loadTexture("img/arx.png");
     powerTexture = loadTexture("img/playerPower.png");
     energyTexture = loadTexture("img/energy.png");
     magicTexture = loadTexture("img/magic.png");
     soulOfTheTimeTexture = loadTexture("img/soul_of_the_time.png");
+    detonaTexture = loadTexture("img/detona.png");
     violetTexture = loadTexture("img/violet.png");
     violetPowerTexture = loadTexture("img/violetPower.png");
     blueTexture = loadTexture("img/blue.png");
@@ -228,6 +236,12 @@ static void resetStage(void)
         free(e);
     }
 
+    while (stage.detonaHead.next) {
+        e = stage.detonaHead.next;
+        stage.detonaHead.next = e->next;
+        free(e);
+    }
+
     while (stage.violetSoulHead.next) {
         e = stage.violetSoulHead.next;
         stage.violetSoulHead.next = e->next;
@@ -283,6 +297,7 @@ static void resetStage(void)
     stage.energyTail = &stage.energyHead;
     stage.magicTail = &stage.magicHead;
     stage.soulOfTheTimeTail = &stage.soulOfTheTomeHead;
+    stage.detonaTail = &stage.detonaHead;
     stage.violetSoulTail = &stage.violetSoulHead;
     stage.blueSoulTail = &stage.blueSoulHead;
     stage.cyanSoulTail = &stage.cyanSoulHead;
@@ -303,9 +318,10 @@ static void initPlayer()
     player->id = 0;
     player->frames = 8;
     player->species = 0;
-    player->energy = 300;
+    player->energy = 500;
     player->magic = 500;
     player->soulOfTheTime = 0;
+    player->detona = 0;
     player->violetSoul = 0;
     player->blueSoul = 0;
     player->cyanSoul = 0;
@@ -386,6 +402,7 @@ static void logic(void)
     doEnergyPods();
     doMagicPods();
     doSoulOfTheTimePods();
+    doDetonaPods();
     doVioletSoulPods();
     doBlueSoulPods();
     doCyanSoulPods();
@@ -397,6 +414,12 @@ static void logic(void)
     clipPlayer();
 
     if (player != NULL) {
+        if (player->detona > 0) {
+            isDetonaOn = true;
+        }else {
+            isDetonaOn = false;
+        }
+
         if (player->energy < 0) {
             player->energy = 0;
         }
@@ -405,6 +428,8 @@ static void logic(void)
         }
         playerEnergy = player->energy;
         playerMagic = player->magic;
+        playerSoulOfTheTime = player->soulOfTheTime;
+        playerDetona = player->detona;
         playerVioletSoul = player->violetSoul;
         playerBlueSoul = player->blueSoul;
         playerCyanSoul = player->cyanSoul;
@@ -440,14 +465,22 @@ static void doPlayer(void)
             player->dx = PLAYER_SPEED;
         }
         if (app.keyboard[SDL_SCANCODE_LCTRL] || touch.fire && player->reload == 0) {
-            if (player != NULL) {
-                if (player->magic > 0) {
-                    playSound(SND_PLAYER_POWER, CH_PLAYER);
-                    firePower();
-                    player->magic--;
-                }else {
-                    player->magic = 0;
-                }
+            if (player->magic > 0) {
+                playSound(SND_PLAYER_POWER, CH_PLAYER);
+                firePower();
+                player->magic--;
+            }else {
+                player->magic = 0;
+            }
+        }
+        if (app.keyboard[SDL_SCANCODE_D] || touch.detona && player->reload == 0) {
+            if (player->detona > 0) {
+                playSound(SND_DETONA, CH_ANY);
+                fireDetona();
+                touch.detona = 0; // ugly hack that works
+                player->detona--;
+            }else {
+                player->detona = 0;
             }
         }
     }
@@ -544,6 +577,11 @@ static int powerHitFighter(Entity *p)
                 addDebris(e);
                 playSound(SND_PLAYER_DIE, CH_PLAYER);
             }else {
+
+                if (e->energy == 0 && e->species != 9 && e->id % 10 == 0) {
+                    addDetonaPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+                }
+
                 switch (e->species) {
                     case 1:
                         if (e->energy == 0) {
@@ -626,6 +664,8 @@ static int powerHitFighter(Entity *p)
                     }
                 }
 
+                // detona drop logic
+
                 playSound(SND_ENEMY_DIE, CH_ANY);
             }
 
@@ -637,6 +677,19 @@ static int powerHitFighter(Entity *p)
         }
     }
     return 0;
+}
+
+void fireDetona(void)
+{
+    Entity *e;
+
+    for (e = stage.fighterHead.next; e != NULL; e = e->next) {
+        if (e != player) {
+            e->energy = 0;
+            addDebris(e);
+            // add detona sound
+        }
+    }
 }
 
 static void doPower(void)
@@ -851,7 +904,7 @@ static void addDebris(Entity *e)
     Debris *d;
     int x, y, w, h;
 
-    if (/*e == player && */player->energy > 0) { // gone to lazy down the game...
+    if (/*e == player && */e->energy > 0) { // gone to lazy down the game...
         w = e->w / e->frames / 4;
         h = e->h / 4;
     }else {
@@ -913,6 +966,7 @@ static void draw(void)
     drawEnergyPods();
     drawMagicPods();
     drawSoulOfTheTimePods();
+    drawDetonaPods();
     drawVioletSoulPods();
     drawBlueSoulPods();
     drawCyanSoulPods();
@@ -922,6 +976,11 @@ static void draw(void)
     drawRedSoulPods();
     drawPinkSoulPods();
     drawBtn();
+
+    if (isDetonaOn) {
+        drawDetonaBtn();
+    }
+
     drawHud();
 }
 
@@ -960,18 +1019,28 @@ static void drawBtn(void)
 {
     int cellWidth = SCREEN_WIDTH / 6;
     int cellHeight = SCREEN_HEIGHT / 2;
-    int controlWidth = cellWidth * 3 / 4;  // Largura do controle de direções
-    int controlHeight = cellHeight * 3 / 4;  // Altura do controle de direções
-    int controlX = cellWidth / 2 - controlWidth / 2;  // Posição X do controle de direções
-    int controlY = cellHeight + cellHeight / 2 - controlHeight / 2;  // Posição Y do controle de direções
+    int controlWidth = cellWidth * 3 / 4;
+    int controlHeight = cellHeight * 3 / 4;
+    int controlX = cellWidth / 2 - controlWidth / 2;
+    int controlY = cellHeight + cellHeight / 2 - controlHeight / 2;
 
     int cellWidth2 = SCREEN_WIDTH / 6;
     int cellHeight2 = SCREEN_HEIGHT / 2;
-    int cell12X = (5 * cellWidth2) + (cellWidth2 / 2) - (240 / 2);  // Ajuste o valor de fireButtonWidth de acordo com a largura do botão de "fire"
-    int cell12Y = cellHeight2 + (cellHeight2 / 2) - (240 / 2);  // Ajuste o valor de fireButtonHeight de acordo com a altura do botão de "fire"
+    int cell1X = (5 * cellWidth2) + (cellWidth2 / 2) - (240 / 2);
+    int cell1Y = cellHeight2 + (cellHeight2 / 2) - (240 / 2);
 
     blit(directionsBtnTexture, controlX, controlY);
-    blit(fireBtnTexture, cell12X, cell12Y);
+    blit(fireBtnTexture, cell1X, cell1Y);
+}
+
+static void drawDetonaBtn(void)
+{
+    int cellWidth3 = SCREEN_WIDTH / 6;
+    int cellHeight3 = SCREEN_HEIGHT / 2;
+    int cell2X = (5 * cellWidth3) + (cellWidth3 / 2) - (280);
+    int cell2Y = cellHeight3 + (cellHeight3 / 2); - (240);
+
+    blit(fireDetonaBtnTexture, cell2X, cell2Y);
 }
 
 static void drawHud(void) {
@@ -985,6 +1054,7 @@ static void drawHud(void) {
     drawText(810, 50, 255, 255, 255, TEXT_LEFT, "OS: %03d", playerOrangeSoul);
     drawText(970, 50, 255, 255, 255, TEXT_LEFT, "RS: %03d", playerRedSoul);
     drawText(1130, 50, 255, 255, 255, TEXT_LEFT, "PS: %03d", playerPinkSoul);
+    drawText(1290, 50, 255, 255, 255, TEXT_LEFT, "DT: %03d", playerDetona);
 
     drawText(10, 80, 255, 255, 255, TEXT_LEFT, "TEMPO: %02d:%02d:%02d:%02d", t.d, t.h, t.m, t.s);
     drawText(400, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "ENERGIA: %03d" : "ENERGY: %03d", playerEnergy);

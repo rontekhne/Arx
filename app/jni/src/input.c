@@ -10,6 +10,7 @@ extern int SCREEN_HEIGHT;
 extern bool isMenuOn;
 extern bool isScoreOn;
 extern bool isKeyboardOn;
+extern bool isDetonaOn;
 
 /* handles key down */
 void doKeyDown(SDL_KeyboardEvent *event)
@@ -424,6 +425,45 @@ void doTouchScoreUp(SDL_TouchFingerEvent* event)
     touch.quit = 0;
 }
 
+void doTouchDetonaDown(SDL_TouchFingerEvent* event)
+{
+    int touchX = event->x * SCREEN_WIDTH;
+    int touchY = event->y * SCREEN_HEIGHT;
+
+    int btnWidth = 120;
+    int btnHeight = 120;
+
+    int cellWidth = SCREEN_WIDTH / 6;
+    int cellHeight = SCREEN_HEIGHT / 2;
+    int cellX = (5 * cellWidth) + (cellWidth / 2) - 280;
+    int cellY = cellHeight + (cellHeight / 2);
+
+    if (touchX >= cellX && touchX < cellX + btnWidth && touchY >= cellY && touchY < cellY + btnHeight) {
+        touch.up = 0;
+        touch.down = 0;
+        touch.left = 0;
+        touch.right = 0;
+        touch.fire = 0;
+        touch.detona = 1;
+    } else {
+        touch.up = 0;
+        touch.down = 0;
+        touch.left = 0;
+        touch.right = 0;
+        touch.fire = 0;
+        touch.detona = 0;
+    }
+}
+void doTouchDetonaUp(SDL_TouchFingerEvent* event)
+{
+    touch.up = 0;
+    touch.down = 0;
+    touch.left = 0;
+    touch.right = 0;
+    touch.fire = 0;
+    touch.detona = 0;
+}
+
 /* handles input */
 void doInput(void)
 {
@@ -454,6 +494,9 @@ void doInput(void)
                 }else if (isScoreOn) {
                     doTouchScoreDown(&event.tfinger);
                 }else {
+                    if (isDetonaOn) {
+                        doTouchDetonaDown(&event.tfinger);
+                    }
                     doTouchDown(&event.tfinger);
                 }
                 break;
@@ -465,6 +508,9 @@ void doInput(void)
                 }else if (isScoreOn) {
                     doTouchScoreUp(&event.tfinger);
                 }else {
+                    if (isDetonaOn) {
+                        doTouchDetonaUp(&event.tfinger);
+                    }
                     doTouchUp(&event.tfinger);
                 }
                 break;

@@ -46,6 +46,7 @@ struct Entity
     int energy;
     int magic;
     int soulOfTheTime;
+    int detona;
     int violetSoul;
     int blueSoul;
     int cyanSoul;
@@ -81,6 +82,7 @@ typedef struct
     Entity energyHead, *energyTail;
     Entity magicHead, *magicTail;
     Entity soulOfTheTomeHead, *soulOfTheTimeTail;
+    Entity detonaHead, *detonaTail;
     Entity violetSoulHead, *violetSoulTail;
     Entity blueSoulHead, *blueSoulTail;
     Entity cyanSoulHead, *cyanSoulTail;
@@ -130,6 +132,7 @@ typedef struct
     int left;
     int right;
     int fire;
+    int detona;
     int play;
     int score;
     int quit;

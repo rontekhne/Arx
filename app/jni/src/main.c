@@ -20,6 +20,7 @@ char lang = 'P';
 bool isKeyboardOn = false;
 bool isMenuOn = false;
 bool isScoreOn = false;
+bool isDetonaOn = false;
 
 unsigned int id; // entities id
 unsigned long long int *Timer; // o tempo total
