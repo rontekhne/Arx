@@ -23,12 +23,17 @@ static void logic(void);
 static void draw(void);
 static void drawLogo(void);
 static void drawTitle(void);
+static void drawArx(void);
 static void drawBtn(void);
 
 static SDL_Texture *logoBackground;
 static SDL_Texture *arxTitle;
+static SDL_Texture *arxTexture;
 static SDL_Texture *btnLargeTexture;
 static SDL_Texture *btnSmallTexture;
+
+static int reveal = 0;
+static int arxX = -32;
 
 extern char lang;
 
@@ -49,6 +54,7 @@ void initMenu(void)
 
     logoBackground = loadTexture("img/logo_background.png");
     arxTitle = loadTexture("img/arx_title.png");
+    arxTexture = loadTexture("img/arx.png");
     btnLargeTexture = loadTexture("img/btn_large.png");
     btnSmallTexture = loadTexture("img/btn_small.png");
 }
@@ -88,9 +94,18 @@ static void draw(void)
         logoTimer++;
         return;
     }else {
+        if (reveal < SCREEN_HEIGHT) {
+            reveal++;
+        }
+
+        if (arxX <= (SCREEN_WIDTH / 2) - (16)) { // arx width
+            arxX++;
+        }
+
         drawBackground();
         drawStarfield();
         drawTitle();
+        drawArx();
         drawBtn();
     }
 }
@@ -115,7 +130,19 @@ static void drawTitle(void)
     r.y = 0;
 
     SDL_QueryTexture(arxTitle, NULL, NULL, &r.w, &r.h);
+    r.h = MIN(reveal, r.h);
     blitRect(arxTitle, &r, (SCREEN_WIDTH / 4) - (r.w / 2), (SCREEN_HEIGHT / 2) - (r.h / 2));
+}
+
+static void drawArx(void)
+{
+    SDL_Rect r;
+
+    r.x = arxX;
+    r.y = 0;
+
+    SDL_QueryTexture(arxTexture, NULL, NULL, &r.w, &r.h);
+    blitSprite(arxTexture, arxX, (SCREEN_HEIGHT / 2) - (r.h / 2), 8, 0, 4, 0);
 }
 
 void drawBtn()

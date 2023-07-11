@@ -334,11 +334,11 @@ static void initPlayer()
     player->orangeSoul = 0;
     player->redSoul = 0;
     player->pinkSoul = 0;
-    player->x = 100;
-    player->y = 100;
     player->texture = playerTexture;
     player->side = SIDE_PLAYER;
     SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
+    player->x = (SCREEN_WIDTH / 2) - (player->w / 2);
+    player->y = (SCREEN_HEIGHT / 2) - (player->h / 2);
 }
 
 static int calculateTotalScore(void) {
