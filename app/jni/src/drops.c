@@ -37,6 +37,9 @@ void doEnergyPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->energy += (1 + rand() % 10);
+            if (player->energy > MAX_ENERGY) {
+                player->energy = MAX_ENERGY;
+            }
             playSound(SND_ENERGY, CH_ANY);
         }
 
@@ -89,6 +92,9 @@ void doMagicPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames , e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->magic += (1 + rand() % 30);
+            if (player->magic > MAX_MAGIC) {
+                player->magic = MAX_MAGIC;
+            };
             playSound(SND_MAGIC, CH_ANY);
         }
 
@@ -193,6 +199,10 @@ void doDetonaPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->detona += 1;
+            if (player->detona > MAX_DETONA) {
+                player->detona = MAX_DETONA;
+                player->energy += 1;
+            }
             playSound(SND_DETONA, CH_ANY);
         }
 

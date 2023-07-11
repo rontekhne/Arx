@@ -25,6 +25,9 @@
 #define GLYPH_WIDTH 18
 #define GLYPH_HEIGHT 28
 #define LOGO_TIME 250
+#define MAX_ENERGY 500
+#define MAX_MAGIC 500
+#define MAX_DETONA 10
 
 enum
 {

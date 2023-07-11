@@ -46,6 +46,9 @@ static void drawDebris(void);
 static void drawBtn(void);
 static void drawDetonaBtn(void);
 static void drawHud(void);
+static void drawDetonaBar(void);
+static void drawEnergyBar(void);
+static void drawMagicBar(void);
 
 static int calculateTotalScore(void);
 
@@ -78,6 +81,7 @@ static SDL_Texture *pinkPowerTexture;
 /* boss */
 static SDL_Texture *bossTexture;
 static SDL_Texture *bossPowerTexture;
+
 /* Drop textures */
 SDL_Texture *energyTexture;
 SDL_Texture *magicTexture;
@@ -99,6 +103,7 @@ static int stageResetTimer;
 static int playerEnergy;
 static int playerMagic;
 Time t;
+bool isDetonaExplosion;
 
 /* tracks died enemies */
 static int violetDead;
@@ -186,6 +191,8 @@ void initStage(void)
     redDead = 0;
     pinkDead = 0;
     bossDead = 0;
+
+    isDetonaExplosion = false;
 
     shuffleArray(specie, 8); // shuffle enemy species
     shuffleArray(energies, 8); // shuffle enemy energies
@@ -474,6 +481,7 @@ static void doPlayer(void)
                 fireDetona();
                 touch.detona = 0; // ugly hack that works
                 player->detona--;
+                isDetonaExplosion = true;
             }else {
                 player->detona = 0;
             }
@@ -1044,14 +1052,79 @@ static void drawHud(void) {
 
     drawText(10, 10, 255, 255, 255, TEXT_LEFT, "TEMPO: %02d:%02d", t.m, t.s);
 
-    drawText(SCREEN_WIDTH - 100, 10, 255, 255, 255, TEXT_RIGHT, lang == 'P' ? "PONTOS: %03d" : "SCORE: %03d", calculateTotalScore());
+    drawDetonaBar();
+    drawEnergyBar();
+    drawMagicBar();
 
-    blitSprite(magicTexture, SCREEN_WIDTH - 450, 6, 8, 16280, 4, 0);
-    drawText(SCREEN_WIDTH - 350, 10, 255, 255, 255, TEXT_RIGHT, " %03d", playerMagic);
+    drawText(SCREEN_WIDTH - 35, 10, 255, 255, 255, TEXT_RIGHT, lang == 'P' ? "PONTOS: %03d" : "SCORE: %03d", calculateTotalScore());
+}
 
-    blitSprite(energyTexture, SCREEN_WIDTH - 600, 6, 8, 16279, 4, 0);
-    drawText(SCREEN_WIDTH - 500, 10, 255, 255, 255, TEXT_RIGHT, " %03d", playerEnergy);
+static void drawDetonaBar(void)
+{
+    int x = SCREEN_WIDTH - 1300;
+    int y = 10;
+    int barWidth = 50;
+    int barHeight = 20;
+    float fillRatio = (float)playerDetona / 10.0;
 
-    blitSprite(detonaTexture, SCREEN_WIDTH - 720, 6, 8, 16281, 4, 0);
-    drawText(SCREEN_WIDTH - 650, 10, 255, 255, 255, TEXT_RIGHT, "%0d", playerDetona);
+    SDL_Rect fillRect;
+    fillRect.x = x;
+    fillRect.y = y;
+    fillRect.w = (int)(barWidth * fillRatio);
+    fillRect.h = barHeight;
+
+    Uint32 colors[] = {0xffffff, 0xbfbfbf, 0x808080, 0x404040};
+    int numColors = sizeof(colors) / sizeof(colors[0]);
+    int colorIndex = SDL_GetTicks() / 80 % numColors;
+
+    Uint8 r = (colors[colorIndex] >> 16) & 0xFF;
+    Uint8 g = (colors[colorIndex] >> 8) & 0xFF;
+    Uint8 b = colors[colorIndex] & 0xFF;
+
+    SDL_SetRenderDrawColor(app.renderer, r, g, b, 255);
+    SDL_RenderFillRect(app.renderer, &fillRect);
+}
+
+static void drawEnergyBar(void)
+{
+    int x = SCREEN_WIDTH - 1250;
+    int y = 10;
+    int barWidth = 500;
+    int barHeight = 20;
+    float fillRatio = (float)playerEnergy / 500.0;
+
+    SDL_Rect fillRect;
+    fillRect.x = x;
+    fillRect.y = y;
+    fillRect.w = (int)(barWidth * fillRatio);
+    fillRect.h = barHeight;
+
+    SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(app.renderer, &fillRect);
+}
+
+static void drawMagicBar(void)
+{
+    int x = SCREEN_WIDTH - 750;
+    int y = 10;
+    int barWidth = 500;
+    int barHeight = 20;
+    float fillRatio = (float)playerMagic / 500.0;
+
+    SDL_Rect fillRect;
+    fillRect.x = x;
+    fillRect.y = y;
+    fillRect.w = (int)(barWidth * fillRatio);
+    fillRect.h = barHeight;
+
+    Uint32 colors[] = {0xa373e6, 0x739de6, 0x73e6e0, 0x73e69b, 0xe6e373, 0xe6a373, 0xe67373, 0xe673d2};
+    int numColors = sizeof(colors) / sizeof(colors[0]);
+    int colorIndex = SDL_GetTicks() / 80 % numColors;
+
+    Uint8 r = (colors[colorIndex] >> 16) & 0xFF;
+    Uint8 g = (colors[colorIndex] >> 8) & 0xFF;
+    Uint8 b = colors[colorIndex] & 0xFF;
+
+    SDL_SetRenderDrawColor(app.renderer, r, g, b, 255);
+    SDL_RenderFillRect(app.renderer, &fillRect);
 }

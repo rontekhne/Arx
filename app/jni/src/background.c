@@ -5,8 +5,10 @@
 #include "draw.h"
 
 extern App app;
+extern Entity *player;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
+extern bool isDetonaExplosion;
 
 static int          backgroundX;
 static Star         stars[MAX_STARS];
@@ -74,6 +76,43 @@ void drawBackground(void)
         dest.w = SCREEN_WIDTH;
         dest.h = SCREEN_HEIGHT;
 
-        SDL_RenderCopy(app.renderer, background, NULL, &dest);
+        const int maxColorValue = 200;
+        const int transitionSpeed = 5;
+
+        if (isDetonaExplosion) {
+            static int colorValue = 150;
+            colorValue = MIN(colorValue + transitionSpeed, maxColorValue);
+            SDL_SetTextureColorMod(background, colorValue, colorValue, colorValue);
+
+            SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_ADD);
+            SDL_SetTextureBlendMode(background, SDL_BLENDMODE_ADD);
+
+            int centerX = player->x + player->w / 2;
+            int centerY = player->y + player->h / 2;
+            int radius = MAX(SCREEN_WIDTH, SCREEN_HEIGHT) * 2;
+
+            SDL_Rect explosionRect = {
+                    centerX - radius / 2,
+                    centerY - radius / 2,
+                    radius,
+                    radius
+            };
+            SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, colorValue);
+            SDL_RenderFillRect(app.renderer, &explosionRect);
+
+            SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);
+            SDL_RenderCopy(app.renderer, background, NULL, &dest);
+
+            if (colorValue == maxColorValue) {
+                isDetonaExplosion = false;
+                colorValue = 0;
+                SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_NONE);
+                SDL_SetTextureBlendMode(background, SDL_BLENDMODE_NONE);
+            }
+        } else {
+            SDL_SetTextureColorMod(background, 255, 255, 255);
+
+            SDL_RenderCopy(app.renderer, background, NULL, &dest);
+        }
     }
 }
