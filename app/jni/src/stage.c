@@ -567,7 +567,7 @@ static int powerHitFighter(Entity *p)
                 addDebris(e);
                 playSound(SND_PLAYER_DIE, CH_PLAYER);
             }else {
-
+                addDebris(e);
                 if (e->energy == 0 && e->species != 9 && e->id % 10 == 0) {
                     addDetonaPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
                 }
@@ -894,12 +894,12 @@ static void addDebris(Entity *e)
     Debris *d;
     int x, y, w, h;
 
-    if (/*e == player && */e->energy > 0) { // gone to lazy down the game...
-        w = e->w / e->frames / 4;
-        h = e->h / 4;
+    if (e->energy > 0) { // gone to lazy down the game...
+        w = e->w / e->frames / 5;
+        h = e->h / 5;
     }else {
-        w = e->w / e->frames / 2;
-        h = e->h / 2;
+        w = e->w / e->frames / 3;
+        h = e->h / 3;
     }
 
     for (y = 0; y <= h; y++) {
@@ -1036,18 +1036,7 @@ static void drawDetonaBtn(void)
 static void drawHud(void) {
     t = getTime(Timer);
 
-    /*drawText(10, 50, 255, 255, 255, TEXT_LEFT, "VS: %03d", playerVioletSoul);
-    drawText(170, 50, 255, 255, 255, TEXT_LEFT, "BS: %03d", playerBlueSoul);
-    drawText(330, 50, 255, 255, 255, TEXT_LEFT, "CS: %03d", playerCyanSoul);
-    drawText(490, 50, 255, 255, 255, TEXT_LEFT, "GS: %03d", playerGreenSoul);
-    drawText(650, 50, 255, 255, 255, TEXT_LEFT, "YS: %03d", playerYellowSoul);
-    drawText(810, 50, 255, 255, 255, TEXT_LEFT, "OS: %03d", playerOrangeSoul);
-    drawText(970, 50, 255, 255, 255, TEXT_LEFT, "RS: %03d", playerRedSoul);
-    drawText(1130, 50, 255, 255, 255, TEXT_LEFT, "PS: %03d", playerPinkSoul);
-    drawText(1290, 50, 255, 255, 255, TEXT_LEFT, "DT: %03d", playerDetona);
-    */
-
-    drawText(10, 10, 255, 255, 255, TEXT_LEFT, "TEMPO: %02d:%02d:%02d:%02d", t.d, t.h, t.m, t.s);
+    drawText(10, 10, 255, 255, 255, TEXT_LEFT, "TEMPO: %02d:%02d", t.m, t.s);
 
     drawText(SCREEN_WIDTH - 100, 10, 255, 255, 255, TEXT_RIGHT, lang == 'P' ? "PONTOS: %03d" : "SCORE: %03d", calculateTotalScore());
 
@@ -1059,13 +1048,4 @@ static void drawHud(void) {
 
     blitSprite(detonaTexture, SCREEN_WIDTH - 720, 6, 8, 16281, 4, 0);
     drawText(SCREEN_WIDTH - 650, 10, 255, 255, 255, TEXT_RIGHT, "%0d", playerDetona);
-
-    //blitSprite(magicTexture, SCREEN_WIDTH - 450, 6, 9, 16282, 6, 0);
-    //drawText(SCREEN_WIDTH - 320, 10, hubR, hubG, hubB, TEXT_RIGHT, " %05d", playerMagic);
-
-    /*drawText(10, 80, 255, 255, 255, TEXT_LEFT, "TEMPO: %02d:%02d:%02d:%02d", t.d, t.h, t.m, t.s);
-    drawText(400, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "ENERGIA: %03d" : "ENERGY: %03d", playerEnergy);
-    drawText(800, 80, 255, 255, 255, TEXT_LEFT, lang == 'P' ? "MAGICA: %03d" : "MAGIC: %03d", playerMagic);
-    drawText(1200, 80, 255, 255, 255, TEXT_LEFT, ,
-             calculateTotalScore());*/
 }

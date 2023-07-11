@@ -249,15 +249,25 @@ static void drawHighscores(void)
     drawText(SCREEN_WIDTH / 3, y, 255, 255, 255, TEXT_CENTER, lang == 'P' ? "PLACAR" : "HIGHSCORES");
 
     for (i = 0; i < NUM_HIGHSCORES; i++) {
-        r = 255;
-        g = 255;
-        b = 255;
+        r = 191;
+        g = 191;
+        b = 191;
 
-        if (highscores.highscore[i].recent) {
+        if (i == 0) { // gold
+            r = 230;
+            g = 227;
+            b = 115;
+        }else if (i == 1) { // silver
+            r = 255;
+            g = 255;
             b = 255;
+        }else if (i == 2) { // bronze
+            r = 230;
+            g = 184;
+            b = 184;
         }
 
-        drawText(SCREEN_WIDTH / 3, y + 70, r, g, b, TEXT_CENTER, "#%d. %-15s ...... %03d", (i + 1), highscores.highscore[i].name, highscores.highscore[i].score);
+        drawText(SCREEN_WIDTH / 3, y + 70, r, g, b, TEXT_CENTER, "%d. %-15s ...... %03d", (i + 1), highscores.highscore[i].name, highscores.highscore[i].score);
 
         y += 50;
     }
