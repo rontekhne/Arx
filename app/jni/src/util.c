@@ -65,3 +65,17 @@ void enemyChasePlayer(Entity *e)
         e->y += e->dy; // * speed
     }
 }
+
+/* functions to randomize enemies spawn using Fisher-Yates algorithm */
+int generateRandom(int min, int max) {
+    return min + rand() % (max - min + 1);
+}
+
+void shuffleArray(int array[], int size) {
+    for (int i = size - 1; i > 0; i--) {
+        int j = generateRandom(0, i);
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}

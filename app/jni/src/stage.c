@@ -123,6 +123,10 @@ static int playerOrangeSoul;
 static int playerRedSoul;
 static int playerPinkSoul;
 
+/* randomize species */
+static int specie[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+static int energies[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+
 void initStage(void)
 {
     app.delegate.logic = logic;
@@ -182,6 +186,9 @@ void initStage(void)
     redDead = 0;
     pinkDead = 0;
     bossDead = 0;
+
+    shuffleArray(specie, 8); // shuffle enemy species
+    shuffleArray(energies, 8); // shuffle enemy energies
 }
 
 static void resetStage(void)
@@ -361,11 +368,9 @@ static int calculateTotalScore(void) {
         totalScore += 50;
     }
 
-    // check if player got soulOfTheTime
+    // check if player got soulOfTheTime | convert the time in seconds into points
     if (playerSoulOfTheTime > 0) {
-        for (i = 0; i < playerSoulOfTheTime; i++) {
-            totalScore += 250;
-        }
+        totalScore += (t.m * 60 + t.s);
     }
 
     return totalScore;
@@ -750,65 +755,66 @@ static void spawnEnemies(void)
 
         /* logic of enemies spawn */
         if (t.m == 0 && t.s < 29) {
-            species = 1;
+            species = specie[0];
         }else if (t.m == 0 && t.s < 59) {
-            species = 2;
+            species = specie[1];
         }else if (t.m == 1 && t.s < 29) {
-            species = 3;
+            species = specie[2];
         }else if (t.m == 1 && t.s < 59) {
-            species = 4;
+            species = specie[3];
         }else if (t.m == 2 && t.s < 29) {
-            species = 5;
+            species = specie[4];
         }else if (t.m == 2 && t.s < 59) {
-            species = 6;
+            species = specie[5];
         }else if (t.m == 3 && t.s < 29) {
-            species = 7;
+            species = specie[6];
         }else if (t.m == 3 && t.s < 59) {
-            species = 8;
+            species = specie[7];
         }else {
             species = 1 + rand() % 9;
         }
 
+        /* enemy attributes */
         switch (species) {
             case 1:
                 enemy->species = 1;
                 enemy->texture = violetTexture;
-                enemy->energy = 1;
+                enemy->energy = energies[0];
                 break;
             case 2:
                 enemy->species = 2;
                 enemy->texture = blueTexture;
-                enemy->energy = 2;
+                enemy->energy = energies[1];
                 break;
             case 3:
                 enemy->species = 3;
                 enemy->texture = cyanTexture;
-                enemy->energy = 4;
+                enemy->energy = energies[2];
                 break;
             case 4:
                 enemy->species = 4;
                 enemy->texture = greenTexture;
-                enemy->energy = 8;
+                enemy->energy = energies[3];
                 break;
             case 5:
                 enemy->species = 5;
                 enemy->texture = yellowTexture;
-                enemy->energy = 1;
+                enemy->energy = energies[4];
                 break;
             case 6:
                 enemy->species = 6;
                 enemy->texture = orangeTexture;
-                enemy->energy = 2;
+                enemy->energy = energies[5];
                 break;
             case 7:
                 enemy->species = 7;
                 enemy->texture = redTexture;
-                enemy->energy = 4;
+                enemy->energy = energies[6];
                 break;
             case 8:
                 enemy->species = 8;
                 enemy->texture = pinkTexture;
-                enemy->energy = 8;
+                enemy->energy = energies[7];
                 break;
         }
 
