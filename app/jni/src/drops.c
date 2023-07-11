@@ -34,7 +34,7 @@ void doEnergyPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->energy += (1 + rand() % 10);
             playSound(SND_ENERGY, CH_ANY);
@@ -60,6 +60,8 @@ void addEnergyPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.energyTail->next = e;
 
+    e->id = id;
+    e->frames = 8;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -68,8 +70,10 @@ void addEnergyPods(int x, int y)
     e->texture = energyTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doMagicPods(void)
@@ -82,7 +86,7 @@ void doMagicPods(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (player != NULL && collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+        if (player != NULL && collision(e->x, e->y, e->w / e->frames , e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->magic += (1 + rand() % 30);
             playSound(SND_MAGIC, CH_ANY);
@@ -108,6 +112,8 @@ void addMagicPods(int x, int y)
     memset(e, 0, sizeof(Entity));
     stage.magicTail->next = e;
 
+    e->id = id;
+    e->frames = 8;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -116,8 +122,10 @@ void addMagicPods(int x, int y)
     e->texture = magicTexture;
 
     SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / 2;
-    e->y -= e->h / 2;
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
 }
 
 void doSoulOfTheTimePods(void)
@@ -157,7 +165,7 @@ void addSoulOfTheTimePods(int x, int y)
     stage.soulOfTheTimeTail->next = e;
 
     e->id = id;
-    e->frames = 1;
+    e->frames = 8;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -209,7 +217,7 @@ void addDetonaPods(int x, int y)
     stage.detonaTail->next = e;
 
     e->id = id;
-    e->frames = 1;
+    e->frames = 8;
     e->x = x;
     e->y = y;
     e->dx = -(rand() % 5);
@@ -646,7 +654,7 @@ void drawEnergyPods(void)
 
     for (e = stage.energyHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
@@ -657,7 +665,7 @@ void drawMagicPods(void)
 
     for (e = stage.magicHead.next; e != NULL; e = e->next) {
         if (e->energy > (FPS * 2) || e->energy % 12 < 6) {
-            blit(e->texture, e->x, e->y);
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
         }
     }
 }
