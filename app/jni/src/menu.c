@@ -171,24 +171,12 @@ void drawBtn()
 {
     SDL_Rect sr, pr, qr, lr;
 
+    // score btn
     sr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4;
     sr.y = SCREEN_HEIGHT / 6;
-
-    pr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4;
-    pr.y = SCREEN_HEIGHT / 2;
-
-    qr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 + SCREEN_HEIGHT / 6;
-    qr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
-
-    lr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 - SCREEN_HEIGHT / 6;
-    lr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
-
     SDL_QueryTexture(scoreBtnTexture, NULL, NULL, &sr.w, &sr.h);
-    SDL_QueryTexture(playBtnTexture, NULL, NULL, &pr.w, &pr.h);
-    SDL_QueryTexture(quitBtnTexture, NULL, NULL, &qr.w, &qr.h);
-    SDL_QueryTexture(ptBtnTexture, NULL, NULL, &lr.w, &lr.h);
-
-    blit(scoreBtnTexture, sr.x, sr.y);
+    sr.w = SCREEN_WIDTH - sr.x;
+    SDL_RenderCopy(app.renderer,  scoreBtnTexture, NULL, &sr);
     drawText(
             sr.x + sr.w / 2,
             sr.y + sr.h / 3,
@@ -199,7 +187,12 @@ void drawBtn()
             lang == 'P' ? "PLACAR" : "SCORE"
     );
 
-    blit(playBtnTexture, pr.x, pr.y);
+    // play btn
+    pr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4;
+    pr.y = SCREEN_HEIGHT / 2;
+    SDL_QueryTexture(playBtnTexture, NULL, NULL, &pr.w, &pr.h);
+    pr.w = SCREEN_WIDTH - pr.x;
+    SDL_RenderCopy(app.renderer,  playBtnTexture, NULL, &pr);
     drawText(
             pr.x + pr.w / 2,
             pr.y + pr.h / 3,
@@ -208,8 +201,12 @@ void drawBtn()
             255,
             TEXT_CENTER,
             lang == 'P' ? "JOGAR" : "PLAY"
-            );
+    );
 
+    // quit btn
+    qr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 + SCREEN_HEIGHT / 6;
+    qr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
+    SDL_QueryTexture(quitBtnTexture, NULL, NULL, &qr.w, &qr.h);
     blit(quitBtnTexture, qr.x, qr.y);
     drawText(
             qr.x + qr.w / 2,
@@ -221,6 +218,10 @@ void drawBtn()
             lang == 'P' ? "SAIR" : "QUIT"
     );
 
+    // lang btn
+    lr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 - SCREEN_HEIGHT / 6;
+    lr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
+    SDL_QueryTexture(ptBtnTexture, NULL, NULL, &lr.w, &lr.h);
     if (lang == 'P') {
         blit(ptBtnTexture, lr.x, lr.y);
     }else {

@@ -250,9 +250,9 @@ static void drawHighscores(void)
 {
     int i, y, r, g, b;
 
-    y = 150;
+    y = SCREEN_HEIGHT / 5;
 
-    blitSprite(trophyTexture, SCREEN_WIDTH / 3, 80, 8, 16271, 4, 0);
+    blitSprite(trophyTexture, SCREEN_WIDTH / 3, SCREEN_HEIGHT / 7, 8, 16271, 4, 0);
 
     for (i = 0; i < NUM_HIGHSCORES; i++) {
         r = 191;
@@ -338,14 +338,9 @@ void drawBtn()
 
     mr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4;
     mr.y = SCREEN_HEIGHT / 6;
-
-    qr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 + SCREEN_HEIGHT / 6;
-    qr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
-
     SDL_QueryTexture(menuBtnTexture, NULL, NULL, &mr.w, &mr.h);
-    SDL_QueryTexture(quitBtnTexture, NULL, NULL, &qr.w, &qr.h);
-
-    blit(menuBtnTexture, mr.x, mr.y);
+    mr.w = SCREEN_WIDTH - mr.x;
+    SDL_RenderCopy(app.renderer,  menuBtnTexture, NULL, &mr);
     drawText(
             mr.x + mr.w / 2,
             mr.y + mr.h / 3,
@@ -356,6 +351,9 @@ void drawBtn()
             "MENU"
     );
 
+    qr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 + SCREEN_HEIGHT / 6;
+    qr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
+    SDL_QueryTexture(quitBtnTexture, NULL, NULL, &qr.w, &qr.h);
     blit(quitBtnTexture, qr.x, qr.y);
     drawText(
             qr.x + qr.w / 2,
