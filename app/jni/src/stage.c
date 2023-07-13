@@ -1131,9 +1131,11 @@ static void drawHud(void) {
 
 static void drawDetonaBar(void)
 {
-    int x = SCREEN_WIDTH - 1300;
+    int x = SCREEN_WIDTH * 10 / 100;
+    // int x = SCREEN_WIDTH - 1300;
     int y = 10;
-    int barWidth = 50;
+    int barWidth = SCREEN_WIDTH * 5 / 100;
+    // int barWidth = 50;
     int barHeight = 20;
     float fillRatio = (float)playerDetona / 10.0;
 
@@ -1157,9 +1159,11 @@ static void drawDetonaBar(void)
 
 static void drawEnergyBar(void)
 {
-    int x = SCREEN_WIDTH - 1250;
+    int x = SCREEN_WIDTH * 15 / 100;
+    // int x = SCREEN_WIDTH - 1250;
     int y = 10;
-    int barWidth = 500;
+    int barWidth = SCREEN_WIDTH * 35 / 100;
+    // int barWidth = 500;
     int barHeight = 20;
     float fillRatio = (float)playerEnergy / 500.0;
 
@@ -1175,9 +1179,11 @@ static void drawEnergyBar(void)
 
 static void drawMagicBar(void)
 {
-    int x = SCREEN_WIDTH - 750;
+    int x = SCREEN_WIDTH * 50 / 100;
+    // int x = SCREEN_WIDTH - 750;
     int y = 10;
-    int barWidth = 500;
+    int barWidth = SCREEN_WIDTH * 35 / 100;
+    // int barWidth = 500;
     int barHeight = 20;
     float fillRatio = (float)playerMagic / 500.0;
 
