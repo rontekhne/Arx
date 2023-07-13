@@ -6,3 +6,6 @@ Time getTime(unsigned long long int *Timer);
 void enemyChasePlayer(Entity *e);
 int generateRandom(int min, int max);
 void shuffleArray(int array[], int size);
+void doPlusPoints(void);
+void addPlusPoints(Entity *e, int points);
+void drawPlusPoints(void);

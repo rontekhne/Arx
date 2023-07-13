@@ -3,6 +3,7 @@
 typedef struct Entity Entity;
 typedef struct Explosion Explosion;
 typedef struct Debris Debris;
+typedef struct PlusPoints PlusPoints;
 typedef  struct Texture Texture;
 
 /* act as a delegate for handling the logic and draw functions
@@ -73,12 +74,24 @@ struct Debris
     Debris *next;
 };
 
+struct PlusPoints
+{
+    float x;
+    float y;
+    float dx;
+    float dy;
+    int points;
+    int life;
+    PlusPoints *next;
+};
+
 /* holds information about fighters and powers */
 typedef struct
 {
     Entity fighterHead, *fighterTail;
     Entity powerHead, *powerTail;
     Debris debrisHead, *debrisTail;
+    PlusPoints plusPointsHead, *plusPointsTail;
     Entity energyHead, *energyTail;
     Entity magicHead, *magicTail;
     Entity soulOfTheTomeHead, *soulOfTheTimeTail;

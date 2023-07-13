@@ -211,6 +211,7 @@ static void resetStage(void)
     Entity *e;
     Explosion *ex;
     Debris *d;
+    PlusPoints *pp;
 
     while (stage.fighterHead.next) {
         e = stage.fighterHead.next;
@@ -228,6 +229,12 @@ static void resetStage(void)
         d = stage.debrisHead.next;
         stage.debrisHead.next = d->next;
         free(d);
+    }
+
+    while (stage.plusPointsHead.next) {
+        pp = stage.plusPointsHead.next;
+        stage.plusPointsHead.next = pp->next;
+        free(pp);
     }
 
     while (stage.energyHead.next) {
@@ -306,6 +313,7 @@ static void resetStage(void)
     stage.fighterTail = &stage.fighterHead;
     stage.powerTail = &stage.powerHead;
     stage.debrisTail = &stage.debrisHead;
+    stage.plusPointsTail = &stage.plusPointsHead;
     stage.energyTail = &stage.energyHead;
     stage.magicTail = &stage.magicHead;
     stage.soulOfTheTimeTail = &stage.soulOfTheTomeHead;
@@ -386,6 +394,7 @@ static int calculateTotalScore(void) {
     // check if player got soulOfTheTime | convert the time in seconds into points
     if (playerSoulOfTheTime > 0) {
         totalScore += (t.m * 60 + t.s);
+        player->soulOfTheTime = 0;
     }
 
     return totalScore;
@@ -409,6 +418,7 @@ static void logic(void)
     spawnEnemies();
     doPower();
     doDebris();
+    doPlusPoints();
     doEnergyPods();
     doMagicPods();
     doSoulOfTheTimePods();
@@ -657,6 +667,7 @@ static int powerHitFighter(Entity *p)
                         break;
                     case 9:
                         if (e->energy == 0) {
+                            addPlusPoints(e, 50);
                             for (int i = 0; i < 20; i++) {
                                 switch(rand() % 10) {
                                     case 0: addVioletSoulPods(e->x + e->w / e->frames / 2, e->y + e->h / 2); break;
@@ -677,6 +688,7 @@ static int powerHitFighter(Entity *p)
                 }
 
                 if (e->energy == 0 && e->species != 9) {
+                    addPlusPoints(e, 1);
                     switch(rand() % 2) {
                         case 0:
                             switch(rand() % 2) {
@@ -991,6 +1003,7 @@ static void draw(void)
     drawFighters();
     drawPower();
     drawDebris();
+    drawPlusPoints();
     drawEnergyPods();
     drawMagicPods();
     drawSoulOfTheTimePods();
@@ -1063,8 +1076,6 @@ static void drawBtn(void)
     SDL_Rect destination1 = { controlX, controlY + 20, 240, 240};
     SDL_RenderCopy(app.renderer, directionsBtnTexture, NULL, &destination1);
 
-    // blit(directionsBtnTexture, controlX, controlY);
-
     /* fire btn */
     int cellWidth2 = SCREEN_WIDTH / 6;
     int cellHeight2 = SCREEN_HEIGHT / 2;
@@ -1074,8 +1085,6 @@ static void drawBtn(void)
     SDL_SetTextureColorMod(fireBtnTexture, touch.fire ? 255 : 128, touch.fire ? 255 : 128, touch.fire ? 255 : 128);
     SDL_Rect destination2 = { cell1X, cell1Y, 240, 240 };
     SDL_RenderCopy(app.renderer, fireBtnTexture, NULL, &destination2);
-
-    //blit(fireBtnTexture, cell1X, cell1Y);
 }
 
 static void drawDetonaBtn(void)
