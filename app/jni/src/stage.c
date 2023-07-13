@@ -548,6 +548,9 @@ static void fireEnemyPower(Entity *e)
     power->y = e->y;
     power->energy = 1;
 
+    power->id = id;
+    power->frames = 1;
+
     switch (e->species) {
         case 1: power->texture = violetPowerTexture; break;
         case 2: power->texture = bluePowerTexture; break;
@@ -557,7 +560,7 @@ static void fireEnemyPower(Entity *e)
         case 6: power->texture = orangePowerTexture; break;
         case 7: power->texture = redPowerTexture; break;
         case 8: power->texture = pinkPowerTexture; break;
-        case 9: power->texture = bossPowerTexture; break;
+        case 9: power->texture = bossPowerTexture; power->frames = 9; break;
     }
 
     power->side = SIDE_ENEMY;
@@ -572,6 +575,8 @@ static void fireEnemyPower(Entity *e)
     power->dy *= ENEMY_POWER_SPEED;
 
     e->reload = (rand() % FPS * 4);
+
+    ++id;
 }
 
 static int powerHitFighter(Entity *p)
@@ -586,7 +591,11 @@ static int powerHitFighter(Entity *p)
 
             if (e == player) {
                 addDebris(e);
-                playSound(SND_PLAYER_DIE, CH_PLAYER);
+                if (e->energy == 0) {
+                    playSound(SND_PLAYER_DIE, CH_PLAYER);
+                }else {
+                    playSound(SND_IMPACT, CH_PLAYER);
+                }
             }else {
                 addDebris(e);
                 if (e->energy == 0 && e->species != 9 && e->id % 10 == 0) {
@@ -675,9 +684,11 @@ static int powerHitFighter(Entity *p)
                     }
                 }
 
-                // detona drop logic
-
-                playSound(SND_ENEMY_DIE, CH_ANY);
+                if (e->energy == 0) {
+                    playSound(SND_ENEMY_DIE, CH_ANY);
+                }else {
+                    playSound(SND_IMPACT, CH_ANY);
+                }
             }
 
             if (e->energy == 0) {
@@ -697,6 +708,7 @@ void fireDetona(void)
     for (e = stage.fighterHead.next; e != NULL; e = e->next) {
         if (e != player) {
             e->energy = 0;
+            playSound(SND_DETONA_EXPLOSION, CH_ANY);
             addDebris(e);
             // add detona sound
         }
@@ -1014,7 +1026,7 @@ static void drawPower(void)
     Entity *p;
 
     for (p = stage.powerHead.next; p != NULL; p = p->next) {
-        blit(p->texture, p->x, p->y);
+        blitSprite(p->texture, p->x, p->y, p->frames, p->id, 4, 0);
     }
 }
 

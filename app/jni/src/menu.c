@@ -10,6 +10,7 @@
 #include "highscores.h"
 #include "stage.h"
 #include "text.h"
+#include "sound.h"
 #include "menu.h"
 
 extern App app;
@@ -71,6 +72,7 @@ static void logic(void)
     doStarfield();
 
     if (touch.lang == 1) {
+        playSound(SND_TAP, CH_ANY);
         if (lang == 'P') {
             lang = 'E';
         }else {
@@ -79,15 +81,18 @@ static void logic(void)
     }
 
     if (touch.quit == 1) {
+        playSound(SND_TAP, CH_ANY);
         exit(0);
     }
 
     if (touch.score == 1) {
+        playSound(SND_TAP, CH_ANY);
         isMenuOn = false;
         initHighscores();
     }
 
     if (touch.play == 1) {
+        playSound(SND_TAP, CH_ANY);
         isMenuOn = false;
         initStage();
     }

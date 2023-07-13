@@ -42,10 +42,12 @@ enum
     SND_ENEMY_POWER,
     SND_PLAYER_DIE,
     SND_ENEMY_DIE,
+    SND_IMPACT,
     SND_ENERGY,
     SND_MAGIC,
     SND_SOUL_OF_THE_TIME,
     SND_DETONA,
+    SND_DETONA_EXPLOSION,
     SND_VIOLET,
     SND_BLUE,
     SND_CYAN,
@@ -54,6 +56,7 @@ enum
     SND_ORANGE,
     SND_RED,
     SND_PINK,
+    SND_TAP,
     SND_MAX
 };
 

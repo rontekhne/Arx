@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "draw.h"
 #include "stage.h"
+#include "sound.h"
 #include "text.h"
 
 extern App app;
@@ -67,6 +68,7 @@ static void logic(void)
     doStarfield();
 
     if (touch.menu == 1) {
+        playSound(SND_TAP, CH_ANY);
         isScoreOn = false;
         isKeyboardOn = false;
         touch.menu = 0;
@@ -75,6 +77,7 @@ static void logic(void)
     }
 
     if (touch.quit == 1) {
+        playSound(SND_TAP, CH_ANY);
         exit(0);
     }
 
@@ -101,6 +104,7 @@ static void handleVirtualKeyboardTouch(char character, int keyboardCode, int* n,
     static unsigned int touchDelay = 500; // Delay in milliseconds
 
     if (app.keyboard[keyboardCode] && (!touchInProgress || (SDL_GetTicks() - lastTouchTime) >= touchDelay)) {
+        playSound(SND_TAP, CH_ANY);
         name[*n] = character;
         touchInProgress = 1;
         lastTouchTime = SDL_GetTicks();
