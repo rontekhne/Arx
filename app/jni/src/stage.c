@@ -345,7 +345,7 @@ static void initPlayer()
     player->texture = playerTexture;
     player->side = SIDE_PLAYER;
     SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
-    player->x = (SCREEN_WIDTH / 2) - (player->w / 2);
+    player->x = (SCREEN_WIDTH / 2) - (player->w / player->frames / 2);
     player->y = (SCREEN_HEIGHT / 2) - (player->h / 2);
 }
 
@@ -1045,6 +1045,8 @@ static void drawDebris(void)
 
 static void drawBtn(void)
 {
+    /* directions btn */
+    int isDirectionTouched = 0;
     int cellWidth = SCREEN_WIDTH / 6;
     int cellHeight = SCREEN_HEIGHT / 2;
     int controlWidth = cellWidth * 3 / 4;
@@ -1052,13 +1054,28 @@ static void drawBtn(void)
     int controlX = cellWidth / 2 - controlWidth / 2;
     int controlY = cellHeight + cellHeight / 2 - controlHeight / 2;
 
+    if (touch.up || touch.down || touch.left || touch.right) {
+        isDirectionTouched = 1;
+    }else {
+        isDirectionTouched = 0;
+    }
+    SDL_SetTextureColorMod(directionsBtnTexture, isDirectionTouched ? 255 : 128, isDirectionTouched ? 255 : 128, isDirectionTouched ? 255 : 128);
+    SDL_Rect destination1 = { controlX, controlY + 20, 240, 240};
+    SDL_RenderCopy(app.renderer, directionsBtnTexture, NULL, &destination1);
+
+    // blit(directionsBtnTexture, controlX, controlY);
+
+    /* fire btn */
     int cellWidth2 = SCREEN_WIDTH / 6;
     int cellHeight2 = SCREEN_HEIGHT / 2;
     int cell1X = (5 * cellWidth2) + (cellWidth2 / 2) - (240 / 2);
     int cell1Y = cellHeight2 + (cellHeight2 / 2) - (240 / 2);
 
-    blit(directionsBtnTexture, controlX, controlY);
-    blit(fireBtnTexture, cell1X, cell1Y);
+    SDL_SetTextureColorMod(fireBtnTexture, touch.fire ? 255 : 128, touch.fire ? 255 : 128, touch.fire ? 255 : 128);
+    SDL_Rect destination2 = { cell1X, cell1Y, 240, 240 };
+    SDL_RenderCopy(app.renderer, fireBtnTexture, NULL, &destination2);
+
+    //blit(fireBtnTexture, cell1X, cell1Y);
 }
 
 static void drawDetonaBtn(void)

@@ -38,6 +38,8 @@ static SDL_Texture *quitBtnTexture;
 
 static int reveal = 0;
 static int arxX = -32;
+static int langTimer = 0;
+static int resetLangTimer = 9;
 
 extern char lang;
 
@@ -53,6 +55,7 @@ void initMenu(void)
     touch.score = 0;
     touch.quit = 0;
     touch.lang = 0;
+    langTimer = resetLangTimer;
 
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 
@@ -71,7 +74,8 @@ static void logic(void)
     doBackground();
     doStarfield();
 
-    if (touch.lang == 1) {
+    if (touch.lang == 1 && --langTimer < 0) {
+        langTimer = resetLangTimer;
         playSound(SND_TAP, CH_ANY);
         if (lang == 'P') {
             lang = 'E';
@@ -222,17 +226,5 @@ void drawBtn()
     }else {
         blit(enBtnTexture, lr.x, lr.y);
     }
-    /*blit(ptBtnTexture, lr.x, lr.y);
-    lr.w = qr.w;
-    lr.h = qr.h;
-    drawText(
-            lr.x + lr.w / 2,
-            lr.y + lr.h / 3,
-            0,
-            0,
-            0,
-            TEXT_CENTER,
-            lang == 'P' ? "PORT." : "ENG."
-    );*/
 }
 

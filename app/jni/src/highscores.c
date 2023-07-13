@@ -349,9 +349,9 @@ void drawBtn()
     drawText(
             mr.x + mr.w / 2,
             mr.y + mr.h / 3,
-            0,
-            0,
-            0,
+            255,
+            255,
+            255,
             TEXT_CENTER,
             "MENU"
     );
@@ -360,9 +360,9 @@ void drawBtn()
     drawText(
             qr.x + qr.w / 2,
             qr.y + qr.h / 3,
-            0,
-            0,
-            0,
+            255,
+            255,
+            255,
             TEXT_CENTER,
             lang == 'P' ? "SAIR" : "QUIT"
     );
