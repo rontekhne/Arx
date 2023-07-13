@@ -26,11 +26,14 @@ static void drawTitle(void);
 static void drawArx(void);
 static void drawBtn(void);
 
-static SDL_Texture *logoBackground;
+static SDL_Texture *logoTexture;
 static SDL_Texture *arxTitle;
 static SDL_Texture *arxTexture;
-static SDL_Texture *btnLargeTexture;
-static SDL_Texture *btnSmallTexture;
+static SDL_Texture *scoreBtnTexture;
+static SDL_Texture *playBtnTexture;
+static SDL_Texture *ptBtnTexture;
+static SDL_Texture *enBtnTexture;
+static SDL_Texture *quitBtnTexture;
 
 static int reveal = 0;
 static int arxX = -32;
@@ -52,11 +55,14 @@ void initMenu(void)
 
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 
-    logoBackground = loadTexture("img/logo_background.png");
+    logoTexture = loadTexture("img/r.png");
     arxTitle = loadTexture("img/arx_title.png");
     arxTexture = loadTexture("img/arx.png");
-    btnLargeTexture = loadTexture("img/btn_large.png");
-    btnSmallTexture = loadTexture("img/btn_small.png");
+    scoreBtnTexture = loadTexture("img/score_btn.png");
+    playBtnTexture = loadTexture("img/play_btn.png");
+    ptBtnTexture = loadTexture("img/pt_btn.png");
+    enBtnTexture = loadTexture("img/en_btn.png");
+    quitBtnTexture = loadTexture("img/quit_btn.png");
 }
 
 static void logic(void)
@@ -112,14 +118,21 @@ static void draw(void)
 
 static void drawLogo(void)
 {
-    SDL_Rect dest;
+    /* background */
+    SDL_Rect fillRect;
+    fillRect.x = 0;
+    fillRect.y = 0;
+    fillRect.w = SCREEN_WIDTH;
+    fillRect.h = SCREEN_HEIGHT;
+    SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(app.renderer, &fillRect);
 
-    dest.x = 0;
-    dest.y = 0;
-    dest.w = SCREEN_WIDTH;
-    dest.h = SCREEN_HEIGHT;
-
-    SDL_RenderCopy(app.renderer, logoBackground, NULL, &dest);
+    /* R */
+    SDL_Rect r;
+    SDL_QueryTexture(logoTexture, NULL, NULL, &r.w, &r.h);
+    r.x = (SCREEN_WIDTH / 2) - (r.w / 10 / 2);
+    r.y = (SCREEN_HEIGHT / 2) - (r.h / 10 / 2);
+    blitSprite(logoTexture, r.x, r.y, 10, 16272, 4, 0);
 }
 
 static void drawTitle(void)
@@ -161,45 +174,50 @@ void drawBtn()
     lr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 - SCREEN_HEIGHT / 6;
     lr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
 
-    SDL_QueryTexture(btnLargeTexture, NULL, NULL, &sr.w, &sr.h);
-    SDL_QueryTexture(btnSmallTexture, NULL, NULL, &qr.w, &qr.h);
+    SDL_QueryTexture(scoreBtnTexture, NULL, NULL, &sr.w, &sr.h);
+    SDL_QueryTexture(playBtnTexture, NULL, NULL, &pr.w, &pr.h);
+    SDL_QueryTexture(quitBtnTexture, NULL, NULL, &qr.w, &qr.h);
+    SDL_QueryTexture(ptBtnTexture, NULL, NULL, &lr.w, &lr.h);
 
-    blit(btnLargeTexture, sr.x, sr.y);
+    blit(scoreBtnTexture, sr.x, sr.y);
     drawText(
             sr.x + sr.w / 2,
             sr.y + sr.h / 3,
-            0,
-            0,
-            0,
+            255,
+            255,
+            255,
             TEXT_CENTER,
             lang == 'P' ? "PLACAR" : "SCORE"
     );
 
-    blit(btnLargeTexture, pr.x, pr.y);
-    pr.w = sr.w;
-    pr.h = sr.h;
+    blit(playBtnTexture, pr.x, pr.y);
     drawText(
             pr.x + pr.w / 2,
             pr.y + pr.h / 3,
-            0,
-            0,
-            0,
+            255,
+            255,
+            255,
             TEXT_CENTER,
             lang == 'P' ? "JOGAR" : "PLAY"
             );
 
-    blit(btnSmallTexture, qr.x, qr.y);
+    blit(quitBtnTexture, qr.x, qr.y);
     drawText(
             qr.x + qr.w / 2,
             qr.y + qr.h / 3,
-            0,
-            0,
-            0,
+            255,
+            255,
+            255,
             TEXT_CENTER,
             lang == 'P' ? "SAIR" : "QUIT"
     );
 
-    blit(btnSmallTexture, lr.x, lr.y);
+    if (lang == 'P') {
+        blit(ptBtnTexture, lr.x, lr.y);
+    }else {
+        blit(enBtnTexture, lr.x, lr.y);
+    }
+    /*blit(ptBtnTexture, lr.x, lr.y);
     lr.w = qr.w;
     lr.h = qr.h;
     drawText(
@@ -210,6 +228,6 @@ void drawBtn()
             0,
             TEXT_CENTER,
             lang == 'P' ? "PORT." : "ENG."
-    );
+    );*/
 }
 

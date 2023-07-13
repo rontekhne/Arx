@@ -82,6 +82,10 @@ static SDL_Texture *pinkPowerTexture;
 static SDL_Texture *bossTexture;
 static SDL_Texture *bossPowerTexture;
 
+/* hud */
+static SDL_Texture *hourglassTexture;
+static SDL_Texture *scoreTexture;
+
 /* Drop textures */
 SDL_Texture *energyTexture;
 SDL_Texture *magicTexture;
@@ -163,7 +167,7 @@ void initStage(void)
     pinkTexture = loadTexture("img/pink.png");
     pinkPowerTexture = loadTexture("img/pinkPower.png");
     bossTexture = loadTexture("img/rainbow.png");
-    bossPowerTexture = loadTexture("img/bossPowerTexture.png");
+    bossPowerTexture = loadTexture("img/bossPower.png");
     violetSoulTexture = loadTexture("img/violetSoul.png");
     blueSoulTexture = loadTexture("img/blueSoul.png");
     cyanSoulTexture = loadTexture("img/cyanSoul.png");
@@ -172,6 +176,10 @@ void initStage(void)
     orangeSoulTexture = loadTexture("img/orangeSoul.png");
     redSoulTexture = loadTexture("img/redSoul.png");
     pinkSoulTexture = loadTexture("img/pinkSoul.png");
+
+    /* hud */
+    hourglassTexture = loadTexture("img/hourglass.png");
+    scoreTexture = loadTexture("img/score.png");
 
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 
@@ -1050,13 +1058,15 @@ static void drawDetonaBtn(void)
 static void drawHud(void) {
     t = getTime(Timer);
 
-    drawText(10, 10, 255, 255, 255, TEXT_LEFT, "TEMPO: %02d:%02d", t.m, t.s);
+    blitSprite(hourglassTexture, 10, 5, 6, 16270, 3, 0);
+    drawText(30, 10, 255, 255, 255, TEXT_LEFT, " %02d:%02d", t.m, t.s);
 
     drawDetonaBar();
     drawEnergyBar();
     drawMagicBar();
 
-    drawText(SCREEN_WIDTH - 35, 10, 255, 255, 255, TEXT_RIGHT, lang == 'P' ? "PONTOS: %03d" : "SCORE: %03d", calculateTotalScore());
+    blit(scoreTexture, SCREEN_WIDTH - 130, 5);
+    drawText(SCREEN_WIDTH - 35, 10, 255, 255, 255, TEXT_RIGHT, " %03d", calculateTotalScore());
 }
 
 static void drawDetonaBar(void)
