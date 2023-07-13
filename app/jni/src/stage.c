@@ -522,6 +522,8 @@ static void firePower(void)
     stage.powerTail->next = power;
     stage.powerTail = power;
 
+    power->id = id;
+    power->frames = 1;
     power->x = player->x + player->w / player->frames / 2;
     power->y = player->y;
     power->side = SIDE_PLAYER;
@@ -533,6 +535,8 @@ static void firePower(void)
     power->y += (player->h / 2) - (power->h / 2);
 
     player->reload = 8; // reload the power timer
+
+    ++id;
 }
 
 static void fireEnemyPower(Entity *e)
@@ -685,9 +689,9 @@ static int powerHitFighter(Entity *p)
                 }
 
                 if (e->energy == 0) {
-                    playSound(SND_ENEMY_DIE, CH_ANY);
+                    playSound(SND_ENEMY_DIE, CH_DEATH);
                 }else {
-                    playSound(SND_IMPACT, CH_ANY);
+                    playSound(SND_IMPACT, CH_DEATH);
                 }
             }
 
@@ -708,7 +712,7 @@ void fireDetona(void)
     for (e = stage.fighterHead.next; e != NULL; e = e->next) {
         if (e != player) {
             e->energy = 0;
-            playSound(SND_DETONA_EXPLOSION, CH_ANY);
+            playSound(SND_DETONA_EXPLOSION, CH_EFFECT);
             addDebris(e);
             // add detona sound
         }

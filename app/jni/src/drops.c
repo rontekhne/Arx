@@ -40,7 +40,7 @@ void doEnergyPods(void)
             if (player->energy > MAX_ENERGY) {
                 player->energy = MAX_ENERGY;
             }
-            playSound(SND_ENERGY, CH_ANY);
+            playSound(SND_ENERGY, CH_SUPPLY);
         }
 
         if (--e->energy <= 0) {
@@ -95,7 +95,7 @@ void doMagicPods(void)
             if (player->magic > MAX_MAGIC) {
                 player->magic = MAX_MAGIC;
             };
-            playSound(SND_MAGIC, CH_ANY);
+            playSound(SND_MAGIC, CH_SUPPLY);
         }
 
         if (--e->energy <= 0) {
@@ -147,7 +147,7 @@ void doSoulOfTheTimePods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->soulOfTheTime += 1;
-            playSound(SND_SOUL_OF_THE_TIME, CH_ANY);
+            playSound(SND_SOUL_OF_THE_TIME, CH_SUPPLY);
         }
 
         if (--e->energy <= 0) {
@@ -203,7 +203,7 @@ void doDetonaPods(void)
                 player->detona = MAX_DETONA;
                 player->energy += 1;
             }
-            playSound(SND_DETONA, CH_ANY);
+            playSound(SND_DETONA, CH_SUPPLY);
         }
 
         if (--e->energy <= 0) {
@@ -255,7 +255,7 @@ void doVioletSoulPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->violetSoul++;
-            playSound(SND_VIOLET, CH_ANY);
+            playSound(SND_VIOLET, CH_SOULS);
         }
 
         if (--e->energy <= 0) {
@@ -307,7 +307,7 @@ void doBlueSoulPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->blueSoul++;
-            playSound(SND_BLUE, CH_ANY);
+            playSound(SND_BLUE, CH_SOULS);
         }
 
         if (--e->energy <= 0) {
@@ -359,7 +359,7 @@ void doCyanSoulPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->cyanSoul++;
-            playSound(SND_CYAN, CH_ANY);
+            playSound(SND_CYAN, CH_SOULS);
         }
 
         if (--e->energy <= 0) {
@@ -411,7 +411,7 @@ void doGreenSoulPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->greenSoul++;
-            playSound(SND_GREEN, CH_ANY);
+            playSound(SND_GREEN, CH_SOULS);
         }
 
         if (--e->energy <= 0) {
@@ -463,7 +463,7 @@ void doYellowSoulPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->yellowSoul++;
-            playSound(SND_YELLOW, CH_ANY);
+            playSound(SND_YELLOW, CH_SOULS);
         }
 
         if (--e->energy <= 0) {
@@ -515,7 +515,7 @@ void doOrangeSoulPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->orangeSoul++;
-            playSound(SND_ORANGE, CH_ANY);
+            playSound(SND_ORANGE, CH_SOULS);
         }
 
         if (--e->energy <= 0) {
@@ -567,7 +567,7 @@ void doRedSoulPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->redSoul++;
-            playSound(SND_RED, CH_ANY);
+            playSound(SND_RED, CH_SOULS);
         }
 
         if (--e->energy <= 0) {
@@ -619,7 +619,7 @@ void doPinkSoulPods(void)
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
             e->energy = 0;
             player->pinkSoul++;
-            playSound(SND_PINK, CH_ANY);
+            playSound(SND_PINK, CH_SOULS);
         }
 
         if (--e->energy <= 0) {

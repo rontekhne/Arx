@@ -34,6 +34,10 @@ enum
     CH_ANY = -1,
     CH_PLAYER,
     CH_ENEMY_POWER,
+    CH_SUPPLY,
+    CH_SOULS,
+    CH_EFFECT,
+    CH_DEATH
 };
 
 enum
