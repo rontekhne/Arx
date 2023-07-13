@@ -435,7 +435,7 @@ void doTouchDetonaDown(SDL_TouchFingerEvent* event)
 
     int cellWidth = SCREEN_WIDTH / 6;
     int cellHeight = SCREEN_HEIGHT / 2;
-    int cellX = (5 * cellWidth) + (cellWidth / 2) - 280;
+    int cellX = (5 * cellWidth) + (cellWidth / 2) - cellWidth;
     int cellY = cellHeight + (cellHeight / 2);
 
     if (touchX >= cellX && touchX < cellX + btnWidth && touchY >= cellY && touchY < cellY + btnHeight) {
@@ -454,6 +454,7 @@ void doTouchDetonaDown(SDL_TouchFingerEvent* event)
         touch.detona = 0;
     }
 }
+
 void doTouchDetonaUp(SDL_TouchFingerEvent* event)
 {
     touch.up = 0;

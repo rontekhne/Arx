@@ -622,6 +622,9 @@ static int powerHitFighter(Entity *p)
                     addDetonaPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
                 }
 
+                // debug
+                addDetonaPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
+
                 switch (e->species) {
                     case 1:
                         if (e->energy == 0) {
@@ -1076,7 +1079,8 @@ static void drawDebris(void)
 
 static void drawBtn(void)
 {
-    /* directions btn */
+    // directions btn
+    SDL_Rect dr, fr;
     int isDirectionTouched = 0;
     int cellWidth = SCREEN_WIDTH / 6;
     int cellHeight = SCREEN_HEIGHT / 2;
@@ -1087,21 +1091,25 @@ static void drawBtn(void)
 
     if (touch.up || touch.down || touch.left || touch.right) {
         isDirectionTouched = 1;
-    }else {
+    } else {
         isDirectionTouched = 0;
     }
+
+    SDL_QueryTexture(directionsBtnTexture, NULL, NULL, &dr.w, &dr.h);
     SDL_SetTextureColorMod(directionsBtnTexture, isDirectionTouched ? 255 : 128, isDirectionTouched ? 255 : 128, isDirectionTouched ? 255 : 128);
-    SDL_Rect destination1 = { controlX, controlY + 20, 240, 240};
+    SDL_Rect destination1 = { controlX, controlY, controlWidth, controlHeight};
     SDL_RenderCopy(app.renderer, directionsBtnTexture, NULL, &destination1);
 
-    /* fire btn */
+    SDL_QueryTexture(fireBtnTexture, NULL, NULL, &fr.w, &fr.h);
+    int fireBtnWidth = cellWidth;
+    int fireBtnHeight = cellHeight * 3 / 4;
     int cellWidth2 = SCREEN_WIDTH / 6;
     int cellHeight2 = SCREEN_HEIGHT / 2;
-    int cell1X = (5 * cellWidth2) + (cellWidth2 / 2) - (240 / 2);
-    int cell1Y = cellHeight2 + (cellHeight2 / 2) - (240 / 2);
+    int cell1X = (5 * cellWidth2) + (cellWidth2 / 2) - (fireBtnWidth / 2);
+    int cell1Y = cellHeight2 + (cellHeight2 / 2) - (fireBtnHeight / 2);
 
     SDL_SetTextureColorMod(fireBtnTexture, touch.fire ? 255 : 128, touch.fire ? 255 : 128, touch.fire ? 255 : 128);
-    SDL_Rect destination2 = { cell1X, cell1Y, 240, 240 };
+    SDL_Rect destination2 = { cell1X, cell1Y, fireBtnWidth, fireBtnHeight };
     SDL_RenderCopy(app.renderer, fireBtnTexture, NULL, &destination2);
 }
 
@@ -1109,7 +1117,7 @@ static void drawDetonaBtn(void)
 {
     int cellWidth3 = SCREEN_WIDTH / 6;
     int cellHeight3 = SCREEN_HEIGHT / 2;
-    int cell2X = (5 * cellWidth3) + (cellWidth3 / 2) - (280);
+    int cell2X = (5 * cellWidth3) + (cellWidth3 / 2) - cellWidth3;
     int cell2Y = cellHeight3 + (cellHeight3 / 2); - (240);
 
     blit(fireDetonaBtnTexture, cell2X, cell2Y);
