@@ -9,6 +9,7 @@
 extern Stage stage;
 extern Entity *player;
 extern Time t;
+extern bool playerGotDrop;
 
 extern SDL_Texture *energyTexture;
 extern SDL_Texture *magicTexture;
@@ -37,6 +38,7 @@ void doEnergyPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = (1 + rand() % 10);
             addPlusPoints(e, plusPoints);
@@ -96,6 +98,7 @@ void doMagicPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames , e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = (1 + rand() % 30);
             addPlusPoints(e, plusPoints);
@@ -155,6 +158,7 @@ void doSoulOfTheTimePods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = t.m * 60 + t.s;
             addPlusPoints(e, plusPoints);
@@ -211,6 +215,7 @@ void doDetonaPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoint = 1;
             addPlusPoints(e, plusPoint);
@@ -271,6 +276,7 @@ void doVioletSoulPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = 1;
             addPlusPoints(e, plusPoints);
@@ -327,6 +333,7 @@ void doBlueSoulPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = 1;
             addPlusPoints(e, plusPoints);
@@ -383,6 +390,7 @@ void doCyanSoulPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = 1;
             addPlusPoints(e, plusPoints);
@@ -439,6 +447,7 @@ void doGreenSoulPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = 1;
             addPlusPoints(e, plusPoints);
@@ -495,6 +504,7 @@ void doYellowSoulPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = 1;
             addPlusPoints(e, plusPoints);
@@ -551,6 +561,7 @@ void doOrangeSoulPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = 1;
             addPlusPoints(e, plusPoints);
@@ -607,6 +618,7 @@ void doRedSoulPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = 1;
             addPlusPoints(e, plusPoints);
@@ -663,6 +675,7 @@ void doPinkSoulPods(void)
         e->y += e->dy;
 
         if (player != NULL && collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            playerGotDrop = true;
             e->energy = 0;
             plusPoints = 1;
             addPlusPoints(e, plusPoints);

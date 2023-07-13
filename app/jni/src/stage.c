@@ -60,6 +60,7 @@ static SDL_Texture *fireBtnTexture;
 static SDL_Texture *fireDetonaBtnTexture;
 static SDL_Texture *directionsBtnTexture;
 static SDL_Texture *playerTexture;
+static SDL_Texture *playerGotDropTexture;
 static SDL_Texture *powerTexture;
 /* enemies textures */
 static SDL_Texture *violetTexture;
@@ -108,6 +109,8 @@ static int playerEnergy;
 static int playerMagic;
 Time t;
 bool isDetonaExplosion;
+bool isBlitedOnce;
+bool playerGotDrop;
 
 /* tracks died enemies */
 static int violetDead;
@@ -145,6 +148,7 @@ void initStage(void)
     fireDetonaBtnTexture = loadTexture("img/detona_btn.png");
     directionsBtnTexture = loadTexture("img/directions_btn.png");
     playerTexture = loadTexture("img/arx.png");
+    playerGotDropTexture = loadTexture("img/arx_got_drop.png");
     powerTexture = loadTexture("img/playerPower.png");
     energyTexture = loadTexture("img/energy.png");
     magicTexture = loadTexture("img/magic.png");
@@ -201,6 +205,8 @@ void initStage(void)
     bossDead = 0;
 
     isDetonaExplosion = false;
+    isBlitedOnce = false;
+    playerGotDrop = false;
 
     shuffleArray(specie, 8); // shuffle enemy species
     shuffleArray(energies, 8); // shuffle enemy energies
@@ -1034,7 +1040,19 @@ static void drawFighters(void)
             enemyChasePlayer(e);
         }
 
-        blitSprite(e->texture, e->x, e->y, e->frames, e->id, 6, 0);
+        if (e == player) {
+            if (playerGotDrop) {
+                isBlitedOnce = blitSprite(playerGotDropTexture, e->x, e->y, 24, e->id, 6, 1);
+                if (isBlitedOnce) {
+                    isBlitedOnce = false;
+                    playerGotDrop = false;
+                }
+            }else {
+                blitSprite(e->texture, e->x, e->y, e->frames, e->id, 6, 0);
+            }
+        }else {
+            blitSprite(e->texture, e->x, e->y, e->frames, e->id, 4, 0);
+        }
     }
 }
 
