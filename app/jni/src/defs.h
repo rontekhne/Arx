@@ -28,6 +28,8 @@
 #define MAX_ENERGY 500
 #define MAX_MAGIC 500
 #define MAX_DETONA 10
+#define PLAYER_INITIAL_ENERGY 500
+#define PLAYER_INITIAL_MAGIC 500
 
 enum
 {

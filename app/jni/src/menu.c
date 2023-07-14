@@ -180,9 +180,9 @@ void drawBtn()
     drawText(
             sr.x + sr.w / 2,
             sr.y + sr.h / 3,
-            255,
-            255,
-            255,
+            40,
+            40,
+            40,
             TEXT_CENTER,
             lang == 'P' ? "PLACAR" : "SCORE"
     );
@@ -196,9 +196,9 @@ void drawBtn()
     drawText(
             pr.x + pr.w / 2,
             pr.y + pr.h / 3,
-            255,
-            255,
-            255,
+            40,
+            40,
+            40,
             TEXT_CENTER,
             lang == 'P' ? "JOGAR" : "PLAY"
     );

@@ -344,9 +344,9 @@ void drawBtn()
     drawText(
             mr.x + mr.w / 2,
             mr.y + mr.h / 3,
-            255,
-            255,
-            255,
+            40,
+            40,
+            40,
             TEXT_CENTER,
             "MENU"
     );

@@ -344,8 +344,8 @@ static void initPlayer()
     player->id = 0;
     player->frames = 8;
     player->species = 0;
-    player->energy = 500;
-    player->magic = 500;
+    player->energy = PLAYER_INITIAL_ENERGY;
+    player->magic = PLAYER_INITIAL_MAGIC;
     player->soulOfTheTime = 0;
     player->detona = 0;
     player->violetSoul = 0;
@@ -622,9 +622,6 @@ static int powerHitFighter(Entity *p)
                     addDetonaPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
                 }
 
-                // debug
-                addDetonaPods(e->x + e->w / e->frames / 2, e->y + e->h / 2);
-
                 switch (e->species) {
                     case 1:
                         if (e->energy == 0) {
@@ -878,12 +875,12 @@ static void spawnEnemies(void)
         SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
 
         if (bossDead) {
-            enemy->dx = -(2 + (rand() % 3)); //  speed
-            enemy->reload = FPS / 2; // crazy reload fire
+            enemy->dx = -(2 + (rand() % 7)); //  speed
+            enemy->reload = FPS / 3; // crazy reload fire
             enemySpawnTimer = 50; //  spawn time
         }else {
             enemy->dx = -(2 + (rand() % 4)); // normal speed
-            enemy->reload = FPS * (1 + (rand() % 3)); // reload fire
+            enemy->reload = FPS * (1 + (rand() % 2)); // reload fire
             // between 30 and 89 milliseconds (meaning a new enemy is created between 0.5 and 1.5 seconds)
             enemySpawnTimer = 30 + (rand() % 60);
         }
@@ -1140,10 +1137,8 @@ static void drawHud(void) {
 static void drawDetonaBar(void)
 {
     int x = SCREEN_WIDTH * 10 / 100;
-    // int x = SCREEN_WIDTH - 1300;
     int y = 10;
     int barWidth = SCREEN_WIDTH * 5 / 100;
-    // int barWidth = 50;
     int barHeight = 20;
     float fillRatio = (float)playerDetona / 10.0;
 
@@ -1168,10 +1163,8 @@ static void drawDetonaBar(void)
 static void drawEnergyBar(void)
 {
     int x = SCREEN_WIDTH * 15 / 100;
-    // int x = SCREEN_WIDTH - 1250;
     int y = 10;
-    int barWidth = SCREEN_WIDTH * 35 / 100;
-    // int barWidth = 500;
+    int barWidth = SCREEN_WIDTH * 35.0 / 100.0;
     int barHeight = 20;
     float fillRatio = (float)playerEnergy / 500.0;
 
@@ -1188,10 +1181,8 @@ static void drawEnergyBar(void)
 static void drawMagicBar(void)
 {
     int x = SCREEN_WIDTH * 50 / 100;
-    // int x = SCREEN_WIDTH - 750;
     int y = 10;
-    int barWidth = SCREEN_WIDTH * 35 / 100;
-    // int barWidth = 500;
+    int barWidth = SCREEN_WIDTH * 35.0 / 100.0;
     int barHeight = 20;
     float fillRatio = (float)playerMagic / 500.0;
 
