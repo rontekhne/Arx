@@ -12,6 +12,9 @@ extern bool isScoreOn;
 extern bool isKeyboardOn;
 extern bool isDetonaOn;
 
+// test
+Control control;
+
 /* handles key down */
 void doKeyDown(SDL_KeyboardEvent *event)
 {
@@ -223,12 +226,12 @@ void doTouchDown(SDL_TouchFingerEvent* event)
     // Check touch position and set touch.up, touch.down, touch.left, touch.right, touch.fire accordingly
     if (touchX >= 5 * cellWidth && touchY >= cellHeight) {
         // Touched in cell 12 (bottom-right corner to fire)
-        touch.up = 0;
-        touch.down = 0;
-        touch.left = 0;
-        touch.right = 0;
+        //touch.up = 0;
+        //touch.down = 0;
+        //touch.left = 0;
+        //touch.right = 0;
         touch.fire = 1;
-    } else if (touchX >= 0 && touchX < cellWidth && touchY >= cellHeight && touchY < 2 * cellHeight) {
+    } /*else if (touchX >= 0 && touchX < cellWidth && touchY >= cellHeight && touchY < 2 * cellHeight) {
         // Touched in cell 7 (control directions)
         int controlX = touchX;
         int controlY = touchY - cellHeight;
@@ -320,12 +323,12 @@ void doTouchDown(SDL_TouchFingerEvent* event)
             touch.right = 0;
             touch.fire = 0;
         }
-    } else {
+    } */else {
         // Touched outside the touchable cells
-        touch.up = 0;
-        touch.down = 0;
-        touch.left = 0;
-        touch.right = 0;
+        //touch.up = 0;
+        //touch.down = 0;
+        //touch.left = 0;
+        //touch.right = 0;
         touch.fire = 0;
     }
 }
@@ -334,11 +337,50 @@ void doTouchDown(SDL_TouchFingerEvent* event)
 void doTouchUp(SDL_TouchFingerEvent *event)
 {
     // Reset app.up, app.down, app.left, app.right to 0
-    touch.up = 0;
-    touch.down = 0;
-    touch.left = 0;
-    touch.right = 0;
+    //touch.up = 0;
+    //touch.down = 0;
+    //touch.left = 0;
+    //touch.right = 0;
     touch.fire = 0;
+}
+
+void controlTouchDown(SDL_TouchFingerEvent *event, Control *control) {
+    if (event->type == SDL_FINGERDOWN) {
+        control->touchX = event->x * SCREEN_WIDTH;
+        control->touchY = event->y * SCREEN_HEIGHT;
+
+        int distance = sqrt(pow(control->touchX - control->centerX, 2) + pow(control->touchY - control->centerY, 2));
+        if (distance <= control->radius) {
+            control->isPressed = 1;
+
+            double angle = atan2(control->touchY - control->centerY, control->touchX - control->centerX) * 180 / M_PI;
+
+            if (angle >= -22.5 && angle < 22.5) {
+                control->pressedDirection = SDL_DIR_RIGHT;
+            } else if (angle >= 22.5 && angle < 67.5) {
+                control->pressedDirection = SDL_DIR_DOWN_RIGHT;
+            } else if (angle >= 67.5 && angle < 112.5) {
+                control->pressedDirection = SDL_DIR_DOWN;
+            } else if (angle >= 112.5 && angle < 157.5) {
+                control->pressedDirection = SDL_DIR_DOWN_LEFT;
+            } else if ((angle >= 157.5 && angle <= 180) || (angle >= -180 && angle < -157.5)) {
+                control->pressedDirection = SDL_DIR_LEFT;
+            } else if (angle >= -157.5 && angle < -112.5) {
+                control->pressedDirection = SDL_DIR_UP_LEFT;
+            } else if (angle >= -112.5 && angle < -67.5) {
+                control->pressedDirection = SDL_DIR_UP;
+            } else if (angle >= -67.5 && angle < -22.5) {
+                control->pressedDirection = SDL_DIR_UP_RIGHT;
+            }
+        }
+    }
+}
+
+void controlTouchUp(SDL_TouchFingerEvent *event, Control *control) {
+    if (event->type == SDL_FINGERUP) {
+        control->isPressed = 0;
+        control->pressedDirection = SDL_DIR_NONE;
+    }
 }
 
 void doTouchMenuDown(SDL_TouchFingerEvent* event)
@@ -498,6 +540,7 @@ void doInput(void)
                     if (isDetonaOn) {
                         doTouchDetonaDown(&event.tfinger);
                     }
+                    controlTouchDown(&event.tfinger, &control); // test
                     doTouchDown(&event.tfinger);
                 }
                 break;
@@ -512,6 +555,7 @@ void doInput(void)
                     if (isDetonaOn) {
                         doTouchDetonaUp(&event.tfinger);
                     }
+                    controlTouchUp(&event.tfinger, &control); // test
                     doTouchUp(&event.tfinger);
                 }
                 break;

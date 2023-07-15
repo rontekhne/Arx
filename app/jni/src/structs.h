@@ -153,16 +153,11 @@ typedef struct
     int lang;
 }Touch;
 
-typedef struct
-{
-    int touchX;
-    int touchY;
-    int cellWidth;
-    int cellHeight;
-    int controlX;
-    int controlY;
-    int directionWidth;
-    int directionHeight;
-    int directionX;
-    int directionY;
-} TouchBtn;
+typedef struct {
+    int centerX, centerY;
+    int touchX, touchY;
+    int radius;
+    int isPressed;
+    int pressedDirection;
+    SDL_Texture *texture;
+} Control;

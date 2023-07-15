@@ -21,6 +21,9 @@ extern int id;
 extern bool isDetonaOn;
 extern unsigned long long int *Timer;
 
+// test
+extern Control control;
+
 /* logic */
 static void initPlayer(void);
 static void resetStage(void);
@@ -43,7 +46,8 @@ static void draw(void);
 static void drawFighters(void);
 static void drawPower(void);
 static void drawDebris(void);
-static void drawBtn(void);
+static void drawControl(Control *control);
+static void drawFireBtn(void);
 static void drawDetonaBtn(void);
 static void drawHud(void);
 static void drawDetonaBar(void);
@@ -58,7 +62,7 @@ Entity *player;
 // Textures
 static SDL_Texture *fireBtnTexture;
 static SDL_Texture *fireDetonaBtnTexture;
-static SDL_Texture *directionsBtnTexture;
+
 static SDL_Texture *playerTexture;
 static SDL_Texture *playerGotDropTexture;
 static SDL_Texture *powerTexture;
@@ -146,7 +150,9 @@ void initStage(void)
 
     fireBtnTexture = loadTexture("img/fire_btn.png");
     fireDetonaBtnTexture = loadTexture("img/detona_btn.png");
-    directionsBtnTexture = loadTexture("img/directions_btn.png");
+
+    control.texture = loadTexture("img/control.png");
+
     playerTexture = loadTexture("img/arx.png");
     playerGotDropTexture = loadTexture("img/arx_got_drop.png");
     powerTexture = loadTexture("img/playerPower.png");
@@ -478,7 +484,7 @@ static void doPlayer(void)
             player->reload--;
         }
 
-        if (app.keyboard[SDL_SCANCODE_UP] || touch.up) {
+        /*if (app.keyboard[SDL_SCANCODE_UP] || touch.up) {
             player->dy = -PLAYER_SPEED;
         }
         if (app.keyboard[SDL_SCANCODE_DOWN] || touch.down) {
@@ -489,7 +495,39 @@ static void doPlayer(void)
         }
         if (app.keyboard[SDL_SCANCODE_RIGHT] || touch.right) {
             player->dx = PLAYER_SPEED;
+        }*/
+
+        switch (control.pressedDirection) {
+            case SDL_DIR_UP:
+                player->dy = -PLAYER_SPEED;
+                break;
+            case SDL_DIR_DOWN:
+                player->dy = PLAYER_SPEED;
+                break;
+            case SDL_DIR_LEFT:
+                player->dx = -PLAYER_SPEED;
+                break;
+            case SDL_DIR_RIGHT:
+                player->dx = PLAYER_SPEED;
+                break;
+            case SDL_DIR_UP_LEFT:
+                player->dx = -PLAYER_SPEED;
+                player->dy = -PLAYER_SPEED;
+                break;
+            case SDL_DIR_UP_RIGHT:
+                player->dx = PLAYER_SPEED;
+                player->dy = -PLAYER_SPEED;
+                break;
+            case SDL_DIR_DOWN_LEFT:
+                player->dx = -PLAYER_SPEED;
+                player->dy = PLAYER_SPEED;
+                break;
+            case SDL_DIR_DOWN_RIGHT:
+                player->dx = PLAYER_SPEED;
+                player->dy = PLAYER_SPEED;
+                break;
         }
+
         if (app.keyboard[SDL_SCANCODE_LCTRL] || touch.fire && player->reload == 0) {
             if (player->magic > 0) {
                 playSound(SND_PLAYER_POWER, CH_PLAYER);
@@ -1022,7 +1060,8 @@ static void draw(void)
     drawOrangeSoulPods();
     drawRedSoulPods();
     drawPinkSoulPods();
-    drawBtn();
+    drawControl(&control);
+    drawFireBtn();
 
     if (isDetonaOn) {
         drawDetonaBtn();
@@ -1074,28 +1113,38 @@ static void drawDebris(void)
     }
 }
 
-static void drawBtn(void)
-{
-    // directions btn
-    SDL_Rect dr, fr;
-    int isDirectionTouched = 0;
-    int cellWidth = SCREEN_WIDTH / 6;
-    int cellHeight = SCREEN_HEIGHT / 2;
-    int controlWidth = cellWidth * 3 / 4;
-    int controlHeight = cellHeight * 3 / 4;
-    int controlX = cellWidth / 2 - controlWidth / 2;
-    int controlY = cellHeight + cellHeight / 2 - controlHeight / 2;
+static void drawControl(Control *control) {
+    SDL_Rect r;
 
-    if (touch.up || touch.down || touch.left || touch.right) {
-        isDirectionTouched = 1;
+    SDL_QueryTexture(control->texture, NULL, NULL, &r.w, &r.h);
+    control->radius = (r.w < r.h) ? r.w / 2 : r.h / 2;
+
+    int controlX = 100 + control->radius;
+    int controlY = SCREEN_HEIGHT - r.h - control->radius - 50;
+
+    control->centerX = controlX;
+    control->centerY = controlY;
+
+    if (control->isPressed) {
+        controlX = control->touchX;
+        controlY = control->touchY;
+        SDL_SetTextureColorMod(control->texture, 255, 255, 255);
     } else {
-        isDirectionTouched = 0;
+        SDL_SetTextureColorMod(control->texture, 128, 128, 128);
     }
 
-    SDL_QueryTexture(directionsBtnTexture, NULL, NULL, &dr.w, &dr.h);
-    SDL_SetTextureColorMod(directionsBtnTexture, isDirectionTouched ? 255 : 128, isDirectionTouched ? 255 : 128, isDirectionTouched ? 255 : 128);
-    SDL_Rect destination1 = { controlX, controlY, controlWidth, controlHeight};
-    SDL_RenderCopy(app.renderer, directionsBtnTexture, NULL, &destination1);
+    int renderX = controlX - control->radius;
+    int renderY = controlY - control->radius;
+
+    blit(control->texture, renderX, renderY);
+}
+
+static void drawFireBtn(void)
+{
+    SDL_Rect fr;
+
+    int cellWidth = SCREEN_WIDTH / 6;
+    int cellHeight = SCREEN_HEIGHT / 2;
 
     SDL_QueryTexture(fireBtnTexture, NULL, NULL, &fr.w, &fr.h);
     int fireBtnWidth = cellWidth;

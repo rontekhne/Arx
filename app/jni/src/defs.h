@@ -31,6 +31,17 @@
 #define PLAYER_INITIAL_ENERGY 500
 #define PLAYER_INITIAL_MAGIC 500
 
+// test
+#define SDL_DIR_UP 0
+#define SDL_DIR_DOWN 1
+#define SDL_DIR_LEFT 2
+#define SDL_DIR_RIGHT 3
+#define SDL_DIR_UP_LEFT 4
+#define SDL_DIR_UP_RIGHT 5
+#define SDL_DIR_DOWN_LEFT 6
+#define SDL_DIR_DOWN_RIGHT 7
+#define SDL_DIR_NONE 8
+
 enum
 {
     CH_ANY = -1,
