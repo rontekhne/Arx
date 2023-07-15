@@ -223,112 +223,9 @@ void doTouchDown(SDL_TouchFingerEvent* event)
     int cellWidth = SCREEN_WIDTH / 6;
     int cellHeight = SCREEN_HEIGHT / 2;
 
-    // Check touch position and set touch.up, touch.down, touch.left, touch.right, touch.fire accordingly
     if (touchX >= 5 * cellWidth && touchY >= cellHeight) {
-        // Touched in cell 12 (bottom-right corner to fire)
-        //touch.up = 0;
-        //touch.down = 0;
-        //touch.left = 0;
-        //touch.right = 0;
         touch.fire = 1;
-    } /*else if (touchX >= 0 && touchX < cellWidth && touchY >= cellHeight && touchY < 2 * cellHeight) {
-        // Touched in cell 7 (control directions)
-        int controlX = touchX;
-        int controlY = touchY - cellHeight;
-
-        int directionWidth = cellWidth / 3;
-        int directionHeight = cellHeight / 3;
-
-        if (controlX >= 0 && controlX < cellWidth && controlY >= 0 && controlY < cellHeight) {
-            // Touched in control directions
-            int directionX = controlX / directionWidth;
-            int directionY = controlY / directionHeight;
-
-            if (directionX == 0 && directionY == 0) {
-                // Touched in top-left direction
-                touch.up = 1;
-                touch.down = 0;
-                touch.left = 1;
-                touch.right = 0;
-                touch.fire = 0;
-            } else if (directionX == 1 && directionY == 0) {
-                // Touched in top direction
-                touch.up = 1;
-                touch.down = 0;
-                touch.left = 0;
-                touch.right = 0;
-                touch.fire = 0;
-            } else if (directionX == 2 && directionY == 0) {
-                // Touched in top-right direction
-                touch.up = 1;
-                touch.down = 0;
-                touch.left = 0;
-                touch.right = 1;
-                touch.fire = 0;
-            } else if (directionX == 0 && directionY == 1) {
-                // Touched in left direction
-                touch.up = 0;
-                touch.down = 0;
-                touch.left = 1;
-                touch.right = 0;
-                touch.fire = 0;
-            } else if (directionX == 1 && directionY == 1) {
-                // Touched in center direction (no movement)
-                touch.up = 0;
-                touch.down = 0;
-                touch.left = 0;
-                touch.right = 0;
-                touch.fire = 0;
-            } else if (directionX == 2 && directionY == 1) {
-                // Touched in right direction
-                touch.up = 0;
-                touch.down = 0;
-                touch.left = 0;
-                touch.right = 1;
-                touch.fire = 0;
-            } else if (directionX == 0 && directionY == 2) {
-                // Touched in bottom-left direction
-                touch.up = 0;
-                touch.down = 1;
-                touch.left = 1;
-                touch.right = 0;
-                touch.fire = 0;
-            } else if (directionX == 1 && directionY == 2) {
-                // Touched in bottom direction
-                touch.up = 0;
-                touch.down = 1;
-                touch.left = 0;
-                touch.right = 0;
-                touch.fire = 0;
-            } else if (directionX == 2 && directionY == 2) {
-                // Touched in bottom-right direction
-                touch.up = 0;
-                touch.down = 1;
-                touch.left = 0;
-                touch.right = 1;
-                touch.fire = 0;
-            } else {
-                // Touched outside the control directions
-                touch.up = 0;
-                touch.down = 0;
-                touch.left = 0;
-                touch.right = 0;
-                touch.fire = 0;
-            }
-        } else {
-            // Touched outside the control directions
-            touch.up = 0;
-            touch.down = 0;
-            touch.left = 0;
-            touch.right = 0;
-            touch.fire = 0;
-        }
-    } */else {
-        // Touched outside the touchable cells
-        //touch.up = 0;
-        //touch.down = 0;
-        //touch.left = 0;
-        //touch.right = 0;
+    } else {
         touch.fire = 0;
     }
 }
@@ -336,11 +233,6 @@ void doTouchDown(SDL_TouchFingerEvent* event)
 /* handles touch up */
 void doTouchUp(SDL_TouchFingerEvent *event)
 {
-    // Reset app.up, app.down, app.left, app.right to 0
-    //touch.up = 0;
-    //touch.down = 0;
-    //touch.left = 0;
-    //touch.right = 0;
     touch.fire = 0;
 }
 
