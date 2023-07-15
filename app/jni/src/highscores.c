@@ -10,6 +10,7 @@
 #include "text.h"
 
 extern App app;
+extern Stage stage;
 extern Highscores highscores;
 extern Touch touch;
 extern int SCREEN_WIDTH;
@@ -252,7 +253,7 @@ static void drawHighscores(void)
 
     y = SCREEN_HEIGHT / 5;
 
-    blitSprite(trophyTexture, SCREEN_WIDTH / 3, SCREEN_HEIGHT / 7, 8, 16271, 4, 0);
+    blit(trophyTexture, SCREEN_WIDTH / 4 - 80, SCREEN_HEIGHT / 7);
 
     for (i = 0; i < NUM_HIGHSCORES; i++) {
         r = 191;
@@ -273,9 +274,14 @@ static void drawHighscores(void)
             b = 184;
         }
 
-        drawText(SCREEN_WIDTH / 3, y + 70, r, g, b, TEXT_CENTER, "%d. %-15s ...... %03d", (i + 1), highscores.highscore[i].name, highscores.highscore[i].score);
+        drawText(SCREEN_WIDTH / 3, y + 70, r, g, b, TEXT_CENTER, "%d %-15s %03d", (i + 1), highscores.highscore[i].name, highscores.highscore[i].score);
 
         y += 50;
+    }
+
+    // temporary while has no database
+    if (newHighscore == NULL) {
+        drawText(SCREEN_WIDTH / 3, y + 70, r, g, b, TEXT_CENTER, lang == 'P' ? "SEUS PONTOS:      %03d" : "YOUR SCORES:      %03d", stage.score);
     }
 }
 

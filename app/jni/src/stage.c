@@ -496,19 +496,6 @@ static void doPlayer(void)
             player->reload--;
         }
 
-        /*if (app.keyboard[SDL_SCANCODE_UP] || touch.up) {
-            player->dy = -PLAYER_SPEED;
-        }
-        if (app.keyboard[SDL_SCANCODE_DOWN] || touch.down) {
-            player->dy = PLAYER_SPEED;
-        }
-        if (app.keyboard[SDL_SCANCODE_LEFT] || touch.left) {
-            player->dx = -PLAYER_SPEED;
-        }
-        if (app.keyboard[SDL_SCANCODE_RIGHT] || touch.right) {
-            player->dx = PLAYER_SPEED;
-        }*/
-
         switch (control.pressedDirection) {
             case SDL_DIR_UP:
                 player->dy = -PLAYER_SPEED;
@@ -549,16 +536,6 @@ static void doPlayer(void)
                 player->magic = 0;
             }
         }
-
-        /*if (app.keyboard[SDL_SCANCODE_LCTRL] || touch.fire && player->reload == 0) {
-            if (player->magic > 0) {
-                playSound(SND_PLAYER_POWER, CH_PLAYER);
-                firePower();
-                player->magic--;
-            }else {
-                player->magic = 0;
-            }
-        }*/
 
         if (app.keyboard[SDL_SCANCODE_D] || touch.detona && player->reload == 0) {
             if (player->detona > 0) {
@@ -793,7 +770,6 @@ void fireDetona(void)
             e->energy = 0;
             playSound(SND_DETONA_EXPLOSION, CH_EFFECT);
             addDebris(e);
-            // add detona sound
         }
     }
 }
