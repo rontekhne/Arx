@@ -21,11 +21,12 @@ extern int id;
 extern bool isDetonaOn;
 extern unsigned long long int *Timer;
 
-// test
 extern Control control;
+extern Fire fire;
 
 /* logic */
 static void initPlayer(void);
+static void initFireBtn(Fire *fire);
 static void resetStage(void);
 static void logic(void);
 static void doPlayer(void);
@@ -47,7 +48,7 @@ static void drawFighters(void);
 static void drawPower(void);
 static void drawDebris(void);
 static void drawControl(Control *control);
-static void drawFireBtn(void);
+static void drawFireBtn(Fire *fire);
 static void drawDetonaBtn(void);
 static void drawHud(void);
 static void drawDetonaBar(void);
@@ -60,7 +61,6 @@ static int calculateTotalScore(void);
 Entity *player;
 
 // Textures
-static SDL_Texture *fireBtnTexture;
 static SDL_Texture *fireDetonaBtnTexture;
 
 static SDL_Texture *playerTexture;
@@ -148,11 +148,9 @@ void initStage(void)
     app.delegate.logic = logic;
     app.delegate.draw = draw;
 
-    fireBtnTexture = loadTexture("img/fire_btn.png");
     fireDetonaBtnTexture = loadTexture("img/detona_btn.png");
-
     control.texture = loadTexture("img/control.png");
-
+    fire.texture = loadTexture("img/control.png");
     playerTexture = loadTexture("img/arx.png");
     playerGotDropTexture = loadTexture("img/arx_got_drop.png");
     powerTexture = loadTexture("img/playerPower.png");
@@ -195,6 +193,7 @@ void initStage(void)
 
     resetStage();
     initPlayer();
+    initFireBtn(&fire);
     stageResetTimer = FPS * 3;
     bossSpawnTimer = 15000;
     *Timer = 0;
@@ -340,7 +339,7 @@ static void resetStage(void)
     stage.pinkSoulTail = &stage.pinkSoulHead;
 }
 
-static void initPlayer()
+static void initPlayer(void)
 {
     player = malloc(sizeof(Entity));
     memset(player, 0, sizeof(Entity));
@@ -367,6 +366,19 @@ static void initPlayer()
     SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
     player->x = (SCREEN_WIDTH / 2) - (player->w / player->frames / 2);
     player->y = (SCREEN_HEIGHT / 2) - (player->h / 2);
+}
+
+static void initFireBtn(Fire *fire)
+{
+    SDL_Rect r;
+
+    SDL_QueryTexture(fire->texture, NULL, NULL, &r.w, &r.h);
+
+    fire->x = SCREEN_WIDTH - r.w - 100;
+    fire->y = SCREEN_HEIGHT - r.h - r.h / 2 - 100;
+    fire->w = r.w;
+    fire->h = r.h;
+    fire->isPressed = 0;
 }
 
 static int calculateTotalScore(void) {
@@ -528,7 +540,7 @@ static void doPlayer(void)
                 break;
         }
 
-        if (app.keyboard[SDL_SCANCODE_LCTRL] || touch.fire && player->reload == 0) {
+        if (fire.isPressed && player->reload == 0) {
             if (player->magic > 0) {
                 playSound(SND_PLAYER_POWER, CH_PLAYER);
                 firePower();
@@ -537,6 +549,17 @@ static void doPlayer(void)
                 player->magic = 0;
             }
         }
+
+        /*if (app.keyboard[SDL_SCANCODE_LCTRL] || touch.fire && player->reload == 0) {
+            if (player->magic > 0) {
+                playSound(SND_PLAYER_POWER, CH_PLAYER);
+                firePower();
+                player->magic--;
+            }else {
+                player->magic = 0;
+            }
+        }*/
+
         if (app.keyboard[SDL_SCANCODE_D] || touch.detona && player->reload == 0) {
             if (player->detona > 0) {
                 playSound(SND_DETONA, CH_ANY);
@@ -1061,7 +1084,7 @@ static void draw(void)
     drawRedSoulPods();
     drawPinkSoulPods();
     drawControl(&control);
-    drawFireBtn();
+    drawFireBtn(&fire);
 
     if (isDetonaOn) {
         drawDetonaBtn();
@@ -1139,24 +1162,15 @@ static void drawControl(Control *control) {
     blit(control->texture, renderX, renderY);
 }
 
-static void drawFireBtn(void)
+static void drawFireBtn(Fire *fire)
 {
-    SDL_Rect fr;
+    if (fire->isPressed) {
+        SDL_SetTextureColorMod(fire->texture, 255, 255, 255);
+    } else {
+        SDL_SetTextureColorMod(fire->texture, 128, 128, 128);
+    }
 
-    int cellWidth = SCREEN_WIDTH / 6;
-    int cellHeight = SCREEN_HEIGHT / 2;
-
-    SDL_QueryTexture(fireBtnTexture, NULL, NULL, &fr.w, &fr.h);
-    int fireBtnWidth = cellWidth;
-    int fireBtnHeight = cellHeight * 3 / 4;
-    int cellWidth2 = SCREEN_WIDTH / 6;
-    int cellHeight2 = SCREEN_HEIGHT / 2;
-    int cell1X = (5 * cellWidth2) + (cellWidth2 / 2) - (fireBtnWidth / 2);
-    int cell1Y = cellHeight2 + (cellHeight2 / 2) - (fireBtnHeight / 2);
-
-    SDL_SetTextureColorMod(fireBtnTexture, touch.fire ? 255 : 128, touch.fire ? 255 : 128, touch.fire ? 255 : 128);
-    SDL_Rect destination2 = { cell1X, cell1Y, fireBtnWidth, fireBtnHeight };
-    SDL_RenderCopy(app.renderer, fireBtnTexture, NULL, &destination2);
+    blit(fire->texture, fire->x, fire->y);
 }
 
 static void drawDetonaBtn(void)
@@ -1166,6 +1180,11 @@ static void drawDetonaBtn(void)
     int cell2X = (5 * cellWidth3) + (cellWidth3 / 2) - cellWidth3;
     int cell2Y = cellHeight3 + (cellHeight3 / 2); - (240);
 
+    if (t.s % 2 == 0) {
+        SDL_SetTextureColorMod(fireDetonaBtnTexture, 255, 255, 255);
+    } else {
+        SDL_SetTextureColorMod(fireDetonaBtnTexture, 128, 128, 128);
+    }
     blit(fireDetonaBtnTexture, cell2X, cell2Y);
 }
 

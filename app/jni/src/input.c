@@ -14,6 +14,7 @@ extern bool isDetonaOn;
 
 // test
 Control control;
+Fire fire;
 
 /* handles key down */
 void doKeyDown(SDL_KeyboardEvent *event)
@@ -213,30 +214,23 @@ void doKeyboardUp(SDL_TouchFingerEvent* event)
 }
 
 
-/* handles fire and control touchsceen */
-void doTouchDown(SDL_TouchFingerEvent* event)
+void doFireDown(SDL_TouchFingerEvent* event, Fire *fire)
 {
     int touchX = event->x * SCREEN_WIDTH;
     int touchY = event->y * SCREEN_HEIGHT;
-
-    // Calculate the thresholds for the cells
-    int cellWidth = SCREEN_WIDTH / 6;
-    int cellHeight = SCREEN_HEIGHT / 2;
-
-    if (touchX >= 5 * cellWidth && touchY >= cellHeight) {
-        touch.fire = 1;
-    } else {
-        touch.fire = 0;
+    if (touchX >= fire->x && touchX <= fire->x + fire->w &&
+        touchY >= fire->y && touchY <= fire->y + fire->h) {
+        fire->isPressed = 1;
     }
 }
 
-/* handles touch up */
-void doTouchUp(SDL_TouchFingerEvent *event)
+void doFireUp(SDL_TouchFingerEvent* event, Fire *fire)
 {
-    touch.fire = 0;
+    fire->isPressed = 0;
 }
 
-void controlTouchDown(SDL_TouchFingerEvent *event, Control *control) {
+void controlTouchDown(SDL_TouchFingerEvent *event, Control *control)
+{
     if (event->type == SDL_FINGERDOWN) {
         control->touchX = event->x * SCREEN_WIDTH;
         control->touchY = event->y * SCREEN_HEIGHT;
@@ -279,10 +273,6 @@ void doTouchMenuDown(SDL_TouchFingerEvent* event)
 {
     int touchX = event->x * SCREEN_WIDTH;
     int touchY = event->y * SCREEN_HEIGHT;
-
-    // Calculate the thresholds for the cells
-    int cellWidth = SCREEN_WIDTH / 3;
-    int cellHeight = SCREEN_HEIGHT / 3;
 
     // Check touch position and set touch.score, touch.play, touch.lang, touch.quit accordingly
     if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) && touchY >= SCREEN_HEIGHT / 6 && touchY < (SCREEN_HEIGHT / 6) * 2) {
@@ -332,10 +322,6 @@ void doTouchScoreDown(SDL_TouchFingerEvent* event)
     int touchX = event->x * SCREEN_WIDTH;
     int touchY = event->y * SCREEN_HEIGHT;
 
-    // Calculate the thresholds for the cells
-    int cellWidth = SCREEN_WIDTH / 4;
-    int cellHeight = SCREEN_HEIGHT / 5;
-
     // Check touch position and set touch.menu and touch.quit accordingly
     if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) && touchY >= SCREEN_HEIGHT / 5 && touchY < (SCREEN_HEIGHT / 5) * 2) {
         // Touched the "MENU" button
@@ -373,29 +359,14 @@ void doTouchDetonaDown(SDL_TouchFingerEvent* event)
     int cellY = cellHeight + (cellHeight / 2);
 
     if (touchX >= cellX && touchX < cellX + btnWidth && touchY >= cellY && touchY < cellY + btnHeight) {
-        touch.up = 0;
-        touch.down = 0;
-        touch.left = 0;
-        touch.right = 0;
-        touch.fire = 0;
         touch.detona = 1;
     } else {
-        touch.up = 0;
-        touch.down = 0;
-        touch.left = 0;
-        touch.right = 0;
-        touch.fire = 0;
         touch.detona = 0;
     }
 }
 
 void doTouchDetonaUp(SDL_TouchFingerEvent* event)
 {
-    touch.up = 0;
-    touch.down = 0;
-    touch.left = 0;
-    touch.right = 0;
-    touch.fire = 0;
     touch.detona = 0;
 }
 
@@ -433,7 +404,7 @@ void doInput(void)
                         doTouchDetonaDown(&event.tfinger);
                     }
                     controlTouchDown(&event.tfinger, &control); // test
-                    doTouchDown(&event.tfinger);
+                    doFireDown(&event.tfinger, &fire);
                 }
                 break;
             case SDL_FINGERUP:
@@ -448,7 +419,7 @@ void doInput(void)
                         doTouchDetonaUp(&event.tfinger);
                     }
                     controlTouchUp(&event.tfinger, &control); // test
-                    doTouchUp(&event.tfinger);
+                    doFireUp(&event.tfinger, &fire);
                 }
                 break;
             default:

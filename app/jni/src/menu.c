@@ -50,7 +50,6 @@ void initMenu(void)
 
     // reset the touch
     isMenuOn = true;
-    touch.fire = 0;
     touch.play = 0;
     touch.score = 0;
     touch.quit = 0;
