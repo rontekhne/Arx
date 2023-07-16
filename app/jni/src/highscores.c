@@ -377,8 +377,10 @@ void drawBtn()
 
 static void drawTextPresentation(void)
 {
-    char line[256] = "QUANDO O ASSEDIO DE QUARENTA INVERNOS SE CAVAREM AS LINHAS DE TEU ROSTO DA JUVENTUDE OS TEUS GALOES SUPERNOS POBRES ANDRAJOS SE TIVEREM POSTO SE ENTAO TE PERGUNTAREM PELO FAUSTO";
-    char temp[256];
+    char textPt[] = "O INIMIGO PODE CONTER UMA ALMA, QUEPOR ALGUM MOTIVO DESCONHECIDO FAZ ASUA ALMA ALIMENTAR-SE DE PODERES DEOUTRO MUNDO. SOIS UM ARX E SUA FAMAEMERGE COMO FRUTO DE SUAS BATALHAS. ";
+    char textEn[] = "THE ENEMY MAY POSSESS A SOUL,      WHICH FOR SOME UNKNOWN REASON FEEDSON POWERS FROM ANOTHER WORLD. YOU  ARE AN ARX, AND YOUR FAME EMERGES  AS THE FRUIT OF YOUR BATTLES.         ";
+    char line[256] = "";
+    char temp[256] = "";
     int x = SCREEN_WIDTH / 2;
     int y = SCREEN_HEIGHT / 3 + GLYPH_HEIGHT * 2;
     int i;
@@ -387,12 +389,18 @@ static void drawTextPresentation(void)
     const int saveX = x;
     const int saveY = y;
 
+    if (lang == 'P') {
+        strcpy(line, textPt);
+    }else {
+        strcpy(line, textEn);
+    }
+
     for (i = 0; i < counter; i++) {
         temp[i] = line[i];
     }
     temp[i] = '\0';
 
-    if (SDL_GetTicks() % 25 == 0) {
+    if (SDL_GetTicks() % 15 == 0) {
         counter++;
     }
 
