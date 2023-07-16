@@ -34,6 +34,7 @@ static void doEnemies(void);
 static void firePower(void);
 static void fireEnemyPower(Entity *e);
 static void fireDetona(void);
+static void fighterCollidesFighter(void);
 static int powerHitFighter(Entity *p);
 static void doPower(void);
 static void doFighters(void);
@@ -440,6 +441,7 @@ static void logic(void)
     doEnemies();
     doFighters();
     spawnEnemies();
+    fighterCollidesFighter();
     doPower();
     doDebris();
     doPlusPoints();
@@ -635,6 +637,27 @@ static void fireEnemyPower(Entity *e)
     e->reload = (rand() % FPS * 4);
 
     ++id;
+}
+
+static void fighterCollidesFighter(void)
+{
+    Entity *e;
+
+    for (e = stage.fighterHead.next; e != NULL; e = e->next) {
+        if (player != NULL && e->side != player->side &&
+                collision(e->x, e->y, e->w / e->frames, e->h, player->x, player->y, player->w / player->frames, player->h)) {
+            // logic
+            if (player->x < e->x) { // left collision
+                player->x -= 20;
+            }
+
+            if (player->x > e->x) { // right collision
+                player->x += 20;
+            }
+
+            player->energy--;
+        }
+    }
 }
 
 static int powerHitFighter(Entity *p)
@@ -1154,7 +1177,7 @@ static void drawDetonaBtn(void)
     int cellWidth3 = SCREEN_WIDTH / 6;
     int cellHeight3 = SCREEN_HEIGHT / 2;
     int cell2X = (5 * cellWidth3) + (cellWidth3 / 2) - cellWidth3;
-    int cell2Y = cellHeight3 + (cellHeight3 / 2); - (240);
+    int cell2Y = cellHeight3 + (cellHeight3 / 2);
 
     if (t.s % 2 == 0) {
         SDL_SetTextureColorMod(fireDetonaBtnTexture, 255, 255, 255);
@@ -1176,6 +1199,9 @@ static void drawHud(void) {
 
     blit(scoreTexture, SCREEN_WIDTH - 130, 5);
     drawText(SCREEN_WIDTH - 35, 10, 255, 255, 255, TEXT_RIGHT, " %03d", calculateTotalScore());
+
+    // debug collision between fighters
+    drawText(10, 200, 255, 255, 255, TEXT_LEFT, "%d", playerEnergy);
 }
 
 static void drawDetonaBar(void)
