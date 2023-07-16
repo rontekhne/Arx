@@ -27,6 +27,7 @@ static void doNameInput(void);
 static void drawNameInput(void);
 static void drawVirtualKeyboard(void);
 static void drawBtn(void);
+static void drawTextPresentation(void);
 
 static SDL_Texture *menuBtnTexture;
 static SDL_Texture *quitBtnTexture;
@@ -61,6 +62,7 @@ void initHighscores(void)
     quitBtnTexture = loadTexture("img/quit_btn.png");
     trophyTexture = loadTexture("img/trophy.png");
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
+
 }
 
 static void logic(void)
@@ -223,6 +225,7 @@ static void draw(void)
     else {
         drawHighscores();
         drawBtn();
+        drawTextPresentation();
     }
 }
 
@@ -251,9 +254,9 @@ static void drawHighscores(void)
 {
     int i, y, r, g, b;
 
-    y = SCREEN_HEIGHT / 5;
+    y = SCREEN_HEIGHT / 6;
 
-    blit(trophyTexture, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 7);
+    blit(trophyTexture, SCREEN_WIDTH / 10, SCREEN_HEIGHT / 8);
 
     for (i = 0; i < NUM_HIGHSCORES; i++) {
         r = 191;
@@ -274,14 +277,14 @@ static void drawHighscores(void)
             b = 184;
         }
 
-        drawText(SCREEN_WIDTH / 4, y + 70, r, g, b, TEXT_LEFT, "%d %-20s %03d", (i + 1), highscores.highscore[i].name, highscores.highscore[i].score);
+        drawText(SCREEN_WIDTH / 10, y + 70, r, g, b, TEXT_LEFT, "%d %-20s %03d", (i + 1), highscores.highscore[i].name, highscores.highscore[i].score);
 
         y += 50;
     }
 
     // temporary while has no database
     if (newHighscore == NULL) {
-        drawText(SCREEN_WIDTH / 4, y + 70, r, g, b, TEXT_LEFT, lang == 'P' ? "SEUS PONTOS:           %03d" : "YOUR SCORES:           %03d", stage.score);
+        drawText(SCREEN_WIDTH / 10, y + 70, r, g, b, TEXT_LEFT, lang == 'P' ? "SEUS PONTOS:           %03d" : "YOUR SCORES:           %03d", stage.score);
     }
 }
 
@@ -372,4 +375,44 @@ void drawBtn()
     );
 }
 
+static void drawTextPresentation(void)
+{
+    char line[256] = "QUANDO O ASSEDIO DE QUARENTA INVERNOS SE CAVAREM AS LINHAS DE TEU ROSTO DA JUVENTUDE OS TEUS GALOES SUPERNOS POBRES ANDRAJOS SE TIVEREM POSTO SE ENTAO TE PERGUNTAREM PELO FAUSTO";
+    char temp[256];
+    int x = SCREEN_WIDTH / 2;
+    int y = SCREEN_HEIGHT / 3 + GLYPH_HEIGHT * 2;
+    int i;
+    static int counter = 0;
+    static int lineCounter = 1;
+    const int saveX = x;
+    const int saveY = y;
 
+    for (i = 0; i < counter; i++) {
+        temp[i] = line[i];
+    }
+    temp[i] = '\0';
+
+    if (SDL_GetTicks() % 25 == 0) {
+        counter++;
+    }
+
+    if (counter > strlen(line)) {
+        counter = 0;
+        lineCounter = 1;
+        x = saveX;
+        y = saveY;
+    }
+
+    int maxCharsPerLine = strlen(line) / 5;
+
+    for (i = 0; i < counter; i++) {
+        drawText(x, y, 200, 200, 200, TEXT_LEFT, "%c", temp[i]);
+        x += GLYPH_WIDTH;
+
+        if ((i + 1) % maxCharsPerLine == 0) {
+            x = saveX;
+            y += (GLYPH_HEIGHT * 2);
+            lineCounter++;
+        }
+    }
+}
