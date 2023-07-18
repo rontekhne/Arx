@@ -84,9 +84,6 @@ static void logic(void)
     }
 
     if (newHighscore != NULL) {
-        stopMusic();
-        loadMusic("msc/arx_main_theme.ogg");
-        playMusic(1);
         isKeyboardOn = true;
         isScoreOn = false;
         doNameInput();
@@ -213,6 +210,8 @@ static void doNameInput(void)
             STRNCPY(newHighscore->name, "ANON", MAX_SCORE_NAME_LENGTH);
         }
         newHighscore = NULL;
+        loadMusic("msc/arx_main_theme.ogg");
+        playMusic(1);
     }
 }
 

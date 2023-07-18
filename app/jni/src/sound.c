@@ -32,6 +32,7 @@ void playMusic(int loop)
 
 void stopMusic(void)
 {
+    //Mix_FadeOutMusic(1000);
     Mix_HaltMusic();
 }
 

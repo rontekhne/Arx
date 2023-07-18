@@ -433,6 +433,7 @@ static int calculateTotalScore(void) {
 static void logic(void)
 {
     if (player == NULL && --stageResetTimer <= 0) {
+        stopMusic();
         *Timer = 0;
         stage.score = calculateTotalScore();
         addHighscore(stage.score);
