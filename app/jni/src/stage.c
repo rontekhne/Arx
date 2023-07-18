@@ -503,35 +503,39 @@ static void doPlayer(void)
             player->reload--;
         }
 
-        switch (control.pressedDirection) {
-            case SDL_DIR_UP:
-                player->dy = -PLAYER_SPEED;
-                break;
-            case SDL_DIR_DOWN:
-                player->dy = PLAYER_SPEED;
-                break;
-            case SDL_DIR_LEFT:
-                player->dx = -PLAYER_SPEED;
-                break;
-            case SDL_DIR_RIGHT:
-                player->dx = PLAYER_SPEED;
-                break;
-            case SDL_DIR_UP_LEFT:
-                player->dx = -PLAYER_SPEED;
-                player->dy = -PLAYER_SPEED;
-                break;
-            case SDL_DIR_UP_RIGHT:
-                player->dx = PLAYER_SPEED;
-                player->dy = -PLAYER_SPEED;
-                break;
-            case SDL_DIR_DOWN_LEFT:
-                player->dx = -PLAYER_SPEED;
-                player->dy = PLAYER_SPEED;
-                break;
-            case SDL_DIR_DOWN_RIGHT:
-                player->dx = PLAYER_SPEED;
-                player->dy = PLAYER_SPEED;
-                break;
+        if (control.isPressed) {
+            switch (control.pressedDirection) {
+                case SDL_DIR_UP:
+                    player->dy = -PLAYER_SPEED;
+                    break;
+                case SDL_DIR_DOWN:
+                    player->dy = PLAYER_SPEED;
+                    break;
+                case SDL_DIR_LEFT:
+                    player->dx = -PLAYER_SPEED;
+                    break;
+                case SDL_DIR_RIGHT:
+                    player->dx = PLAYER_SPEED;
+                    break;
+                case SDL_DIR_UP_LEFT:
+                    player->dx = -PLAYER_SPEED;
+                    player->dy = -PLAYER_SPEED;
+                    break;
+                case SDL_DIR_UP_RIGHT:
+                    player->dx = PLAYER_SPEED;
+                    player->dy = -PLAYER_SPEED;
+                    break;
+                case SDL_DIR_DOWN_LEFT:
+                    player->dx = -PLAYER_SPEED;
+                    player->dy = PLAYER_SPEED;
+                    break;
+                case SDL_DIR_DOWN_RIGHT:
+                    player->dx = PLAYER_SPEED;
+                    player->dy = PLAYER_SPEED;
+                    break;
+                default:
+                    break;
+            }
         }
 
         if (fire.isPressed && player->reload == 0) {
@@ -660,7 +664,9 @@ static void fighterCollidesFighter(void)
                 player->x += 20;
             }
 
-            player->energy--;
+            if (t.s % 3 == 0) {
+                player->energy--;
+            }
         }
     }
 }
@@ -1153,8 +1159,8 @@ static void drawControl(Control *control) {
     control->centerY = controlY;
 
     if (control->isPressed) {
-        controlX = control->touchX;
-        controlY = control->touchY;
+        controlX = control->lastTouchX;
+        controlY = control->lastTouchY;
         SDL_SetTextureColorMod(control->texture, 255, 255, 255);
     } else {
         SDL_SetTextureColorMod(control->texture, 128, 128, 128);

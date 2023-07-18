@@ -140,11 +140,6 @@ typedef struct
 /* objects to represent touchscreen */
 typedef struct
 {
-    //int up;
-    //int down;
-    //int left;
-    //int right;
-    //int fire;
     int detona;
     int play;
     int score;
@@ -156,6 +151,7 @@ typedef struct
 typedef struct {
     int centerX, centerY;
     int touchX, touchY;
+    int lastTouchX, lastTouchY;
     int radius;
     int isPressed;
     int pressedDirection;
