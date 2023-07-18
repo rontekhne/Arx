@@ -798,7 +798,7 @@ void fireDetona(void)
     Entity *e;
 
     for (e = stage.fighterHead.next; e != NULL; e = e->next) {
-        if (e != player) {
+        if (e != player && e->species != 9) {
             e->energy = 0;
             playSound(SND_DETONA_EXPLOSION, CH_EFFECT);
             addDebris(e);
