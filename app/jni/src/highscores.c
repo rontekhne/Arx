@@ -16,7 +16,7 @@ extern Touch touch;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern bool isKeyboardOn;
-extern int isScoreOn;
+extern bool isScoreOn;
 extern char lang;
 
 static void logic(void);
@@ -62,7 +62,6 @@ void initHighscores(void)
     quitBtnTexture = loadTexture("img/quit_btn.png");
     trophyTexture = loadTexture("img/trophy.png");
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
-
 }
 
 static void logic(void)
@@ -85,6 +84,9 @@ static void logic(void)
     }
 
     if (newHighscore != NULL) {
+        stopMusic();
+        loadMusic("msc/arx_main_theme.ogg");
+        playMusic(1);
         isKeyboardOn = true;
         isScoreOn = false;
         doNameInput();

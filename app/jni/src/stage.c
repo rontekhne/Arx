@@ -216,6 +216,10 @@ void initStage(void)
 
     shuffleArray(specie, 8); // shuffle enemy species
     shuffleArray(energies, 8); // shuffle enemy energies
+
+    stopMusic();
+    loadMusic("msc/music.mp3");
+    playMusic(1);
 }
 
 static void resetStage(void)
@@ -1199,9 +1203,6 @@ static void drawHud(void) {
 
     blit(scoreTexture, SCREEN_WIDTH - 130, 5);
     drawText(SCREEN_WIDTH - 35, 10, 255, 255, 255, TEXT_RIGHT, " %03d", calculateTotalScore());
-
-    // debug collision between fighters
-    drawText(10, 200, 255, 255, 255, TEXT_LEFT, "%d", playerEnergy);
 }
 
 static void drawDetonaBar(void)

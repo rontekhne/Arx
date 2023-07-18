@@ -84,7 +84,7 @@ void initGame(void)
     initHighscoreTable();
     initMenu();
     memset(&stage, 0, sizeof(Stage));
-    loadMusic("msc/music.mp3");
+    loadMusic("msc/arx_main_theme.ogg");
     playMusic(1);
 }
 
