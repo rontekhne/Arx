@@ -464,5 +464,6 @@ void doInput(void)
             default:
                 break;
         }
+        control.isFirePressed = fire.isPressed; // handles multitouch control-fire
     }
 }

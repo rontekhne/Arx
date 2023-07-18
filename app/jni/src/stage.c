@@ -503,7 +503,15 @@ static void doPlayer(void)
             player->reload--;
         }
 
-        if (control.isPressed) {
+        if (control.isFirePressed && player->reload == 0) {
+            if (player->magic > 0) {
+                playSound(SND_PLAYER_POWER, CH_PLAYER);
+                firePower();
+                player->magic--;
+            }else {
+                player->magic = 0;
+            }
+        } else if (control.isPressed) {
             switch (control.pressedDirection) {
                 case SDL_DIR_UP:
                     player->dy = -PLAYER_SPEED;
@@ -535,16 +543,6 @@ static void doPlayer(void)
                     break;
                 default:
                     break;
-            }
-        }
-
-        if (fire.isPressed && player->reload == 0) {
-            if (player->magic > 0) {
-                playSound(SND_PLAYER_POWER, CH_PLAYER);
-                firePower();
-                player->magic--;
-            }else {
-                player->magic = 0;
             }
         }
 
