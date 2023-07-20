@@ -149,17 +149,20 @@ typedef struct
 }Touch;
 
 typedef struct {
+    int fingerId;
     int centerX, centerY;
     int touchX, touchY;
     int lastTouchX, lastTouchY;
     int radius;
     int isPressed;
     int pressedDirection;
+    int isMoving;
     SDL_Texture *texture;
 } Control;
 
 typedef struct
 {
+    int fingerId;
     int x;
     int y;
     int w;

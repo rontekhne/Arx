@@ -219,12 +219,15 @@ void doFireDown(SDL_TouchFingerEvent* event, Fire *fire)
     if (touchX >= fire->x && touchX <= fire->x + fire->w &&
         touchY >= fire->y && touchY <= fire->y + fire->h) {
         fire->isPressed = 1;
+        fire->fingerId = event->fingerId;
     }
 }
 
 void doFireUp(SDL_TouchFingerEvent* event, Fire *fire)
 {
-    fire->isPressed = 0;
+    if (fire->isPressed && fire->fingerId == event->fingerId) {
+        fire->isPressed = 0;
+    }
 }
 
 void controlMotion(SDL_TouchFingerEvent *event, Control *control) {
@@ -260,45 +263,45 @@ void controlMotion(SDL_TouchFingerEvent *event, Control *control) {
     }
 }
 
-void controlTouchDown(SDL_TouchFingerEvent *event, Control *control) {
-    if (event->type == SDL_FINGERDOWN) {
-        control->touchX = event->x * SCREEN_WIDTH;
-        control->touchY = event->y * SCREEN_HEIGHT;
-        control->lastTouchX = control->touchX;
-        control->lastTouchY = control->touchY;
+void controlTouchDown(SDL_TouchFingerEvent *event, Control *control)
+{
+    control->touchX = event->x * SCREEN_WIDTH;
+    control->touchY = event->y * SCREEN_HEIGHT;
+    control->lastTouchX = control->touchX;
+    control->lastTouchY = control->touchY;
 
-        int distance = sqrt(pow(control->touchX - control->centerX, 2) + pow(control->touchY - control->centerY, 2));
-        if (distance <= control->radius) {
-            control->isPressed = 1;
+    int distance = sqrt(pow(control->touchX - control->centerX, 2) + pow(control->touchY - control->centerY, 2));
+    if (distance <= control->radius) {
+        control->isPressed = 1;
+        control->fingerId = event->fingerId;
 
-            double angle = atan2(control->touchY - control->centerY, control->touchX - control->centerX) * 180 / M_PI;
+        double angle = atan2(control->touchY - control->centerY, control->touchX - control->centerX) * 180 / M_PI;
 
-            if (angle >= -22.5 && angle < 22.5) {
-                control->pressedDirection = SDL_DIR_RIGHT;
-            } else if (angle >= 22.5 && angle < 67.5) {
-                control->pressedDirection = SDL_DIR_DOWN_RIGHT;
-            } else if (angle >= 67.5 && angle < 112.5) {
-                control->pressedDirection = SDL_DIR_DOWN;
-            } else if (angle >= 112.5 && angle < 157.5) {
-                control->pressedDirection = SDL_DIR_DOWN_LEFT;
-            } else if ((angle >= 157.5 && angle <= 180) || (angle >= -180 && angle < -157.5)) {
-                control->pressedDirection = SDL_DIR_LEFT;
-            } else if (angle >= -157.5 && angle < -112.5) {
-                control->pressedDirection = SDL_DIR_UP_LEFT;
-            } else if (angle >= -112.5 && angle < -67.5) {
-                control->pressedDirection = SDL_DIR_UP;
-            } else if (angle >= -67.5 && angle < -22.5) {
-                control->pressedDirection = SDL_DIR_UP_RIGHT;
-            }
+        if (angle >= -22.5 && angle < 22.5) {
+            control->pressedDirection = SDL_DIR_RIGHT;
+        } else if (angle >= 22.5 && angle < 67.5) {
+            control->pressedDirection = SDL_DIR_DOWN_RIGHT;
+        } else if (angle >= 67.5 && angle < 112.5) {
+            control->pressedDirection = SDL_DIR_DOWN;
+        } else if (angle >= 112.5 && angle < 157.5) {
+            control->pressedDirection = SDL_DIR_DOWN_LEFT;
+        } else if ((angle >= 157.5 && angle <= 180) || (angle >= -180 && angle < -157.5)) {
+            control->pressedDirection = SDL_DIR_LEFT;
+        } else if (angle >= -157.5 && angle < -112.5) {
+            control->pressedDirection = SDL_DIR_UP_LEFT;
+        } else if (angle >= -112.5 && angle < -67.5) {
+            control->pressedDirection = SDL_DIR_UP;
+        } else if (angle >= -67.5 && angle < -22.5) {
+            control->pressedDirection = SDL_DIR_UP_RIGHT;
         }
     }
 }
 
-void controlTouchUp(SDL_TouchFingerEvent *event, Control *control) {
-    if (event->type == SDL_FINGERUP) {
+void controlTouchUp(SDL_TouchFingerEvent *event, Control *control)
+{
+    if (control->isPressed && control->fingerId == event->fingerId) {
         control->isPressed = 0;
         control->pressedDirection = SDL_DIR_NONE;
-
         control->lastTouchX = control->centerX;
         control->lastTouchY = control->centerY;
     }
@@ -386,7 +389,7 @@ void doTouchDetonaDown(SDL_TouchFingerEvent* event)
     int touchY = event->y * SCREEN_HEIGHT;
 
     int btnWidth = 120;
-    int btnHeight = 120;
+    int btnHeight = 120;;
 
     int cellWidth = SCREEN_WIDTH / 6;
     int cellHeight = SCREEN_HEIGHT / 2;
@@ -453,8 +456,9 @@ void doInput(void)
                     if (isDetonaOn) {
                         doTouchDetonaUp(&event.tfinger);
                     }
-                    controlTouchUp(&event.tfinger, &control);
+
                     doFireUp(&event.tfinger, &fire);
+                    controlTouchUp(&event.tfinger, &control);
                 }
                 break;
             case SDL_FINGERMOTION:
