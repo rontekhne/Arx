@@ -212,7 +212,6 @@ void doKeyboardUp(SDL_TouchFingerEvent* event)
     app.keyboard[SDL_SCANCODE_SPACE] = 0;
 }
 
-
 void doFireDown(SDL_TouchFingerEvent* event, Fire *fire)
 {
     int touchX = event->x * SCREEN_WIDTH;
@@ -464,6 +463,5 @@ void doInput(void)
             default:
                 break;
         }
-        control.isFirePressed = fire.isPressed; // handles multitouch control-fire
     }
 }

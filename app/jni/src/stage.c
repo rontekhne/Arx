@@ -151,7 +151,7 @@ void initStage(void)
 
     fireDetonaBtnTexture = loadTexture("img/detona_btn.png");
     control.texture = loadTexture("img/control.png");
-    fire.texture = loadTexture("img/control.png");
+    fire.texture = loadTexture("img/fire.png");
     playerTexture = loadTexture("img/arx.png");
     playerGotDropTexture = loadTexture("img/arx_got_drop.png");
     powerTexture = loadTexture("img/playerPower.png");
@@ -503,7 +503,7 @@ static void doPlayer(void)
             player->reload--;
         }
 
-        if (control.isFirePressed && player->reload == 0) {
+        if (fire.isPressed && player->reload == 0) {
             if (player->magic > 0) {
                 playSound(SND_PLAYER_POWER, CH_PLAYER);
                 firePower();
@@ -798,7 +798,7 @@ void fireDetona(void)
     Entity *e;
 
     for (e = stage.fighterHead.next; e != NULL; e = e->next) {
-        if (e != player) {
+        if (e != player && e->species != 9) {
             e->energy = 0;
             playSound(SND_DETONA_EXPLOSION, CH_EFFECT);
             addDebris(e);
