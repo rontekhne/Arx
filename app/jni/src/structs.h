@@ -153,6 +153,7 @@ typedef struct {
     int centerX, centerY;
     int touchX, touchY;
     int lastTouchX, lastTouchY;
+    int currentX, currentY;
     int radius;
     int isPressed;
     int pressedDirection;

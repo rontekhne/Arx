@@ -1176,7 +1176,10 @@ static void drawControl(Control *control) {
             blit(control->texture, renderX, renderY);
         } else {
             // The touch is outside the control area, don't render (or render at the positon where the finger is)
-            // SDL_SetTextureColorMod(control->texture, 128, 128, 128);
+            controlX = control->currentX - control->radius;
+            controlY = control->currentY - control->radius;
+            SDL_SetTextureColorMod(control->texture, 128, 128, 128);
+            blit(control->texture, controlX, controlY);
         }
     } else {
         // Button not pressed, render at the center

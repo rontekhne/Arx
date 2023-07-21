@@ -235,6 +235,9 @@ void controlMotion(SDL_TouchFingerEvent *event, Control *control) {
         control->touchX = event->x * SCREEN_WIDTH;
         control->touchY = event->y * SCREEN_HEIGHT;
 
+        control->currentX = control->touchX;
+        control->currentY = control->touchY;
+
         int distance = sqrt(pow(control->touchX - control->centerX, 2) + pow(control->touchY - control->centerY, 2));
         if (distance <= control->radius * 2) {
             control->lastTouchX = control->touchX;
