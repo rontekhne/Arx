@@ -156,7 +156,6 @@ typedef struct {
     int radius;
     int isPressed;
     int pressedDirection;
-    int isMoving;
     SDL_Texture *texture;
 } Control;
 

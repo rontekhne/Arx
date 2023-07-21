@@ -1144,6 +1144,7 @@ static void drawDebris(void)
     }
 }
 
+// Bug in the control tbn rendering
 static void drawControl(Control *control) {
     SDL_Rect r;
 
@@ -1156,18 +1157,37 @@ static void drawControl(Control *control) {
     control->centerX = controlX;
     control->centerY = controlY;
 
+    // Check if the button is pressed and the touch is within the control area
     if (control->isPressed) {
-        controlX = control->lastTouchX;
-        controlY = control->lastTouchY;
-        SDL_SetTextureColorMod(control->texture, 255, 255, 255);
+        int touchX = control->lastTouchX;
+        int touchY = control->lastTouchY;
+
+        // Calculate distance between touch and control center
+        int distance = sqrt(pow(touchX - control->centerX, 2) + pow(touchY - control->centerY, 2));
+
+        // Check if touch is within control area
+        if (distance <= control->radius * 2) {
+            controlX = touchX;
+            controlY = touchY;
+            SDL_SetTextureColorMod(control->texture, 255, 255, 255);
+            int renderX = controlX - control->radius;
+            int renderY = controlY - control->radius;
+
+            blit(control->texture, renderX, renderY);
+        } else {
+            // The touch is outside the control area, don't render (or render at the positon where the finger is)
+            // SDL_SetTextureColorMod(control->texture, 128, 128, 128);
+        }
     } else {
+        // Button not pressed, render at the center
         SDL_SetTextureColorMod(control->texture, 128, 128, 128);
+        blit(control->texture, controlX - control->radius, controlY - control->radius);
     }
 
-    int renderX = controlX - control->radius;
-    int renderY = controlY - control->radius;
+    //int renderX = controlX - control->radius;
+    //int renderY = controlY - control->radius;
 
-    blit(control->texture, renderX, renderY);
+    //blit(control->texture, renderX, renderY);
 }
 
 static void drawFireBtn(Fire *fire)

@@ -232,15 +232,15 @@ void doFireUp(SDL_TouchFingerEvent* event, Fire *fire)
 
 void controlMotion(SDL_TouchFingerEvent *event, Control *control) {
     if (control->isPressed) {
-        int touchX = event->x * SCREEN_WIDTH;
-        int touchY = event->y * SCREEN_HEIGHT;
+        control->touchX = event->x * SCREEN_WIDTH;
+        control->touchY = event->y * SCREEN_HEIGHT;
 
-        int distance = sqrt(pow(touchX - control->centerX, 2) + pow(touchY - control->centerY, 2));
+        int distance = sqrt(pow(control->touchX - control->centerX, 2) + pow(control->touchY - control->centerY, 2));
         if (distance <= control->radius * 2) {
-            control->lastTouchX = touchX;
-            control->lastTouchY = touchY;
+            control->lastTouchX = control->touchX;
+            control->lastTouchY = control->touchY;
 
-            double angle = atan2(touchY - control->centerY, touchX - control->centerX) * 180 / M_PI;
+            double angle = atan2(control->touchY - control->centerY, control->touchX - control->centerX) * 180 / M_PI;
 
             if (angle >= -22.5 && angle < 22.5) {
                 control->pressedDirection = SDL_DIR_RIGHT;
