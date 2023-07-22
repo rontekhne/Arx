@@ -56,7 +56,7 @@ void initMenu(void)
 
     logoTexture = loadTexture("img/r.png");
     arxTitle = loadTexture("img/arx_title.png");
-    arxTexture = loadTexture("img/arx.png");
+    arxTexture = loadTexture("img/arx_menu.png");
     scoreBtnTexture = loadTexture("img/score_btn.png");
     playBtnTexture = loadTexture("img/play_btn.png");
     ptBtnTexture = loadTexture("img/pt_btn.png");
@@ -136,7 +136,7 @@ static void drawLogo(void)
     SDL_QueryTexture(logoTexture, NULL, NULL, &r.w, &r.h);
     r.x = (SCREEN_WIDTH / 2) - (r.w / 10 / 2);
     r.y = (SCREEN_HEIGHT / 2) - (r.h / 10 / 2);
-    blitSprite(logoTexture, r.x, r.y, 10, 16272, 4, 0);
+    blitSprite(logoTexture, r.x, r.y, 10, LOGO_ID, 4, 0);
 }
 
 static void drawTitle(void)
@@ -159,7 +159,7 @@ static void drawArx(void)
     r.y = 0;
 
     SDL_QueryTexture(arxTexture, NULL, NULL, &r.w, &r.h);
-    blitSprite(arxTexture, arxX, (SCREEN_HEIGHT / 2) - (r.h / 2), 8, 0, 4, 0);
+    blitSprite(arxTexture, arxX, (SCREEN_HEIGHT / 2) - (r.h / 2), 8, ARX_MENU_ID, 4, 0);
 }
 
 void drawBtn()

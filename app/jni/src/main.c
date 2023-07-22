@@ -39,7 +39,6 @@ int main(int argc, char *argv[])
     memset(&app, 0, sizeof(App));
     Timer = malloc(sizeof(unsigned long long int));
     app.textureTail = &app.textureHead;
-    id = 1;
 
     initSDL();
     atexit(cleanup);

@@ -194,6 +194,7 @@ void initStage(void)
 
     resetStage();
     initPlayer();
+    id = 1;
     initFireBtn(&fire);
     stageResetTimer = FPS * 3;
     bossSpawnTimer = 15000;
@@ -225,7 +226,6 @@ void initStage(void)
 static void resetStage(void)
 {
     Entity *e;
-    Explosion *ex;
     Debris *d;
     PlusPoints *pp;
 
@@ -471,12 +471,14 @@ static void logic(void)
             isDetonaOn = false;
         }
 
-        if (player->energy < 0) {
+        /*if (player->energy < 0) {
             player->energy = 0;
-        }
+        }*/
+
         if (player->magic < 0) {
             player->magic = 0;
         }
+
         playerEnergy = player->energy;
         playerMagic = player->magic;
         playerSoulOfTheTime = player->soulOfTheTime;
@@ -664,6 +666,11 @@ static void fighterCollidesFighter(void)
 
             if (t.s % 3 == 0) {
                 player->energy--;
+            }
+
+            if (player->energy == 0) {
+                addDebris(player);
+                playSound(SND_PLAYER_DIE, CH_PLAYER);
             }
         }
     }
@@ -1112,7 +1119,7 @@ static void drawFighters(void)
 
         if (e == player) {
             if (playerGotDrop) {
-                isBlitedOnce = blitSprite(playerGotDropTexture, e->x, e->y, 24, e->id, 6, 1);
+                isBlitedOnce = blitSprite(playerGotDropTexture, e->x, e->y, 24, PLAYER_GOT_DROP_ID, 6, 1);
                 if (isBlitedOnce) {
                     isBlitedOnce = false;
                     playerGotDrop = false;
@@ -1216,14 +1223,14 @@ static void drawDetonaBtn(void)
 static void drawHud(void) {
     t = getTime(Timer);
 
-    blitSprite(hourglassTexture, 10, 5, 6, 16270, 3, 0);
+    blitSprite(hourglassTexture, 10, 5, 6, HOURGLASS_ID, 3, 0);
     drawText(30, 10, 255, 255, 255, TEXT_LEFT, " %02d:%02d", t.m, t.s);
 
     drawDetonaBar();
     drawEnergyBar();
     drawMagicBar();
 
-    blitSprite(scoreTexture, SCREEN_WIDTH - 130, 10, 9, 16275, 4, 0);
+    blitSprite(scoreTexture, SCREEN_WIDTH - 130, 10, 9, SCORE_ID, 4, 0);
     drawText(SCREEN_WIDTH - 35, 10, 255, 255, 255, TEXT_RIGHT, " %03d", calculateTotalScore());
 }
 

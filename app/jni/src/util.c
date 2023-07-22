@@ -143,3 +143,14 @@ void drawPlusPoints(void)
         drawText(pp->x, pp->y, 255, 255, 255, TEXT_CENTER, "+ %d", pp->points);
     }
 }
+
+// used in the blitSprite function at draw.c
+void resetTwoArraysSameSize(int size, int a[size], int b[size])
+{
+    if (player == NULL) {
+        for (int i = 0; i < 16284; i++) {
+            a[i] = 0;
+            b[i] = 0;
+        }
+    }
+}

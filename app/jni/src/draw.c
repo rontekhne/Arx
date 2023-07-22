@@ -1,6 +1,7 @@
 /* draw.c: functions related to drawing and rendering */
 
 #include "common.h"
+#include "util.h"
 #include "draw.h"
 
 extern App app;
@@ -107,6 +108,7 @@ bool blitSprite(SDL_Texture *texture, int x, int y, int frames, int id, int fram
     static int delay[16284];
     static int frame[16284];
 
+    resetTwoArraysSameSize(16284, delay, frame);
 
     SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
 
