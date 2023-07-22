@@ -20,6 +20,7 @@ char lang = 'P';
 bool isKeyboardOn = false;
 bool isMenuOn = false;
 bool isScoreOn = false;
+bool isHelpOn = false;
 bool isDetonaOn = false;
 
 unsigned int id; // entities id

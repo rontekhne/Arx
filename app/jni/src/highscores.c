@@ -17,6 +17,7 @@ extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern bool isKeyboardOn;
 extern bool isScoreOn;
+extern bool isHelpOn;
 extern char lang;
 
 static void logic(void);
@@ -28,13 +29,19 @@ static void drawNameInput(void);
 static void drawVirtualKeyboard(void);
 static void drawBtn(void);
 static void drawTextPresentation(void);
+static void drawHelpBtn(void);
+static void drawHelp(void);
 
 static SDL_Texture *menuBtnTexture;
 static SDL_Texture *quitBtnTexture;
+static SDL_Texture *helpBtnTexture;
+static SDL_Texture *helpTexture;
 static SDL_Texture *trophyTexture;
 static SDL_Texture * virtualKeyboard;
 static Highscore *newHighscore;
 static int        cursorBlink;
+
+static int helpBtnTimer = 0;
 
 void initHighscoreTable(void)
 {
@@ -60,6 +67,8 @@ void initHighscores(void)
 
     menuBtnTexture = loadTexture("img/menu_btn.png");
     quitBtnTexture = loadTexture("img/quit_btn.png");
+    helpBtnTexture = loadTexture("img/help_btn.png");
+    helpTexture = loadTexture("img/help.png");
     trophyTexture = loadTexture("img/trophy.png");
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 }
@@ -95,6 +104,15 @@ static void logic(void)
 
     if (++cursorBlink >= FPS) {
         cursorBlink = 0;
+    }
+
+    if (touch.help == 1 && SDL_GetTicks() % 12 == 0) {
+        if (isHelpOn == false) {
+            isHelpOn = true;
+        }else {
+            isHelpOn = false;
+        }
+        playSound(SND_TAP, CH_ANY);
     }
 }
 
@@ -225,8 +243,12 @@ static void draw(void)
     }
     else {
         drawHighscores();
-        drawBtn();
         drawTextPresentation();
+        if (isHelpOn) {
+            drawHelp();
+        }
+        drawHelpBtn();
+        drawBtn();
     }
 }
 
@@ -422,6 +444,79 @@ static void drawTextPresentation(void)
             x = saveX;
             y += (GLYPH_HEIGHT * 2);
             lineCounter++;
+        }
+    }
+}
+
+static void drawHelpBtn(void)
+{
+    SDL_Rect hr;
+
+
+    hr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 - SCREEN_HEIGHT / 6;
+    hr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
+    SDL_QueryTexture(helpBtnTexture, NULL, NULL, &hr.w, &hr.h);
+    blit(helpBtnTexture, hr.x, hr.y);
+    drawText(
+            hr.x + hr.w / 2,
+            hr.y + hr.h / 3,
+            255,
+            255,
+            255,
+            TEXT_CENTER,
+            !isHelpOn ? lang == 'P' ? "AJUDA" : "HELP" : lang == 'P' ? "VOLTAR" : "BACK"
+    );
+}
+
+static void drawHelp(void)
+{
+    SDL_Rect r;
+
+    r.x = 0;
+    r.y = 0;
+    r.w = SCREEN_WIDTH;
+    r.h = SCREEN_HEIGHT;
+
+    SDL_RenderCopy(app.renderer, helpTexture, NULL, &r);
+
+    int x = GLYPH_WIDTH, y;
+    char pt[10][96] =
+            {
+            "SEU OBJETIVO: OBTENHA PONTOS E GARANTA SEU LUGAR NO PLACAR.",
+             "DEIXE O CONTROLE PRESSIONADO PARA DESVIAR DOS INIMIGOS.",
+             "TU PERDES ENERGIA QUANDO ATINGIDO OU QUANDO COLIDES COM O INIMIGO.",
+             "EXTERMINE OS ARXS COLORIDOS E COLETE SUAS ALMAS PARA GARANTIR PONTOS.",
+             "QUANDO ELIMINAR O RAINBOW, O CHEFE, COLETE A ALMA DO TEMPO POR PONTOS EXTRAS.",
+             "COLETE GRUPOS DE OITO ALMAS DE CORES DIFERENTES E GARANTA MAIS PONTOS EXTRAS.",
+             "O  ACIONADOR DE DETONA APARECE QUANDO O DETONA FOR COLETADO.",
+             "ECONOMIZE MAGIA E JAMAIS DEIXE-A ACABAR.",
+             "DIVIRTA-SE!"
+            };
+    char en[10][96] =
+            {
+            "HOLD DOWN THE CONTROLLER TO DODGE ENEMIES.",
+            "YOU LOSES ENERGY WHEN HIT OR WHEN COLLIDING WITH THE ENEMY.",
+            "YOUR GOAL: GET POINTS AND SECURE YOUR PLACE ON THE LEADERBOARD.",
+            "EXTERMINATE THE COLORFUL ARXS AND COLLECT THEIR SOULS TO GUARANTEE POINTS.",
+            "WHEN YOU ELIMINATE RAINBOW, THE BOSS, COLLECT THE SOUL OF TIME FOR EXTRA POINTS.",
+            "COLLECT GROUPS OF EIGHT SOULS OF DIFFERENT COLORS AND GUARANTEE MORE EXTRA POINTS.",
+            "THE WRECK TRIGGER APPEARS WHEN WRECK IS COLLECTED.",
+            "SAVE MAGIC AND NEVER LET IT RUN OUT.",
+            "HAVE FUN!"
+            };
+    if (lang == 'P') {
+        y = SCREEN_HEIGHT / 6 + 32;
+        for (int i = 0; i < 9; i++) {
+            drawText(x, y + ((GLYPH_HEIGHT * 2) * i), 200, 200, 200, TEXT_LEFT, "%s", pt[i]);
+            x++;
+            y++;
+        }
+    }else {
+        y = SCREEN_HEIGHT / 6 + 32;
+        for (int i = 0; i < 9; i++) {
+            drawText(x, y + ((GLYPH_HEIGHT * 2) * i), 200, 200, 200, TEXT_LEFT, "%s", en[i]);
+            x++;
+            y++;
         }
     }
 }

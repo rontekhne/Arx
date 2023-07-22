@@ -1144,7 +1144,6 @@ static void drawDebris(void)
     }
 }
 
-// Bug in the control tbn rendering
 static void drawControl(Control *control) {
     SDL_Rect r;
 
@@ -1186,11 +1185,6 @@ static void drawControl(Control *control) {
         SDL_SetTextureColorMod(control->texture, 128, 128, 128);
         blit(control->texture, controlX - control->radius, controlY - control->radius);
     }
-
-    //int renderX = controlX - control->radius;
-    //int renderY = controlY - control->radius;
-
-    //blit(control->texture, renderX, renderY);
 }
 
 static void drawFireBtn(Fire *fire)

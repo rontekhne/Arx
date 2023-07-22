@@ -368,14 +368,22 @@ void doTouchScoreDown(SDL_TouchFingerEvent* event)
         // Touched the "MENU" button
         touch.menu = 1;
         touch.quit = 0;
+        touch.help = 0;
     } else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) + (SCREEN_HEIGHT / 6) && touchY >= (SCREEN_HEIGHT - SCREEN_HEIGHT / 6)) {
-        // Touched the "Q" button
+        // Touched the "QUIT" button
         touch.menu = 0;
         touch.quit = 1;
+        touch.help = 0;
+    } else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) - (SCREEN_HEIGHT / 6) && touchY >= (SCREEN_HEIGHT - SCREEN_HEIGHT / 6)) {
+        // Touched the "HELP" button
+        touch.menu = 0;
+        touch.quit = 0;
+        touch.help = 1;
     } else {
         // Touched outside the touchable areas
         touch.menu = 0;
         touch.quit = 0;
+        touch.help = 0;
     }
 }
 
@@ -384,6 +392,7 @@ void doTouchScoreUp(SDL_TouchFingerEvent* event)
     // Reset touch.menu and touch.quit
     touch.menu = 0;
     touch.quit = 0;
+    touch.help = 0;
 }
 
 void doTouchDetonaDown(SDL_TouchFingerEvent* event)

@@ -146,6 +146,7 @@ typedef struct
     int quit;
     int menu;
     int lang;
+    int help;
 }Touch;
 
 typedef struct {
