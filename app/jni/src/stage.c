@@ -1223,7 +1223,7 @@ static void drawHud(void) {
     drawEnergyBar();
     drawMagicBar();
 
-    blit(scoreTexture, SCREEN_WIDTH - 130, 5);
+    blitSprite(scoreTexture, SCREEN_WIDTH - 130, 10, 9, 16275, 4, 0);
     drawText(SCREEN_WIDTH - 35, 10, 255, 255, 255, TEXT_RIGHT, " %03d", calculateTotalScore());
 }
 
