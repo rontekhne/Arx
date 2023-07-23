@@ -9,4 +9,3 @@ void shuffleArray(int array[], int size);
 void doPlusPoints(void);
 void addPlusPoints(Entity *e, int points);
 void drawPlusPoints(void);
-void resetTwoArraysSameSize(int size, int a[size], int b[size]);

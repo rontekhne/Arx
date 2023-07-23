@@ -41,7 +41,8 @@ static SDL_Texture * virtualKeyboard;
 static Highscore *newHighscore;
 static int        cursorBlink;
 
-static int helpBtnTimer = 0;
+static int helpTimer = 0;
+static int resetHelpTimer = 9;
 
 void initHighscoreTable(void)
 {
@@ -64,6 +65,7 @@ void initHighscores(void)
     app.delegate.draw = draw;
 
     isScoreOn = true;
+    helpTimer = resetHelpTimer;
 
     menuBtnTexture = loadTexture("img/menu_btn.png");
     quitBtnTexture = loadTexture("img/quit_btn.png");
@@ -99,14 +101,14 @@ static void logic(void)
     }else {
         isKeyboardOn = false;
         isScoreOn = true;
-        initHighscores();
     }
 
     if (++cursorBlink >= FPS) {
         cursorBlink = 0;
     }
 
-    if (touch.help == 1 && SDL_GetTicks() % 12 == 0) {
+    if (touch.help == 1 && --helpTimer == 0) {
+        helpTimer = resetHelpTimer;
         if (isHelpOn == false) {
             isHelpOn = true;
         }else {

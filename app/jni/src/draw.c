@@ -108,8 +108,6 @@ bool blitSprite(SDL_Texture *texture, int x, int y, int frames, int id, int fram
     static int delay[16284];
     static int frame[16284];
 
-    resetTwoArraysSameSize(16284, delay, frame);
-
     SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
 
     src.x = 0 + ((dest.w / frames) * frame[id]);
