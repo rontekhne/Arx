@@ -219,7 +219,7 @@ void initStage(void)
     shuffleArray(energies, 8); // shuffle enemy energies
 
     stopMusic();
-    loadMusic("msc/music.mp3");
+    loadMusic("msc/arx_part_one.ogg");
     playMusic(1);
 }
 
@@ -471,12 +471,13 @@ static void logic(void)
             isDetonaOn = false;
         }
 
-        /*if (player->energy < 0) {
-            player->energy = 0;
-        }*/
-
-        if (player->magic < 0) {
+        if (player->magic <= 0) {
             player->magic = 0;
+        }
+
+        if (player->magic > 0 && player->magic < 100) {
+            if (t.s % 10 == 0)
+            player->magic += 2;
         }
 
         playerEnergy = player->energy;
