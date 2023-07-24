@@ -116,6 +116,7 @@ Time t;
 bool isDetonaExplosion;
 bool isBlitedOnce;
 bool playerGotDrop;
+static int soulOfTheTimePoints;
 
 /* tracks died enemies */
 static int violetDead;
@@ -422,9 +423,11 @@ static int calculateTotalScore(void) {
 
     // check if player got soulOfTheTime | convert the time in seconds into points
     if (playerSoulOfTheTime > 0) {
-        totalScore += (t.m * 60 + t.s);
+        soulOfTheTimePoints = t.m * 60 + t.s;
         player->soulOfTheTime = 0;
     }
+
+    totalScore += soulOfTheTimePoints;
 
     return totalScore;
 }
