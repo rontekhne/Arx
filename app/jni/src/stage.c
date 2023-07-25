@@ -117,6 +117,7 @@ bool isDetonaExplosion;
 bool isBlitedOnce;
 bool playerGotDrop;
 static int soulOfTheTimePoints;
+static int isSecondSongOn;
 
 /* tracks died enemies */
 static int violetDead;
@@ -219,9 +220,12 @@ void initStage(void)
     shuffleArray(specie, 8); // shuffle enemy species
     shuffleArray(energies, 8); // shuffle enemy energies
 
+    // play the first song
     stopMusic();
     loadMusic("msc/arx_part_one.ogg");
-    playMusic(1);
+    playMusic(0);
+
+    isSecondSongOn = false;
 }
 
 static void resetStage(void)
@@ -495,6 +499,14 @@ static void logic(void)
         playerOrangeSoul = player->orangeSoul;
         playerRedSoul = player->redSoul;
         playerPinkSoul = player->pinkSoul;
+    }
+
+    // play the second second song
+    if (t.m == 5 && t.s == 53 && isSecondSongOn == false) {
+        isSecondSongOn = true;
+        stopMusic();
+        loadMusic("msc/arx_part_two.ogg");
+        playMusic(0);
     }
 
     (*Timer)++;
