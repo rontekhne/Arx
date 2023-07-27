@@ -32,8 +32,7 @@ void playMusic(int loop)
 
 void stopMusic(void)
 {
-    //Mix_FadeOutMusic(1000);
-    Mix_HaltMusic();
+    Mix_FadeOutMusic(1000);
 }
 
 void playSound(int id, int channel)
