@@ -88,7 +88,7 @@ void doKeyboardDown(SDL_TouchFingerEvent* event)
             case 52: app.keyboard[SDL_SCANCODE_J] = 1; break;
             case 53: app.keyboard[SDL_SCANCODE_K] = 1; break;
             case 54: app.keyboard[SDL_SCANCODE_L] = 1; break;
-                //case 55: game.keyboard[34] = 1; break; // double quote "
+            case 55: app.keyboard[SDL_SCANCODE_DOUBLEQUOTE] = 1; break; // double quote "
                 /* RETURN */
             case 56:
             case 57:
@@ -107,13 +107,13 @@ void doKeyboardDown(SDL_TouchFingerEvent* event)
             case 66: app.keyboard[SDL_SCANCODE_B] = 1; break;
             case 67: app.keyboard[SDL_SCANCODE_N] = 1; break;
             case 68: app.keyboard[SDL_SCANCODE_M] = 1; break;
-            case 69: app.keyboard[SDL_SCANCODE_MINUS] = 1; break;
+            case 69: app.keyboard[SDL_SCANCODE_HIFEN] = 1; break;
             case 70: app.keyboard[SDL_SCANCODE_APOSTROPHE] = 1; break;
 
                 // fifth row
-                //case 76: game.keyboard[63] = 1; break; // question ?
+            case 76: app.keyboard[SDLK_QUESTION] = 1; break;
             case 77: app.keyboard[SDL_SCANCODE_KP_HASH] = 1; break; // hash
-                //case 78: game.keyboard[36] = 1; break; // dollar
+            case 78: app.keyboard[SDL_SCANCODE_DOLAR] = 1; break; // dollar
             case 79: app.keyboard[SDL_SCANCODE_KP_PERCENT] = 1; break; // percent
             case 80: app.keyboard[SDL_SCANCODE_KP_AMPERSAND] = 1; break; // ampersand
             case 81: app.keyboard[SDL_SCANCODE_KP_LEFTPAREN] = 1; break; // (
@@ -181,7 +181,7 @@ void doKeyboardUp(SDL_TouchFingerEvent* event)
     app.keyboard[SDL_SCANCODE_J] = 0;
     app.keyboard[SDL_SCANCODE_K] = 0;
     app.keyboard[SDL_SCANCODE_L] = 0;
-    //game.keyboard[34] = 0;
+    app.keyboard[SDL_SCANCODE_DOUBLEQUOTE] = 0;
     app.keyboard[SDL_SCANCODE_RETURN] = 0;
     // fourth row
     app.keyboard[SDL_SCANCODE_KP_EXCLAM] = 0;
@@ -192,12 +192,13 @@ void doKeyboardUp(SDL_TouchFingerEvent* event)
     app.keyboard[SDL_SCANCODE_B] = 0;
     app.keyboard[SDL_SCANCODE_N] = 0;
     app.keyboard[SDL_SCANCODE_M] = 0;
-    app.keyboard[SDL_SCANCODE_MINUS] = 0;
+    app.keyboard[SDL_SCANCODE_HIFEN] = 0;
     app.keyboard[SDL_SCANCODE_APOSTROPHE] = 0;
     // fifth row
-    //game.keyboard[63] = 0;
+
+    app.keyboard[SDLK_QUESTION] = 0;
     app.keyboard[SDL_SCANCODE_KP_HASH] = 0;
-    //game.keyboard[36] = 0;
+    app.keyboard[SDL_SCANCODE_DOLAR] = 0;
     app.keyboard[SDL_SCANCODE_KP_PERCENT] = 0;
     app.keyboard[SDL_SCANCODE_KP_AMPERSAND] = 0;
     app.keyboard[SDL_SCANCODE_KP_LEFTPAREN] = 0;

@@ -144,81 +144,84 @@ static void doNameInput(void)
     for (i = 0; i < strlen(app.inputText); i++) {
         c = toupper(app.inputText[i]);
 
-        if (n < MAX_SCORE_NAME_LENGTH - 1 && c >= ' ' && c <= 'Z') {
-            newHighscore->name[n++] = c;
+        if (n < MAX_SCORE_NAME_LENGTH - 1) {
+            if (c >= ' ' && c <= 'Z')
+                newHighscore->name[n++] = c;
+        }else {
+            newHighscore->name[n] = '\0';
         }
     }
 
-    /* get touch */
-
-    // first row
-    handleVirtualKeyboardTouch('0', SDL_SCANCODE_0, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('1', SDL_SCANCODE_1, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('2', SDL_SCANCODE_2, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('3', SDL_SCANCODE_3, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('4', SDL_SCANCODE_4, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('5', SDL_SCANCODE_5, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('6', SDL_SCANCODE_6, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('7', SDL_SCANCODE_7, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('8', SDL_SCANCODE_8, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('9', SDL_SCANCODE_9, &n, newHighscore->name);
-    handleVirtualKeyboardTouch(':', SDL_SCANCODE_KP_COLON, &n, newHighscore->name);
-    handleVirtualKeyboardTouch(';', SDL_SCANCODE_SEMICOLON, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('=', SDL_SCANCODE_EQUALS, &n, newHighscore->name);
-    // second row
-    handleVirtualKeyboardTouch('Q', SDL_SCANCODE_Q, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('W', SDL_SCANCODE_W, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('E', SDL_SCANCODE_E, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('R', SDL_SCANCODE_R, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('T', SDL_SCANCODE_T, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('Y', SDL_SCANCODE_Y, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('U', SDL_SCANCODE_U, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('I', SDL_SCANCODE_I, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('O', SDL_SCANCODE_O, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('P', SDL_SCANCODE_P, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('<', SDL_SCANCODE_KP_LESS, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('>', SDL_SCANCODE_KP_GREATER, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('@', SDL_SCANCODE_KP_AT, &n, newHighscore->name);
-    // third row
-    handleVirtualKeyboardTouch('A', SDL_SCANCODE_A, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('S', SDL_SCANCODE_S, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('D', SDL_SCANCODE_D, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('F', SDL_SCANCODE_F, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('G', SDL_SCANCODE_G, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('H', SDL_SCANCODE_H, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('J', SDL_SCANCODE_J, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('K', SDL_SCANCODE_K, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('L', SDL_SCANCODE_L, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('P', SDL_SCANCODE_P, &n, newHighscore->name);
-    //handleVirtualKeyboardTouch('\"', 34, &n, newHighscore->name);
-    handleVirtualKeyboardTouch(' ', SDL_SCANCODE_RETURN, &n, newHighscore->name);
-    // fouth row
-    handleVirtualKeyboardTouch('!', SDL_SCANCODE_KP_EXCLAM, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('Z', SDL_SCANCODE_Z, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('X', SDL_SCANCODE_X, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('C', SDL_SCANCODE_C, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('V', SDL_SCANCODE_V, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('B', SDL_SCANCODE_B, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('N', SDL_SCANCODE_N, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('M', SDL_SCANCODE_M, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('\'', SDL_SCANCODE_APOSTROPHE, &n, newHighscore->name);
-    // fifth row
-    //handleVirtualKeyboardTouch('?', 63, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('#', SDL_SCANCODE_KP_HASH, &n, newHighscore->name);
-    //handleVirtualKeyboardTouch('$', 36, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('%', SDL_SCANCODE_KP_PERCENT, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('&', SDL_SCANCODE_KP_AMPERSAND, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('(', SDL_SCANCODE_KP_LEFTPAREN, &n, newHighscore->name);
-    handleVirtualKeyboardTouch(')', SDL_SCANCODE_KP_RIGHTPAREN, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('*', SDL_SCANCODE_KP_MULTIPLY, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('+', SDL_SCANCODE_KP_PLUS, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('.', SDL_SCANCODE_KP_PERIOD, &n, newHighscore->name);
-    handleVirtualKeyboardTouch('/', SDL_SCANCODE_KP_DIVIDE, &n, newHighscore->name);
-    handleVirtualKeyboardTouch(',', SDL_SCANCODE_KP_COMMA, &n, newHighscore->name);
-    // sixth row
-    handleVirtualKeyboardTouch('\0', SDL_SCANCODE_BACKSPACE, &n, newHighscore->name); // verify
-    handleVirtualKeyboardTouch(' ', SDL_SCANCODE_SPACE, &n, newHighscore->name);
-
+    if (n < MAX_SCORE_NAME_LENGTH) {
+        /* get touch */
+        // first row
+        handleVirtualKeyboardTouch('0', SDL_SCANCODE_0, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('1', SDL_SCANCODE_1, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('2', SDL_SCANCODE_2, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('3', SDL_SCANCODE_3, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('4', SDL_SCANCODE_4, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('5', SDL_SCANCODE_5, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('6', SDL_SCANCODE_6, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('7', SDL_SCANCODE_7, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('8', SDL_SCANCODE_8, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('9', SDL_SCANCODE_9, &n, newHighscore->name);
+        handleVirtualKeyboardTouch(':', SDL_SCANCODE_KP_COLON, &n, newHighscore->name);
+        handleVirtualKeyboardTouch(';', SDL_SCANCODE_SEMICOLON, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('=', SDL_SCANCODE_EQUALS, &n, newHighscore->name);
+        // second row
+        handleVirtualKeyboardTouch('Q', SDL_SCANCODE_Q, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('W', SDL_SCANCODE_W, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('E', SDL_SCANCODE_E, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('R', SDL_SCANCODE_R, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('T', SDL_SCANCODE_T, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('Y', SDL_SCANCODE_Y, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('U', SDL_SCANCODE_U, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('I', SDL_SCANCODE_I, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('O', SDL_SCANCODE_O, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('P', SDL_SCANCODE_P, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('<', SDL_SCANCODE_KP_LESS, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('>', SDL_SCANCODE_KP_GREATER, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('@', SDL_SCANCODE_KP_AT, &n, newHighscore->name);
+        // third row
+        handleVirtualKeyboardTouch('A', SDL_SCANCODE_A, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('S', SDL_SCANCODE_S, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('D', SDL_SCANCODE_D, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('F', SDL_SCANCODE_F, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('G', SDL_SCANCODE_G, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('H', SDL_SCANCODE_H, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('J', SDL_SCANCODE_J, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('K', SDL_SCANCODE_K, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('L', SDL_SCANCODE_L, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('\"', SDL_SCANCODE_DOUBLEQUOTE, &n, newHighscore->name);
+        handleVirtualKeyboardTouch(' ', SDL_SCANCODE_RETURN, &n, newHighscore->name);
+        // fouth row
+        handleVirtualKeyboardTouch('!', SDL_SCANCODE_KP_EXCLAM, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('Z', SDL_SCANCODE_Z, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('X', SDL_SCANCODE_X, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('C', SDL_SCANCODE_C, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('V', SDL_SCANCODE_V, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('B', SDL_SCANCODE_B, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('N', SDL_SCANCODE_N, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('M', SDL_SCANCODE_M, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('-', SDL_SCANCODE_HIFEN, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('\'', SDL_SCANCODE_APOSTROPHE, &n, newHighscore->name);
+        // fifth row
+        handleVirtualKeyboardTouch('?', SDLK_QUESTION, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('#', SDL_SCANCODE_KP_HASH, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('$', SDL_SCANCODE_DOLAR, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('%', SDL_SCANCODE_KP_PERCENT, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('&', SDL_SCANCODE_KP_AMPERSAND, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('(', SDL_SCANCODE_KP_LEFTPAREN, &n, newHighscore->name);
+        handleVirtualKeyboardTouch(')', SDL_SCANCODE_KP_RIGHTPAREN, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('*', SDL_SCANCODE_KP_MULTIPLY, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('+', SDL_SCANCODE_KP_PLUS, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('.', SDL_SCANCODE_KP_PERIOD, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('/', SDL_SCANCODE_KP_DIVIDE, &n, newHighscore->name);
+        handleVirtualKeyboardTouch(',', SDL_SCANCODE_KP_COMMA, &n, newHighscore->name);
+        // sixth row
+        handleVirtualKeyboardTouch('\0', SDL_SCANCODE_BACKSPACE, &n, newHighscore->name); // verify
+        handleVirtualKeyboardTouch(' ', SDL_SCANCODE_SPACE, &n, newHighscore->name);
+    }
 
     if (n > 0 && app.keyboard[SDL_SCANCODE_BACKSPACE]) {
         newHighscore->name[--n] = '\0';

@@ -478,6 +478,10 @@ static void logic(void)
             isDetonaOn = false;
         }
 
+        if (player->energy <= 0) {
+            player->energy = 0;
+        }
+
         if (player->magic <= 0) {
             player->magic = 0;
         }
