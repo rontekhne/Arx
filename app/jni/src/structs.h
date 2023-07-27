@@ -82,6 +82,10 @@ struct PlusPoints
     float dy;
     int points;
     int life;
+    int r;
+    int g;
+    int b;
+    int a;
     PlusPoints *next;
 };
 

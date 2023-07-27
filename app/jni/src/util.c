@@ -94,7 +94,11 @@ void doPlusPoints(void)
         pp->x -= pp->dx;
         pp->y -= pp->dy;
 
-        if (--pp->life <= 0) {
+        if (pp->a > 0) {
+            pp->a -= 2;
+        }
+
+        if (--pp->life <= 0 || pp->a <= 0) {
             if (pp == stage.plusPointsTail) {
                 stage.plusPointsTail = prev;
             }
@@ -117,6 +121,10 @@ void addPlusPoints(Entity *e, int points)
 
     pp->life = FPS;
     pp->points = points;
+    pp->r = 255;
+    pp->g = 255;
+    pp->b = 255;
+    pp->a = 255;
 
     switch (e->species) {
     case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 12: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21:
@@ -140,6 +148,6 @@ void drawPlusPoints(void)
     PlusPoints *pp;
 
     for (pp = stage.plusPointsHead.next; pp != NULL; pp = pp->next) {
-        drawText(pp->x, pp->y, 255, 255, 255, TEXT_CENTER, "+ %d", pp->points);
+        drawFadeOutText(pp->x, pp->y,pp->r, pp->g, pp->b, pp->a, TEXT_CENTER, "+ %d", pp->points);
     }
 }
