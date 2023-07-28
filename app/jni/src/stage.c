@@ -67,26 +67,36 @@ static SDL_Texture *fireDetonaBtnTexture;
 static SDL_Texture *playerTexture;
 static SDL_Texture *playerGotDropTexture;
 static SDL_Texture *powerTexture;
+static SDL_Texture *playerDebrisTexture;
 /* enemies textures */
 static SDL_Texture *violetTexture;
 static SDL_Texture *violetPowerTexture;
+static SDL_Texture *violetDebrisTexture;
 static SDL_Texture *blueTexture;
 static SDL_Texture *bluePowerTexture;
+static SDL_Texture *blueDebrisTexture;
 static SDL_Texture *cyanTexture;
 static SDL_Texture *cyanPowerTexture;
+static SDL_Texture *cyanDebrisTexture;
 static SDL_Texture *greenTexture;
 static SDL_Texture *greenPowerTexture;
+static SDL_Texture *greenDebrisTexture;
 static SDL_Texture *yellowTexture;
 static SDL_Texture *yellowPowerTexture;
+static SDL_Texture *yellowDebrisTexture;
 static SDL_Texture *orangeTexture;
 static SDL_Texture *orangePowerTexture;
+static SDL_Texture *orangeDebrisTexture;
 static SDL_Texture *redTexture;
 static SDL_Texture *redPowerTexture;
+static SDL_Texture *redDebrisTexture;
 static SDL_Texture *pinkTexture;
 static SDL_Texture *pinkPowerTexture;
+static SDL_Texture *pinkDebrisTexture;
 /* boss */
 static SDL_Texture *bossTexture;
 static SDL_Texture *bossPowerTexture;
+static SDL_Texture *bossDebrisTexture;
 
 /* hud */
 static SDL_Texture *hourglassTexture;
@@ -157,28 +167,38 @@ void initStage(void)
     playerTexture = loadTexture("img/arx.png");
     playerGotDropTexture = loadTexture("img/arx_got_drop.png");
     powerTexture = loadTexture("img/playerPower.png");
+    playerDebrisTexture = loadTexture("img/arxDebris.png");
     energyTexture = loadTexture("img/energy.png");
     magicTexture = loadTexture("img/magic.png");
     soulOfTheTimeTexture = loadTexture("img/soul_of_the_time.png");
     detonaTexture = loadTexture("img/detona.png");
     violetTexture = loadTexture("img/violet.png");
     violetPowerTexture = loadTexture("img/violetPower.png");
+    violetDebrisTexture = loadTexture("img/violetDebris.png");
     blueTexture = loadTexture("img/blue.png");
     bluePowerTexture = loadTexture("img/bluePower.png");
+    blueDebrisTexture = loadTexture("img/blueDebris.png");
     cyanTexture = loadTexture("img/cyan.png");
     cyanPowerTexture = loadTexture("img/cyanPower.png");
+    cyanDebrisTexture = loadTexture("img/cyanDebris.png");
     greenTexture = loadTexture("img/green.png");
     greenPowerTexture = loadTexture("img/greenPower.png");
+    greenDebrisTexture = loadTexture("img/greenDebris.png");
     yellowTexture = loadTexture("img/yellow.png");
     yellowPowerTexture = loadTexture("img/yellowPower.png");
+    yellowDebrisTexture = loadTexture("img/yellowDebris.png");
     orangeTexture = loadTexture("img/orange.png");
     orangePowerTexture = loadTexture("img/orangePower.png");
+    orangeDebrisTexture = loadTexture("img/orangeDebris.png");
     redTexture = loadTexture("img/red.png");
     redPowerTexture = loadTexture("img/redPower.png");
+    redDebrisTexture = loadTexture("img/redDebris.png");
     pinkTexture = loadTexture("img/pink.png");
     pinkPowerTexture = loadTexture("img/pinkPower.png");
+    pinkDebrisTexture = loadTexture("img/pinkDebris.png");
     bossTexture = loadTexture("img/rainbow.png");
     bossPowerTexture = loadTexture("img/bossPower.png");
+    bossDebrisTexture = loadTexture("img/rainbowDebris.png");
     violetSoulTexture = loadTexture("img/violetSoul.png");
     blueSoulTexture = loadTexture("img/blueSoul.png");
     cyanSoulTexture = loadTexture("img/cyanSoul.png");
@@ -372,6 +392,7 @@ static void initPlayer(void)
     player->redSoul = 0;
     player->pinkSoul = 0;
     player->texture = playerTexture;
+    player->textureDebris = playerDebrisTexture;
     player->side = SIDE_PLAYER;
     SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
     player->x = (SCREEN_WIDTH / 2) - (player->w / player->frames / 2);
@@ -925,41 +946,49 @@ static void spawnEnemies(void)
             case 1:
                 enemy->species = 1;
                 enemy->texture = violetTexture;
+                enemy->textureDebris = violetDebrisTexture;
                 enemy->energy = energies[0];
                 break;
             case 2:
                 enemy->species = 2;
                 enemy->texture = blueTexture;
+                enemy->textureDebris = blueDebrisTexture;
                 enemy->energy = energies[1];
                 break;
             case 3:
                 enemy->species = 3;
                 enemy->texture = cyanTexture;
+                enemy->textureDebris = cyanDebrisTexture;
                 enemy->energy = energies[2];
                 break;
             case 4:
                 enemy->species = 4;
                 enemy->texture = greenTexture;
+                enemy->textureDebris = greenDebrisTexture;
                 enemy->energy = energies[3];
                 break;
             case 5:
                 enemy->species = 5;
                 enemy->texture = yellowTexture;
+                enemy->textureDebris = yellowDebrisTexture;
                 enemy->energy = energies[4];
                 break;
             case 6:
                 enemy->species = 6;
                 enemy->texture = orangeTexture;
+                enemy->textureDebris = orangeDebrisTexture;
                 enemy->energy = energies[5];
                 break;
             case 7:
                 enemy->species = 7;
                 enemy->texture = redTexture;
+                enemy->textureDebris = redDebrisTexture;
                 enemy->energy = energies[6];
                 break;
             case 8:
                 enemy->species = 8;
                 enemy->texture = pinkTexture;
+                enemy->textureDebris = pinkDebrisTexture;
                 enemy->energy = energies[7];
                 break;
         }
@@ -998,6 +1027,7 @@ static void spawnEnemies(void)
         boss->energy = 100;
         boss->species = 9;
         boss->texture = bossTexture;
+        boss->textureDebris = bossDebrisTexture;
 
         boss->x = SCREEN_WIDTH;
         boss->y = rand() % SCREEN_HEIGHT;
@@ -1028,6 +1058,10 @@ static void doDebris(void)
         d->y += d->dy;
 
         //d->dy += 0.5; gravity
+
+        if (d->a > 0) {
+            d->a -= 1;
+        }
 
         if (--d->life <= 0) {
             if (d == stage.debrisTail) {
@@ -1061,13 +1095,15 @@ static void addDebris(Entity *e)
             stage.debrisTail->next = d;
             stage.debrisTail = d;
 
+            d->a = 255;
+
             d->x = e->x + x;
             d->y = e->y + y;
             // expansion rate 0.01, less is slower
             d->dx = (((rand() % 21) - 10) * 0.1) + (x - w / 2) * ((rand() % 10) * 0.01);
             d->dy = (((rand() % 21) - 10) * 0.1) + (y - h / 2) * ((rand() % 10) * 0.01);
             d->life = FPS * 4;
-            d->texture = e->texture;
+            d->texture = e->textureDebris;
 
             d->rect.x = x;
             d->rect.y = y;
@@ -1167,7 +1203,7 @@ static void drawDebris(void)
     Debris *d;
 
     for (d = stage.debrisHead.next; d != NULL; d = d->next) {
-        blitRect(d->texture, &d->rect, d->x, d->y);
+        blitFadeOutRect(d->texture, &d->rect, d->a, d->x, d->y);
     }
 }
 

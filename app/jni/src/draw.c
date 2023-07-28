@@ -95,6 +95,20 @@ void blitRect(SDL_Texture *texture, SDL_Rect *src, int x, int y)
     SDL_RenderCopy(app.renderer, texture, src, &dest);
 }
 
+void blitFadeOutRect(SDL_Texture *texture, SDL_Rect *src, int a, int x, int y)
+{
+    SDL_Rect dest;
+
+    dest.x = x;
+    dest.y = y;
+    dest.w = src->w;
+    dest.h = src->h;
+
+    SDL_SetTextureAlphaMod(texture, a);
+
+    SDL_RenderCopy(app.renderer, texture, src, &dest);
+}
+
 /* draw an animated spritesheet */
 bool blitSprite(SDL_Texture *texture, int x, int y, int frames, int id, int frame_delay, int times)
 {

@@ -59,6 +59,7 @@ struct Entity
     int reload;
     int side;
     SDL_Texture *texture;
+    SDL_Texture *textureDebris;
     Entity *next;
 };
 
@@ -68,6 +69,7 @@ struct Debris
     float y;
     float dx;
     float dy;
+    int a;
     SDL_Rect rect;
     SDL_Texture *texture;
     int life;
