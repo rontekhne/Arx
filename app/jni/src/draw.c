@@ -20,6 +20,7 @@ void presentScene(void)
     SDL_RenderPresent(app.renderer);
 }
 
+/* get the texture when it is loaded */
 static SDL_Texture *getTexture(char *name)
 {
     Texture *t;
@@ -35,6 +36,7 @@ static SDL_Texture *getTexture(char *name)
     return NULL;
 }
 
+/* Add the texture to a cache when it is loaded */
 static void addTextureToCache(char *name, SDL_Texture *sdlTexture)
 {
     Texture *texture;
@@ -83,6 +85,7 @@ void blit(SDL_Texture *texture, int x, int y)
     SDL_RenderCopy(app.renderer, texture, NULL, &dest); /* drawing */
 }
 
+/* Draw a portion of a rectangle */
 void blitRect(SDL_Texture *texture, SDL_Rect *src, int x, int y)
 {
     SDL_Rect dest;
@@ -95,6 +98,7 @@ void blitRect(SDL_Texture *texture, SDL_Rect *src, int x, int y)
     SDL_RenderCopy(app.renderer, texture, src, &dest);
 }
 
+/* Draw a portion of a rectangle and fade out it */
 void blitFadeOutRect(SDL_Texture *texture, SDL_Rect *src, int a, int x, int y)
 {
     SDL_Rect dest;

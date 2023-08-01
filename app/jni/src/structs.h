@@ -1,5 +1,6 @@
 /* structs.h: object definitions */
 
+// struct definitions
 typedef struct Entity Entity;
 typedef struct Explosion Explosion;
 typedef struct Debris Debris;
@@ -14,6 +15,7 @@ typedef struct
     void (*draw)(void);
 } Delegate;
 
+/* Holds the characters and texture of the font */
 struct Texture
 {
     char name[MAX_NAME_LENGTH];
@@ -63,6 +65,7 @@ struct Entity
     Entity *next;
 };
 
+/* Represents the debris after entities are dead */
 struct Debris
 {
     float x;
@@ -76,6 +79,7 @@ struct Debris
     Debris *next;
 };
 
+/* Represents the text that appears when the player gets a drop */
 struct PlusPoints
 {
     float x;
@@ -91,7 +95,7 @@ struct PlusPoints
     PlusPoints *next;
 };
 
-/* holds information about fighters and powers */
+/* linked lists: holds information about fighters and powers */
 typedef struct
 {
     Entity fighterHead, *fighterTail;
@@ -129,12 +133,13 @@ typedef struct
     int score;
 } Highscore;
 
+/* Holds the highscore */
 typedef struct
 {
     Highscore highscore[NUM_HIGHSCORES];
 } Highscores;
 
-/* handles time */
+/* holds the game time */
 typedef struct
 {
     int d;
@@ -155,6 +160,7 @@ typedef struct
     int help;
 }Touch;
 
+/* Represents the pad */
 typedef struct {
     int fingerId;
     int centerX, centerY;
@@ -167,6 +173,7 @@ typedef struct {
     SDL_Texture *texture;
 } Control;
 
+/* Represents the fire button */
 typedef struct
 {
     int fingerId;

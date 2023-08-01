@@ -128,6 +128,7 @@ bool isBlitedOnce;
 bool playerGotDrop;
 static int soulOfTheTimePoints;
 static int isSecondSongOn;
+static int isThirdSongOn;
 
 /* tracks died enemies */
 static int violetDead;
@@ -246,6 +247,7 @@ void initStage(void)
     playMusic(0);
 
     isSecondSongOn = false;
+    isThirdSongOn = false;
 }
 
 static void resetStage(void)
@@ -531,6 +533,13 @@ static void logic(void)
         isSecondSongOn = true;
         stopMusic();
         loadMusic("msc/arx_part_two.ogg");
+        playMusic(0);
+    }
+
+    if (t.m == 11 && t.s == 4 && isThirdSongOn == false) {
+        isThirdSongOn = true;
+        stopMusic();
+        loadMusic("msc/arx_part_three.ogg");
         playMusic(0);
     }
 

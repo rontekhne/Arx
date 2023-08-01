@@ -1,43 +1,47 @@
 /* defs.h: contains definitions, such as the size of the window */
 
-/* window size and screen resolution */
-//#define SCREEN_WIDTH 1024
-//#define SCREEN_HEIGHT 680
-
+/* Utilities */
 #define STRNCPY(dest, src, n) strncpy(dest, src, n); dest[n - 1] = '\0'
-
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
+/* Player and Enemy */
 #define PLAYER_SPEED 4
 #define PLAYER_POWER_SPEED 16
 #define PLAYER_INITIAL_ENERGY 500
 #define PLAYER_INITIAL_MAGIC 500
+#define ENEMY_POWER_SPEED 8
 
-#define MAX_KEYBOARD_KEYS 350
+/* Game logic */
 #define SIDE_PLAYER 0
 #define SIDE_ENEMY 1
+
+/* Control */
 #define FPS 60
-#define ENEMY_POWER_SPEED 8
 #define MAX_STARS 500
 #define MAX_SND_CHANNELS 8
+#define LOGO_TIME 250
+#define MAX_ENERGY 500
+#define MAX_MAGIC 500
+#define MAX_DETONA 10
+
+/* Keyboard, input and score */
+#define MAX_KEYBOARD_KEYS 350
 #define NUM_HIGHSCORES 8
 #define MAX_NAME_LENGTH 32
 #define MAX_LINE_LENGTH 1024
 #define MAX_SCORE_NAME_LENGTH 11
 #define GLYPH_WIDTH 18
 #define GLYPH_HEIGHT 28
-#define LOGO_TIME 250
-#define MAX_ENERGY 500
-#define MAX_MAGIC 500
-#define MAX_DETONA 10
 
+/* ids */
 #define PLAYER_GOT_DROP_ID 16283
 #define HOURGLASS_ID 16282
 #define SCORE_ID 16281
 #define LOGO_ID 16280
 #define ARX_MENU_ID 16279
 
+/* Touch */
 #define SDL_DIR_UP 0
 #define SDL_DIR_DOWN 1
 #define SDL_DIR_LEFT 2
@@ -48,10 +52,12 @@
 #define SDL_DIR_DOWN_RIGHT 7
 #define SDL_DIR_NONE 8
 
+/* Aux keys */
 #define SDL_SCANCODE_DOUBLEQUOTE 346
 #define SDL_SCANCODE_HIFEN 348
 #define SDL_SCANCODE_DOLAR 349
 
+/* Audio channels */
 enum
 {
     CH_ANY = -1,
@@ -63,6 +69,7 @@ enum
     CH_DEATH
 };
 
+/* Sounds */
 enum
 {
     SND_PLAYER_POWER,
@@ -87,6 +94,7 @@ enum
     SND_MAX
 };
 
+/* Text align */
 enum
 {
     TEXT_LEFT,
