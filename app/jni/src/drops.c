@@ -26,6 +26,8 @@ extern SDL_Texture *pinkSoulTexture;
 
 extern unsigned long long int id;
 
+/* this section has functions that handles the real time
+ * logic updates of the drops in the main loop.  */
 void doEnergyPods(void)
 {
     Entity *e, *prev;
@@ -59,31 +61,6 @@ void doEnergyPods(void)
         }
         prev = e;
     }
-}
-
-void addEnergyPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.energyTail->next = e;
-
-    e->id = id;
-    e->species = 10;
-    e->frames = 8;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = energyTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
 }
 
 void doMagicPods(void)
@@ -121,31 +98,6 @@ void doMagicPods(void)
     }
 }
 
-void addMagicPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.magicTail->next = e;
-
-    e->id = id;
-    e->species = 11;
-    e->frames = 8;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = magicTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
-}
-
 void doSoulOfTheTimePods(void)
 {
     Entity *e, *prev;
@@ -176,31 +128,6 @@ void doSoulOfTheTimePods(void)
         }
         prev = e;
     }
-}
-
-void addSoulOfTheTimePods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.soulOfTheTimeTail->next = e;
-
-    e->id = id;
-    e->species = 12;
-    e->frames = 8;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = soulOfTheTimeTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
 }
 
 void doDetonaPods(void)
@@ -239,31 +166,6 @@ void doDetonaPods(void)
     }
 }
 
-void addDetonaPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.detonaTail->next = e;
-
-    e->id = id;
-    e->species = 13;
-    e->frames = 8;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = detonaTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
-}
-
 void doVioletSoulPods(void)
 {
     Entity *e, *prev;
@@ -294,31 +196,6 @@ void doVioletSoulPods(void)
         }
         prev = e;
     }
-}
-
-void addVioletSoulPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.violetSoulTail->next = e;
-
-    e->id = id;
-    e->species = 14;
-    e->frames = 16;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = violetSoulTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
 }
 
 void doBlueSoulPods(void)
@@ -353,31 +230,6 @@ void doBlueSoulPods(void)
     }
 }
 
-void addBlueSoulPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.blueSoulTail->next = e;
-
-    e->id = id;
-    e->species = 15;
-    e->frames = 16;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = blueSoulTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
-}
-
 void doCyanSoulPods(void)
 {
     Entity *e, *prev;
@@ -408,31 +260,6 @@ void doCyanSoulPods(void)
         }
         prev = e;
     }
-}
-
-void addCyanSoulPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.cyanSoulTail->next = e;
-
-    e->id = id;
-    e->species = 16;
-    e->frames = 16;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = cyanSoulTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
 }
 
 void doGreenSoulPods(void)
@@ -467,31 +294,6 @@ void doGreenSoulPods(void)
     }
 }
 
-void addGreenSoulPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.greenSoulTail->next = e;
-
-    e->id = id;
-    e->species = 17;
-    e->frames = 16;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = greenSoulTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
-}
-
 void doYellowSoulPods(void)
 {
     Entity *e, *prev;
@@ -522,31 +324,6 @@ void doYellowSoulPods(void)
         }
         prev = e;
     }
-}
-
-void addYellowSoulPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.yellowSoulTail->next = e;
-
-    e->id = id;
-    e->species = 18;
-    e->frames = 16;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = yellowSoulTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
 }
 
 void doOrangeSoulPods(void)
@@ -581,31 +358,6 @@ void doOrangeSoulPods(void)
     }
 }
 
-void addOrangeSoulPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.orangeSoulTail->next = e;
-
-    e->id = id;
-    e->species = 19;
-    e->frames = 16;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = orangeSoulTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
-}
-
 void doRedSoulPods(void)
 {
     Entity *e, *prev;
@@ -636,31 +388,6 @@ void doRedSoulPods(void)
         }
         prev = e;
     }
-}
-
-void addRedSoulPods(int x, int y)
-{
-    Entity *e;
-
-    e = malloc(sizeof(Entity));
-    memset(e, 0, sizeof(Entity));
-    stage.redSoulTail->next = e;
-
-    e->id = id;
-    e->species = 20;
-    e->frames = 16;
-    e->x = x;
-    e->y = y;
-    e->dx = -(rand() % 5);
-    e->dy = (rand() % 5) - (rand() % 5);
-    e->energy = FPS * 10;
-    e->texture = redSoulTexture;
-
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->x -= e->w / e->frames / 2;
-    e->y -= e->h / e->frames / 2;
-
-    ++id;
 }
 
 void doPinkSoulPods(void)
@@ -695,6 +422,284 @@ void doPinkSoulPods(void)
     }
 }
 
+/* This section has functions that handles the addition of the
+ * drop to the game when an entity dies */
+void addEnergyPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.energyTail->next = e;
+
+    e->id = id;
+    e->species = 10;
+    e->frames = 8;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = energyTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+
+void addMagicPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.magicTail->next = e;
+
+    e->id = id;
+    e->species = 11;
+    e->frames = 8;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = magicTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addSoulOfTheTimePods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.soulOfTheTimeTail->next = e;
+
+    e->id = id;
+    e->species = 12;
+    e->frames = 8;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = soulOfTheTimeTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addDetonaPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.detonaTail->next = e;
+
+    e->id = id;
+    e->species = 13;
+    e->frames = 8;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = detonaTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addVioletSoulPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.violetSoulTail->next = e;
+
+    e->id = id;
+    e->species = 14;
+    e->frames = 16;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = violetSoulTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addBlueSoulPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.blueSoulTail->next = e;
+
+    e->id = id;
+    e->species = 15;
+    e->frames = 16;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = blueSoulTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addCyanSoulPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.cyanSoulTail->next = e;
+
+    e->id = id;
+    e->species = 16;
+    e->frames = 16;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = cyanSoulTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addGreenSoulPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.greenSoulTail->next = e;
+
+    e->id = id;
+    e->species = 17;
+    e->frames = 16;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = greenSoulTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addYellowSoulPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.yellowSoulTail->next = e;
+
+    e->id = id;
+    e->species = 18;
+    e->frames = 16;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = yellowSoulTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addOrangeSoulPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.orangeSoulTail->next = e;
+
+    e->id = id;
+    e->species = 19;
+    e->frames = 16;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = orangeSoulTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
+void addRedSoulPods(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.redSoulTail->next = e;
+
+    e->id = id;
+    e->species = 20;
+    e->frames = 16;
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->energy = FPS * 10;
+    e->texture = redSoulTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+    e->x -= e->w / e->frames / 2;
+    e->y -= e->h / e->frames / 2;
+
+    ++id;
+}
+
 void addPinkSoulPods(int x, int y)
 {
     Entity *e;
@@ -720,6 +725,8 @@ void addPinkSoulPods(int x, int y)
     ++id;
 }
 
+/* This section has funtions that draw the texture in the game
+ * till the player gets it or its time is ended */
 void drawEnergyPods(void)
 {
     Entity *e;

@@ -23,7 +23,7 @@ void doKeyDown(SDL_KeyboardEvent *event)
     }
 }
 
-/* handles key down */
+/* handles key up */
 void doKeyUp(SDL_KeyboardEvent *event)
 {
     if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS) {
@@ -31,6 +31,7 @@ void doKeyUp(SDL_KeyboardEvent *event)
     }
 }
 
+/* This function handles the virtual keyboard touch down */
 void doKeyboardDown(SDL_TouchFingerEvent* event)
 {
     // Calculate the touch position
@@ -141,6 +142,7 @@ void doKeyboardDown(SDL_TouchFingerEvent* event)
     }
 }
 
+/* This function handles the virtual keyboard touch up */
 void doKeyboardUp(SDL_TouchFingerEvent* event)
 {
     // first row
@@ -213,6 +215,7 @@ void doKeyboardUp(SDL_TouchFingerEvent* event)
     app.keyboard[SDL_SCANCODE_SPACE] = 0;
 }
 
+/* This function handles the virtual fire button touch down */
 void doFireDown(SDL_TouchFingerEvent* event, Fire *fire)
 {
     int touchX = event->x * SCREEN_WIDTH;
@@ -224,6 +227,7 @@ void doFireDown(SDL_TouchFingerEvent* event, Fire *fire)
     }
 }
 
+/* This function handles the virtual fire button touch up */
 void doFireUp(SDL_TouchFingerEvent* event, Fire *fire)
 {
     if (fire->isPressed && fire->fingerId == event->fingerId) {
@@ -231,6 +235,7 @@ void doFireUp(SDL_TouchFingerEvent* event, Fire *fire)
     }
 }
 
+/* This function handles the pad of control motion */
 void controlMotion(SDL_TouchFingerEvent *event, Control *control) {
     if (control->isPressed) {
         control->touchX = event->x * SCREEN_WIDTH;
@@ -267,6 +272,7 @@ void controlMotion(SDL_TouchFingerEvent *event, Control *control) {
     }
 }
 
+/* This function handles the touch down of the pad of control */
 void controlTouchDown(SDL_TouchFingerEvent *event, Control *control)
 {
     control->touchX = event->x * SCREEN_WIDTH;
@@ -301,6 +307,7 @@ void controlTouchDown(SDL_TouchFingerEvent *event, Control *control)
     }
 }
 
+/* This function handles the touch up of the pad of control */
 void controlTouchUp(SDL_TouchFingerEvent *event, Control *control)
 {
     if (control->isPressed && control->fingerId == event->fingerId) {
@@ -311,6 +318,7 @@ void controlTouchUp(SDL_TouchFingerEvent *event, Control *control)
     }
 }
 
+/* This function handles the touch down of the buttons in the menu screen */
 void doTouchMenuDown(SDL_TouchFingerEvent* event)
 {
     int touchX = event->x * SCREEN_WIDTH;
@@ -350,6 +358,7 @@ void doTouchMenuDown(SDL_TouchFingerEvent* event)
     }
 }
 
+/* This function handles the touch up of the buttons in the menu screen */
 void doTouchMenuUp(SDL_TouchFingerEvent* event)
 {
     // reset
@@ -359,6 +368,7 @@ void doTouchMenuUp(SDL_TouchFingerEvent* event)
     touch.quit = 0;
 }
 
+/* This function handles the touch down of the buttons in the score screen */
 void doTouchScoreDown(SDL_TouchFingerEvent* event)
 {
     int touchX = event->x * SCREEN_WIDTH;
@@ -388,6 +398,7 @@ void doTouchScoreDown(SDL_TouchFingerEvent* event)
     }
 }
 
+/* This function handles the touch up of the buttons in the score screen */
 void doTouchScoreUp(SDL_TouchFingerEvent* event)
 {
     // Reset touch.menu and touch.quit
@@ -396,6 +407,7 @@ void doTouchScoreUp(SDL_TouchFingerEvent* event)
     touch.help = 0;
 }
 
+/* This function handles the detona special power button touch down */
 void doTouchDetonaDown(SDL_TouchFingerEvent* event)
 {
     int touchX = event->x * SCREEN_WIDTH;
@@ -416,12 +428,13 @@ void doTouchDetonaDown(SDL_TouchFingerEvent* event)
     }
 }
 
+/* This function handles the detona special power button touch up */
 void doTouchDetonaUp(SDL_TouchFingerEvent* event)
 {
     touch.detona = 0;
 }
 
-/* handles input */
+/* handles input and call input functions */
 void doInput(void)
 {
     SDL_Event event;

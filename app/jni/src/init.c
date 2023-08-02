@@ -13,6 +13,8 @@ extern int SCREEN_HEIGHT;
 extern App app;
 extern Stage stage;
 
+/* This function initializes all SDL functions and resources
+ * needed for the game to work properly */
 void initSDL(void)
 {
     int rendererFlags, windowFlags;
@@ -75,6 +77,10 @@ void initSDL(void)
     SDL_ShowCursor(0);
 }
 
+/* This function initialize in order the first
+ * function of the game to be loaded and set
+ * memory for the game stage, also loads the
+ * first song */
 void initGame(void)
 {
     initBackground();
@@ -88,6 +94,8 @@ void initGame(void)
     playMusic(1);
 }
 
+/* This function clean the images, renderer and window.
+ * After that, it quits */
 void cleanup(void)
 {
     IMG_Quit();

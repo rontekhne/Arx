@@ -1,5 +1,6 @@
 /* highscores.c: handles highscore table */
 
+/* includes the headers used in this file */
 #include "common.h"
 #include "background.h"
 #include "highscores.h"
@@ -9,6 +10,7 @@
 #include "sound.h"
 #include "text.h"
 
+/* add the extern global variables and constants */
 extern App app;
 extern Stage stage;
 extern Highscores highscores;
@@ -20,6 +22,7 @@ extern bool isScoreOn;
 extern bool isHelpOn;
 extern char lang;
 
+/* prototypes of the static functions */
 static void logic(void);
 static void draw(void);
 static int  highscoreComparator(const void *a, const void *b);
@@ -32,18 +35,23 @@ static void drawTextPresentation(void);
 static void drawHelpBtn(void);
 static void drawHelp(void);
 
+/* declaration of static textures */
 static SDL_Texture *menuBtnTexture;
 static SDL_Texture *quitBtnTexture;
 static SDL_Texture *helpBtnTexture;
 static SDL_Texture *helpTexture;
 static SDL_Texture *trophyTexture;
 static SDL_Texture * virtualKeyboard;
+
+/* static logic variables used here */
 static Highscore *newHighscore;
 static int        cursorBlink;
-
 static int helpTimer = 0;
 static int resetHelpTimer = 9;
 
+/* this function initialize the score table with ANON if
+ * there's no score recorded, otherwise it's populated
+ * with the name and score of the player */
 void initHighscoreTable(void)
 {
     int i;
@@ -59,6 +67,10 @@ void initHighscoreTable(void)
     cursorBlink = 0;
 }
 
+/* this function initialize this module, aka highscores.
+ * It begins delegating the logic and draw functions to
+ * the app, then there are control variables being initialized,
+ * textures being loaded and memory allocated to the keyboard keys */
 void initHighscores(void)
 {
     app.delegate.logic = logic;
@@ -75,6 +87,9 @@ void initHighscores(void)
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 }
 
+/* This is the main logic function of the hoghscore module.
+ * It handles the pressing of buttons and uses flags to do
+ * it */
 static void logic(void)
 {
     doBackground();
@@ -118,6 +133,11 @@ static void logic(void)
     }
 }
 
+/* This function handles the touch of the virtual keyboard and its
+ * called for all keys in the doNameInput function. It begins setting
+ * static variables to hold the time in order to simulate a delay to
+ * avoid multi click when the player clicks it. After this, the
+ * variables are updated inside the if statement and a delay is applyed */
 static void handleVirtualKeyboardTouch(char character, int keyboardCode, int* n, char* name)
 {
     /* handle delay touch */
@@ -134,6 +154,10 @@ static void handleVirtualKeyboardTouch(char character, int keyboardCode, int* n,
     }
 }
 
+/* This function handles the input in the virtual keyboard screen.
+ * It uses the handleVirtualKeyboardTouch function to apply a delay
+ * when the player touches in a key and is done when the return key
+ * is pressed. */
 static void doNameInput(void)
 {
     int  i, n;
@@ -238,6 +262,9 @@ static void doNameInput(void)
     }
 }
 
+/* The draw function calls all draw functions in this module.
+ * It has a logic to handle the switching between screen and
+ * draw accordingly */
 static void draw(void)
 {
     drawBackground();
@@ -257,6 +284,9 @@ static void draw(void)
     }
 }
 
+/* This function uses the font texture to draw each
+ * character in the virtual keyboard screen. It simply
+ * draw the character pressed */
 static void drawNameInput(void)
 {
     SDL_Rect r;
@@ -278,6 +308,9 @@ static void drawNameInput(void)
     }
 }
 
+/* This function draws the eight score in the highscore
+ * table. It choses colors for the first three ranks and
+ * draw the rest with the same fourth color: that's grey. */
 static void drawHighscores(void)
 {
     int i, y, r, g, b;
@@ -316,6 +349,8 @@ static void drawHighscores(void)
     }
 }
 
+/* This function add the new highscore if the player has one.
+ * It get the score from the game and puts it in the table */
 void addHighscore(int score)
 {
     Highscore newHighscores[NUM_HIGHSCORES + 1];
@@ -344,6 +379,9 @@ void addHighscore(int score)
     }
 }
 
+/* This function compares the scores with the purpose
+ * of order. The socre table has an order that goes from
+ * the forst place to the eighth */
 static int highscoreComparator(const void *a, const void *b)
 {
     Highscore *h1 = ((Highscore*)a);
@@ -369,6 +407,7 @@ static void drawVirtualKeyboard(void)
     SDL_RenderCopy(app.renderer, virtualKeyboard, NULL, &dest);
 }
 
+/* Draw the menu and quit buttons in the score screen */
 void drawBtn()
 {
     SDL_Rect mr, qr;
@@ -403,6 +442,7 @@ void drawBtn()
     );
 }
 
+/* This function draws a text in the score screen */
 static void drawTextPresentation(void)
 {
     char textPt[] = "O INIMIGO PODE CONTER UMA ALMA, QUEPOR ALGUM MOTIVO DESCONHECIDO FAZ ASUA ALMA ALIMENTAR-SE DE PODERES DEOUTRO MUNDO. SOIS UM ARX E SUA FAMAEMERGE COMO FRUTO DE SUAS BATALHAS. ";
@@ -453,6 +493,7 @@ static void drawTextPresentation(void)
     }
 }
 
+/* Draw the help button */
 static void drawHelpBtn(void)
 {
     SDL_Rect hr;
@@ -473,6 +514,8 @@ static void drawHelpBtn(void)
     );
 }
 
+/* Draw a help screen above the score screen
+ * to help the player to play the game */
 static void drawHelp(void)
 {
     SDL_Rect r;
