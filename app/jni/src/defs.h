@@ -58,9 +58,10 @@
 #define SDL_SCANCODE_DOLAR 349
 
 /* Audio channels */
+#define MIX_MAX_VOLUME 128
 enum
 {
-    CH_ANY = -1,
+    CH_ANY, // = -1,
     CH_PLAYER,
     CH_ENEMY_POWER,
     CH_SUPPLY,

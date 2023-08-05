@@ -41,6 +41,8 @@ static void doFighters(void);
 static void spawnEnemies(void);
 static void doDebris(void);
 static void addDebris(Entity *e);
+static void doSoundVolume(Volume *v);
+static void doMusicVolume(Volume *v);
 
 static void clipPlayer(void);
 /* draw */
@@ -55,6 +57,8 @@ static void drawHud(void);
 static void drawDetonaBar(void);
 static void drawEnergyBar(void);
 static void drawMagicBar(void);
+static void drawSoundVolumeBtn(Volume *v);
+static void drawMusicVolumeBtn(Volume *v);
 
 static int calculateTotalScore(void);
 
@@ -115,6 +119,11 @@ SDL_Texture *yellowSoulTexture;
 SDL_Texture *orangeSoulTexture;
 SDL_Texture *redSoulTexture;
 SDL_Texture *pinkSoulTexture;
+
+
+/* Sound effects and music volume control */
+Volume soundVolume;
+Volume musicVolume;
 
 // control
 static int enemySpawnTimer;
@@ -213,13 +222,25 @@ void initStage(void)
     hourglassTexture = loadTexture("img/hourglass.png");
     scoreTexture = loadTexture("img/score.png");
 
+    /* Volume - create init ); */
+    soundVolume.texture = loadTexture("img/sound_control.png");
+    musicVolume.texture = loadTexture("img/music_control.png");
+    soundVolume.isBarOn = 0;
+    soundVolume.level = 3;
+    soundVolume.timer = 77;
+    soundVolume.alpha = 100;
+    musicVolume.isBarOn = 0;
+    musicVolume.level = 3;
+    musicVolume.timer = 77;
+    musicVolume.alpha = 100;
+
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 
     resetStage();
     initPlayer();
     id = 1;
     initFireBtn(&fire);
-    stageResetTimer = FPS * 4;
+    stageResetTimer = FPS * 6;
     bossSpawnTimer = 15000;
     *Timer = 0;
     stage.score = 0;
@@ -462,6 +483,7 @@ static int calculateTotalScore(void) {
 
 static void logic(void)
 {
+    // This is the end, beautiful friend.
     if (player == NULL && --stageResetTimer <= 0) {
         stopMusic();
         *Timer = 0;
@@ -492,6 +514,8 @@ static void logic(void)
     doOrangeSoulPods();
     doRedSoulPods();
     doPinkSoulPods();
+    doSoundVolume(&soundVolume);
+    doMusicVolume(&musicVolume);
     clipPlayer();
 
     if (player != NULL) {
@@ -509,9 +533,9 @@ static void logic(void)
             player->magic = 0;
         }
 
-        if (player->magic > 0 && player->magic < 100) {
+        if (player->magic > 0 && player->magic < 50) {
             if (t.s % 10 == 0)
-            player->magic += 2;
+            player->magic += 1;
         }
 
         playerEnergy = player->energy;
@@ -1122,6 +1146,46 @@ static void addDebris(Entity *e)
     }
 }
 
+static void doSoundVolume(Volume *v)
+{
+    int i;
+
+    switch (v->level) {
+        case 0:
+                Mix_Volume(-1, 0);
+            break;
+        case 1:
+                Mix_Volume(-1, MIX_MAX_VOLUME / 3);
+            break;
+        case 2:
+                Mix_Volume(-1, MIX_MAX_VOLUME / 3 * 2);
+            break;
+        case 3:
+                Mix_Volume(-1, MIX_MAX_VOLUME);
+            break;
+    }
+}
+
+static void doMusicVolume(Volume *v)
+{
+    int i;
+
+    switch (v->level) {
+        case 0:
+            Mix_VolumeMusic(0);
+            break;
+        case 1:
+            Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
+            break;
+        case 2:
+            Mix_VolumeMusic(MIX_MAX_VOLUME / 3 * 2);
+            break;
+        case 3:
+            Mix_VolumeMusic(MIX_MAX_VOLUME);
+            break;
+    }
+}
+
 static void clipPlayer(void)
 {
     if (player != NULL) {
@@ -1165,6 +1229,8 @@ static void draw(void)
     drawPinkSoulPods();
     drawControl(&control);
     drawFireBtn(&fire);
+    drawSoundVolumeBtn(&soundVolume);
+    drawMusicVolumeBtn(&musicVolume);
 
     if (isDetonaOn) {
         drawDetonaBtn();
@@ -1367,4 +1433,72 @@ static void drawMagicBar(void)
 
     SDL_SetRenderDrawColor(app.renderer, r, g, b, 255);
     SDL_RenderFillRect(app.renderer, &fillRect);
+}
+
+static void drawSoundVolumeBtn(Volume *v)
+{
+    SDL_Rect r;
+
+    r.x = 10;
+    r.y = 52;
+
+    SDL_QueryTexture(v->texture, NULL, NULL, &r.w, &r.h);
+    blit(v->texture, r.x, r.y);
+
+    if (v->isBarOn) {
+        SDL_Rect fillRect;
+
+        fillRect.x = r.x + r.w + 10;
+        fillRect.y = r.y;
+        fillRect.w = r.w * v->level;
+        fillRect.h = r.h;
+
+        if (v->isTouched) {
+            v->alpha = 100;
+            v->timer = 77;
+        }
+
+        if (v->timer > 0) {
+            v->alpha = (v->timer * 100) / 77;
+            v->timer--;
+
+            SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, v->alpha);
+            SDL_RenderFillRect(app.renderer, &fillRect);
+        }
+    }
+}
+
+static void drawMusicVolumeBtn(Volume *v)
+{
+    SDL_Rect r;
+
+    r.x = 10;
+    r.y = 104;
+
+    SDL_QueryTexture(v->texture, NULL, NULL, &r.w, &r.h);
+    blit(v->texture, r.x, r.y);
+
+    if (v->isBarOn) {
+        SDL_Rect fillRect;
+
+        fillRect.x = r.x + r.w + 10;
+        fillRect.y = r.y;
+        fillRect.w = r.w * v->level;
+        fillRect.h = r.h;
+
+        if (v->isTouched) {
+            v->alpha = 100;
+            v->timer = 77;
+        }
+
+        if (v->timer > 0) {
+            v->alpha = (v->timer * 100) / 77;
+            v->timer--;
+
+            SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, v->alpha);
+            SDL_RenderFillRect(app.renderer, &fillRect);
+        }
+    }
 }

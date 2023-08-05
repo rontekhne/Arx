@@ -158,6 +158,8 @@ typedef struct
     int menu;
     int lang;
     int help;
+    int music;
+    int sound;
 }Touch;
 
 /* Represents the pad */
@@ -184,3 +186,18 @@ typedef struct
     int isPressed;
     SDL_Texture *texture;
 } Fire;
+
+/* Represents the sound effect and volume control */
+typedef struct
+{
+    int x;
+    int y;
+    int w;
+    int h;
+    int isBarOn;
+    int isTouched;
+    int level;
+    int timer;
+    int alpha;
+    SDL_Texture *texture;
+} Volume;

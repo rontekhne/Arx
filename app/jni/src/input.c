@@ -11,6 +11,8 @@ extern bool isMenuOn;
 extern bool isScoreOn;
 extern bool isKeyboardOn;
 extern bool isDetonaOn;
+extern Volume musicVolume;
+extern Volume soundVolume;
 
 Control control;
 Fire fire;
@@ -414,7 +416,7 @@ void doTouchDetonaDown(SDL_TouchFingerEvent* event)
     int touchY = event->y * SCREEN_HEIGHT;
 
     int btnWidth = 120;
-    int btnHeight = 120;;
+    int btnHeight = 120;
 
     int cellWidth = SCREEN_WIDTH / 6;
     int cellHeight = SCREEN_HEIGHT / 2;
@@ -432,6 +434,67 @@ void doTouchDetonaDown(SDL_TouchFingerEvent* event)
 void doTouchDetonaUp(SDL_TouchFingerEvent* event)
 {
     touch.detona = 0;
+}
+
+/* This functions controls the sound and music volume */
+void doSoundVolumeTouchDown(SDL_TouchFingerEvent *event, Volume *v)
+{
+    int touchX = event->x * SCREEN_WIDTH;
+    int touchY = event->y * SCREEN_HEIGHT;
+
+    int btnWidth = 32;
+    int btnHeight = 32;
+
+    if (touchX > 10 && touchX < 10 + btnWidth && touchY > 52 && touchY < 52 + btnHeight) {
+        touch.sound++;
+        v->level = touch.sound;
+        v->isTouched = 1;
+
+        if (v->isBarOn && touch.sound > 3) {
+            v->isBarOn = 0;
+        }else {
+            v->isBarOn = 1;
+        }
+    }
+}
+
+void doSoundVolumeTouchUp(SDL_TouchFingerEvent *event, Volume *v)
+{
+    if (touch.sound > 3) {
+        touch.sound = 0;
+        v->level = 0;
+    }
+    v->isTouched = 0;
+}
+
+void doMusicVolumeTouchDown(SDL_TouchFingerEvent *event, Volume *v)
+{
+    int touchX = event->x * SCREEN_WIDTH;
+    int touchY = event->y * SCREEN_HEIGHT;
+
+    int btnWidth = 32;
+    int btnHeight = 32;
+
+    if (touchX > 10 && touchX < 10 + btnWidth && touchY > 104 && touchY < 104 + btnHeight) {
+        touch.music++;
+        v->level = touch.music;
+        v->isTouched = 1;
+
+        if (v->isBarOn && touch.music > 3) {
+            v->isBarOn = 0;
+        }else {
+            v->isBarOn = 1;
+        }
+    }
+}
+
+void doMusicVolumeTouchUp(SDL_TouchFingerEvent *event, Volume *v)
+{
+    if (touch.music > 3) {
+        touch.music = 0;
+        v->level = 0;
+    }
+    v->isTouched = 0;
 }
 
 /* handles input and call input functions */
@@ -469,6 +532,8 @@ void doInput(void)
                     }
                     controlTouchDown(&event.tfinger, &control);
                     doFireDown(&event.tfinger, &fire);
+                    doSoundVolumeTouchDown(&event.tfinger, &soundVolume);
+                    doMusicVolumeTouchDown(&event.tfinger, &musicVolume);
                 }
                 break;
             case SDL_FINGERUP:
@@ -485,6 +550,8 @@ void doInput(void)
 
                     doFireUp(&event.tfinger, &fire);
                     controlTouchUp(&event.tfinger, &control);
+                    doSoundVolumeTouchUp(&event.tfinger, &soundVolume);
+                    doMusicVolumeTouchUp(&event.tfinger, &musicVolume);
                 }
                 break;
             case SDL_FINGERMOTION:
