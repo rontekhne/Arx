@@ -8,8 +8,10 @@
 #include "background.h"
 #include "highscores.h"
 #include "drops.h"
+#include "volume.h"
 #include "stage.h"
 
+/* extern variables and structures */
 extern App app;
 extern Highscores highscores;
 extern Stage stage;
@@ -20,9 +22,10 @@ extern char lang;
 extern int id;
 extern bool isDetonaOn;
 extern unsigned long long int *Timer;
-
 extern Control control;
 extern Fire fire;
+extern Volume soundVolume;
+extern Volume musicVolume;
 
 /* logic */
 static void initPlayer(void);
@@ -41,8 +44,6 @@ static void doFighters(void);
 static void spawnEnemies(void);
 static void doDebris(void);
 static void addDebris(Entity *e);
-static void doSoundVolume(Volume *v);
-static void doMusicVolume(Volume *v);
 
 static void clipPlayer(void);
 /* draw */
@@ -57,8 +58,6 @@ static void drawHud(void);
 static void drawDetonaBar(void);
 static void drawEnergyBar(void);
 static void drawMagicBar(void);
-static void drawSoundVolumeBtn(Volume *v);
-static void drawMusicVolumeBtn(Volume *v);
 
 static int calculateTotalScore(void);
 
@@ -119,11 +118,6 @@ SDL_Texture *yellowSoulTexture;
 SDL_Texture *orangeSoulTexture;
 SDL_Texture *redSoulTexture;
 SDL_Texture *pinkSoulTexture;
-
-
-/* Sound effects and music volume control */
-Volume soundVolume;
-Volume musicVolume;
 
 // control
 static int enemySpawnTimer;
@@ -221,18 +215,6 @@ void initStage(void)
     /* hud */
     hourglassTexture = loadTexture("img/hourglass.png");
     scoreTexture = loadTexture("img/score.png");
-
-    /* Volume - create init ); */
-    soundVolume.texture = loadTexture("img/sound_control.png");
-    musicVolume.texture = loadTexture("img/music_control.png");
-    soundVolume.isBarOn = 0;
-    soundVolume.level = 3;
-    soundVolume.timer = 77;
-    soundVolume.alpha = 100;
-    musicVolume.isBarOn = 0;
-    musicVolume.level = 3;
-    musicVolume.timer = 77;
-    musicVolume.alpha = 100;
 
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 
@@ -1146,46 +1128,6 @@ static void addDebris(Entity *e)
     }
 }
 
-static void doSoundVolume(Volume *v)
-{
-    int i;
-
-    switch (v->level) {
-        case 0:
-                Mix_Volume(-1, 0);
-            break;
-        case 1:
-                Mix_Volume(-1, MIX_MAX_VOLUME / 3);
-            break;
-        case 2:
-                Mix_Volume(-1, MIX_MAX_VOLUME / 3 * 2);
-            break;
-        case 3:
-                Mix_Volume(-1, MIX_MAX_VOLUME);
-            break;
-    }
-}
-
-static void doMusicVolume(Volume *v)
-{
-    int i;
-
-    switch (v->level) {
-        case 0:
-            Mix_VolumeMusic(0);
-            break;
-        case 1:
-            Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
-            break;
-        case 2:
-            Mix_VolumeMusic(MIX_MAX_VOLUME / 3 * 2);
-            break;
-        case 3:
-            Mix_VolumeMusic(MIX_MAX_VOLUME);
-            break;
-    }
-}
-
 static void clipPlayer(void)
 {
     if (player != NULL) {
@@ -1433,72 +1375,4 @@ static void drawMagicBar(void)
 
     SDL_SetRenderDrawColor(app.renderer, r, g, b, 255);
     SDL_RenderFillRect(app.renderer, &fillRect);
-}
-
-static void drawSoundVolumeBtn(Volume *v)
-{
-    SDL_Rect r;
-
-    r.x = 10;
-    r.y = 52;
-
-    SDL_QueryTexture(v->texture, NULL, NULL, &r.w, &r.h);
-    blit(v->texture, r.x, r.y);
-
-    if (v->isBarOn) {
-        SDL_Rect fillRect;
-
-        fillRect.x = r.x + r.w + 10;
-        fillRect.y = r.y;
-        fillRect.w = r.w * v->level;
-        fillRect.h = r.h;
-
-        if (v->isTouched) {
-            v->alpha = 100;
-            v->timer = 77;
-        }
-
-        if (v->timer > 0) {
-            v->alpha = (v->timer * 100) / 77;
-            v->timer--;
-
-            SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, v->alpha);
-            SDL_RenderFillRect(app.renderer, &fillRect);
-        }
-    }
-}
-
-static void drawMusicVolumeBtn(Volume *v)
-{
-    SDL_Rect r;
-
-    r.x = 10;
-    r.y = 104;
-
-    SDL_QueryTexture(v->texture, NULL, NULL, &r.w, &r.h);
-    blit(v->texture, r.x, r.y);
-
-    if (v->isBarOn) {
-        SDL_Rect fillRect;
-
-        fillRect.x = r.x + r.w + 10;
-        fillRect.y = r.y;
-        fillRect.w = r.w * v->level;
-        fillRect.h = r.h;
-
-        if (v->isTouched) {
-            v->alpha = 100;
-            v->timer = 77;
-        }
-
-        if (v->timer > 0) {
-            v->alpha = (v->timer * 100) / 77;
-            v->timer--;
-
-            SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, v->alpha);
-            SDL_RenderFillRect(app.renderer, &fillRect);
-        }
-    }
 }

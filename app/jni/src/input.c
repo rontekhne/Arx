@@ -520,6 +520,9 @@ void doInput(void)
                 STRNCPY(app.inputText, event.text.text, MAX_LINE_LENGTH);
                 break;
             case SDL_FINGERDOWN:
+                doSoundVolumeTouchDown(&event.tfinger, &soundVolume);
+                doMusicVolumeTouchDown(&event.tfinger, &musicVolume);
+
                 if (isKeyboardOn) {
                     doKeyboardDown(&event.tfinger);
                 }else if (isMenuOn) {
@@ -532,11 +535,12 @@ void doInput(void)
                     }
                     controlTouchDown(&event.tfinger, &control);
                     doFireDown(&event.tfinger, &fire);
-                    doSoundVolumeTouchDown(&event.tfinger, &soundVolume);
-                    doMusicVolumeTouchDown(&event.tfinger, &musicVolume);
                 }
                 break;
             case SDL_FINGERUP:
+                doSoundVolumeTouchUp(&event.tfinger, &soundVolume);
+                doMusicVolumeTouchUp(&event.tfinger, &musicVolume);
+
                 if (isKeyboardOn) {
                     doKeyboardUp(&event.tfinger);
                 }else if (isMenuOn) {
@@ -550,8 +554,6 @@ void doInput(void)
 
                     doFireUp(&event.tfinger, &fire);
                     controlTouchUp(&event.tfinger, &control);
-                    doSoundVolumeTouchUp(&event.tfinger, &soundVolume);
-                    doMusicVolumeTouchUp(&event.tfinger, &musicVolume);
                 }
                 break;
             case SDL_FINGERMOTION:

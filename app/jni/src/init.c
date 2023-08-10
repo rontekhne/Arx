@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "init.h"
 #include "sound.h"
+#include "volume.h"
 #include "text.h"
 
 extern int SCREEN_WIDTH;
@@ -89,6 +90,7 @@ void initGame(void)
     initFonts();
     initHighscoreTable();
     initMenu();
+    initVolume();
     memset(&stage, 0, sizeof(Stage));
     loadMusic("msc/arx_main_theme.ogg");
     playMusic(1);

@@ -8,9 +8,10 @@
 #include "draw.h"
 #include "stage.h"
 #include "sound.h"
+#include "volume.h"
 #include "text.h"
 
-/* add the extern global variables and constants */
+/* add the extern global variables, constants and structures */
 extern App app;
 extern Stage stage;
 extern Highscores highscores;
@@ -21,6 +22,8 @@ extern bool isKeyboardOn;
 extern bool isScoreOn;
 extern bool isHelpOn;
 extern char lang;
+extern Volume soundVolume;
+extern Volume musicVolume;
 
 /* prototypes of the static functions */
 static void logic(void);
@@ -113,6 +116,7 @@ static void logic(void)
         isKeyboardOn = true;
         isScoreOn = false;
         doNameInput();
+        doSoundVolume(&soundVolume);
     }else {
         isKeyboardOn = false;
         isScoreOn = true;
@@ -272,6 +276,7 @@ static void draw(void)
 
     if (newHighscore != NULL) {
         drawNameInput();
+        drawSoundVolumeBtn(&soundVolume);
     }
     else {
         drawHighscores();

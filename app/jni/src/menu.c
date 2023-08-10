@@ -7,6 +7,7 @@
 #include "stage.h"
 #include "text.h"
 #include "sound.h"
+#include "volume.h"
 #include "menu.h"
 
 extern App app;
@@ -15,6 +16,8 @@ extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern bool isMenuOn;
 extern int logoTimer;
+extern Volume soundVolume;
+extern Volume musicVolume;
 
 static void logic(void);
 static void draw(void);
@@ -68,6 +71,8 @@ static void logic(void)
 {
     doBackground();
     doStarfield();
+    doSoundVolume(&soundVolume);
+    doMusicVolume(&musicVolume);
 
     if (touch.lang == 1 && --langTimer < 0) {
         langTimer = resetLangTimer;
@@ -117,6 +122,8 @@ static void draw(void)
         drawTitle();
         drawArx();
         drawBtn();
+        drawSoundVolumeBtn(&soundVolume);
+        drawMusicVolumeBtn(&musicVolume);
     }
 }
 
