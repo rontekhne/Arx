@@ -52,6 +52,50 @@ static int        cursorBlink;
 static int helpTimer = 0;
 static int resetHelpTimer = 9;
 
+
+/* DB TEST */
+#include "databaseManager.h"
+
+typedef struct
+{
+    char *name;
+    int *score;
+}Users;
+
+static Users users;
+
+JNIEXPORT void JNICALL Java_org_libsdl_app_DatabaseManager_getData(JNIEnv *env, jobject thiz, jstring name, jint score) {
+    const char *c_str = (*env)->GetStringUTFChars(env, name, 0);
+
+    if (c_str == NULL) {
+        return;
+    }
+
+    if (users.name != NULL) {
+        free(users.name);
+    }
+
+    if (users.score != NULL) {
+        free(users.score);
+    }
+
+    users.name = (char *) malloc(strlen(c_str) + 1);
+    if (users.name == NULL) {
+        (*env)->ReleaseStringUTFChars(env, users.name, c_str);
+        return;
+    }
+
+    strcpy(users.name, c_str);
+    users.score = score;
+
+    for (int i = 0; i < strlen(users.name); ++i) {
+        users.name[i] = toupper(users.name[i]);
+    }
+
+    (*env)->ReleaseStringUTFChars(env, name, c_str);
+}
+
+
 /* this function initialize the score table with ANON if
  * there's no score recorded, otherwise it's populated
  * with the name and score of the player */
@@ -286,6 +330,8 @@ static void draw(void)
         }
         drawHelpBtn();
         drawBtn();
+
+        drawText(10, SCREEN_HEIGHT - 50, 255, 255, 255, TEXT_LEFT, "%s %d", users.name, users.score);
     }
 }
 

@@ -1,5 +1,8 @@
 /* common.h: contains common headers */
 
+/* android */
+#include <jni.h>
+
 /* SDL2 includes */
 #include <SDL.h>
 #include <SDL_image.h>

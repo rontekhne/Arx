@@ -230,4 +230,3 @@ void drawBtn()
         blit(enBtnTexture, lr.x, lr.y);
     }
 }
-
