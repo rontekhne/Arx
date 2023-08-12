@@ -222,7 +222,7 @@ void initStage(void)
     initPlayer();
     id = 1;
     initFireBtn(&fire);
-    stageResetTimer = FPS * 6;
+    stageResetTimer = FPS * 5;
     bossSpawnTimer = 15000;
     *Timer = 0;
     stage.score = 0;

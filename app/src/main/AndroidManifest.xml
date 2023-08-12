@@ -15,7 +15,7 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
-    <!-- Game controller support -->
+    <!-- Game controller support
     <uses-feature
         android:name="android.hardware.bluetooth"
         android:required="false" />
@@ -24,7 +24,7 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.usb.host"
-        android:required="false" />
+        android:required="false" /-->
 
     <!-- External mouse input events -->
     <uses-feature
@@ -45,8 +45,11 @@
     <!-- <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" /> -->
     <!-- <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> -->
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!-- Allow access to the vibrator -->
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <!--uses-permission android:name="android.permission.VIBRATE" /-->
 
     <!-- if you want to capture audio, uncomment this. -->
     <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
@@ -68,7 +71,7 @@
         <!-- Example of setting SDL hints from AndroidManifest.xml:
         <meta-data android:name="SDL_ENV.SDL_ACCELEROMETER_AS_JOYSTICK" android:value="0"/>
          -->
-     
+
         <activity android:name="org.libsdl.app.SDLActivity"
             android:screenOrientation="landscape"
             android:label="@string/app_name"
@@ -83,9 +86,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <!-- Let Android know that we can handle some USB devices and should receive this event -->
-            <intent-filter>
+            <!--intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
+            </intent-filter-->
             <!-- Drop file event -->
             <!--
             <intent-filter>
