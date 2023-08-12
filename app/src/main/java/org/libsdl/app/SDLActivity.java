@@ -330,10 +330,14 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             Log.v(TAG, "modify thread properties failed " + e.toString());
         }
 
-        /* DB TEST (Worked but, it can't be here)
-        * implement a database data exchange here is crazy */
+        /* DB TEST  */
+        DatabaseUsers[] users = new DatabaseUsers[9];
+        users[0] = new DatabaseUsers();
+        users[0].setName("PEDRO");
+        users[0].setScore(100);
+
         DatabaseManager dbManager = new DatabaseManager();
-        dbManager.getData("Pedro", 123);
+        dbManager.getData(users[0].getName(), users[0].getScore());
         /* DB TEST */
 
         // Load shared libraries
