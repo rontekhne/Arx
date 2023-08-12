@@ -331,13 +331,41 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         }
 
         /* DB TEST  */
-        DatabaseUsers[] users = new DatabaseUsers[9];
+        DatabaseUsers[] users = new DatabaseUsers[8];
         users[0] = new DatabaseUsers();
         users[0].setName("PEDRO");
         users[0].setScore(100);
 
+        users[1] = new DatabaseUsers();
+        users[1].setName("TONHO");
+        users[1].setScore(101);
+
+        users[2] = new DatabaseUsers();
+        users[2].setName("LUCIA");
+        users[2].setScore(102);
+
+        users[3] = new DatabaseUsers();
+        users[3].setName("MARIA");
+        users[3].setScore(103);
+
+        users[4] = new DatabaseUsers();
+        users[4].setName("LUIZE");
+        users[4].setScore(104);
+
+        users[5] = new DatabaseUsers();
+        users[5].setName("MARCOS");
+        users[5].setScore(105);
+
+        users[6] = new DatabaseUsers();
+        users[6].setName("JOREL");
+        users[6].setScore(106);
+
+        users[7] = new DatabaseUsers();
+        users[7].setName("INES");
+        users[7].setScore(107);
+
         DatabaseManager dbManager = new DatabaseManager();
-        dbManager.getData(users[0].getName(), users[0].getScore());
+        dbManager.getData(users);
         /* DB TEST */
 
         // Load shared libraries

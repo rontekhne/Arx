@@ -12,7 +12,7 @@ extern "C" {
  * Method:    sayHello
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_libsdl_app_DatabaseManager_getData(JNIEnv *env, jobject thiz, jstring name, jint score);
+JNIEXPORT void JNICALL Java_org_libsdl_app_DatabaseManager_getData(JNIEnv *env, jobject thiz, jobjectArray usersArray);
 
 #ifdef __cplusplus
 }

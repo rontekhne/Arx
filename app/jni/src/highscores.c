@@ -54,45 +54,50 @@ static int resetHelpTimer = 9;
 
 
 /* DB TEST */
+/* Files involved in database JNI interface
+ * All build.gradle and firebase things
+ * databaseManager.h, highscores.c, DatabaseManager.Java,
+ * DatabaseUsers.Java, SDLActivity.java
+ * */
 #include "databaseManager.h"
 
 typedef struct
 {
     char *name;
-    int *score;
+    int score;
 }Users;
 
-static Users users;
+static Users *users;
 
-JNIEXPORT void JNICALL Java_org_libsdl_app_DatabaseManager_getData(JNIEnv *env, jobject thiz, jstring name, jint score) {
-    const char *c_str = (*env)->GetStringUTFChars(env, name, 0);
+JNIEXPORT void JNICALL Java_org_libsdl_app_DatabaseManager_getData(JNIEnv *env, jobject thiz, jobjectArray usersArray) {
+    int numUsers = (*env)->GetArrayLength(env, usersArray);
 
-    if (c_str == NULL) {
-        return;
+    users = (Users *)malloc(numUsers * sizeof(Users));
+
+    for (int i = 0; i < numUsers; i++) {
+        jobject userObject = (*env)->GetObjectArrayElement(env, usersArray, i);
+
+        jmethodID getNameMethod = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, userObject), "getName", "()Ljava/lang/String;");
+        jmethodID getScoreMethod = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, userObject), "getScore", "()I");
+
+        jstring name = (jstring)(*env)->CallObjectMethod(env, userObject, getNameMethod);
+        jint score = (*env)->CallIntMethod(env, userObject, getScoreMethod);
+
+        const char *cName = (*env)->GetStringUTFChars(env, name, NULL);
+
+        users[i].name = strdup(cName);
+        users[i].score = score;
+
+        (*env)->ReleaseStringUTFChars(env, name, cName);
+        (*env)->DeleteLocalRef(env, userObject);
     }
 
-    if (users.name != NULL) {
-        free(users.name);
-    }
+    /* Free the users array of structures
+     for (int i = 0; i < numUsers; i++) {
+            free(users[i].name);
+        }
+        free(users); */
 
-    if (users.score != NULL) {
-        free(users.score);
-    }
-
-    users.name = (char *) malloc(strlen(c_str) + 1);
-    if (users.name == NULL) {
-        (*env)->ReleaseStringUTFChars(env, users.name, c_str);
-        return;
-    }
-
-    strcpy(users.name, c_str);
-    users.score = score;
-
-    for (int i = 0; i < strlen(users.name); ++i) {
-        users.name[i] = toupper(users.name[i]);
-    }
-
-    (*env)->ReleaseStringUTFChars(env, name, c_str);
 }
 
 
@@ -106,8 +111,12 @@ void initHighscoreTable(void)
     memset(&highscores, 0, sizeof(Highscores));
 
     for (i = 0; i < NUM_HIGHSCORES; i++) {
-        highscores.highscore[i].score = NUM_HIGHSCORES - i;
-        STRNCPY(highscores.highscore[i].name, "ANON", MAX_SCORE_NAME_LENGTH);
+        //highscores.highscore[i].score = NUM_HIGHSCORES - i;
+        //STRNCPY(highscores.highscore[i].name, "ANON", MAX_SCORE_NAME_LENGTH);
+
+        /* DB TEST */
+        STRNCPY(highscores.highscore[i].name, users[i].name, MAX_SCORE_NAME_LENGTH);
+        highscores.highscore[i].score = users[i].score;
     }
 
     newHighscore = NULL;
@@ -330,8 +339,6 @@ static void draw(void)
         }
         drawHelpBtn();
         drawBtn();
-
-        drawText(10, SCREEN_HEIGHT - 50, 255, 255, 255, TEXT_LEFT, "%s %d", users.name, users.score);
     }
 }
 
