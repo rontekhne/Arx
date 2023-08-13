@@ -331,6 +331,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         }
 
         /* DB TEST  */
+
         String[] names = {"PEDRO", "TONHO", "LUCIA", "MARIA", "LUIZE", "MARCOS", "JOREL", "INES"};
         int[] scores = {100, 101, 102, 103, 104, 105, 106, 107};
 
@@ -344,6 +345,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
         DatabaseManager dbManager = new DatabaseManager();
         dbManager.getData(users);
+
         /* DB TEST */
 
         // Load shared libraries
