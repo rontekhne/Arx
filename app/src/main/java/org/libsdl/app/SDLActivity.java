@@ -53,6 +53,12 @@ import android.widget.Toast;
 import java.util.Hashtable;
 import java.util.Locale;
 
+/* DB TEST */
+import android.content.Context;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.*;
+
 
 /**
     SDL Activity
@@ -330,21 +336,46 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             Log.v(TAG, "modify thread properties failed " + e.toString());
         }
 
-        /* DB TEST  */
+        /* DB TEST */
 
-        String[] names = {"PEDRO", "TONHO", "LUCIA", "MARIA", "LUIZE", "MARCOS", "JOREL", "INES"};
-        int[] scores = {100, 101, 102, 103, 104, 105, 106, 107};
+        Context context = this;
+        String[] names = new String[8];
+        int[] scores = new int[8];
 
-        DatabaseUsers[] users = new DatabaseUsers[8];
+        FirebaseApp.initializeApp(context);
 
-        for (int i = 0; i < 8; i++) {
-            users[i] = new DatabaseUsers();
-            users[i].setName(names[i]);
-            users[i].setScore(scores[i]);
-        }
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int index = 0;
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String name = userSnapshot.child("name").getValue(String.class);
+                    int score = userSnapshot.child("score").getValue(Integer.class);
+                    names[index] = name;
+                    scores[index] = score;
+                    index++;
+                }
 
-        DatabaseManager dbManager = new DatabaseManager();
-        dbManager.getData(users);
+                // Agora, os arrays names e scores estão preenchidos com os dados do Firebase
+                // Faça o que você precisa com esses arrays aqui
+                DatabaseUsers[] users = new DatabaseUsers[8];
+
+                for (int i = 0; i < 8; i++) {
+                    users[i] = new DatabaseUsers();
+                    users[i].setName(names[i]);
+                    users[i].setScore(scores[i]);
+                }
+
+                DatabaseManager dbManager = new DatabaseManager();
+                dbManager.getData(users);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
 
         /* DB TEST */
 
