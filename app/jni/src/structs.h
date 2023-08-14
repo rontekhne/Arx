@@ -201,3 +201,10 @@ typedef struct
     int alpha;
     SDL_Texture *texture;
 } Volume;
+
+/* database */
+typedef struct
+{
+    char *name;
+    int score;
+}Users;

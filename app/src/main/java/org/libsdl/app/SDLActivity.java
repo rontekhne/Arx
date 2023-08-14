@@ -345,18 +345,17 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         FirebaseApp.initializeApp(context);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.orderByChild("score").limitToLast(8).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int index = 0;
+                int index = 7; // Start from the last index
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String name = userSnapshot.child("name").getValue(String.class);
                     int score = userSnapshot.child("score").getValue(Integer.class);
                     names[index] = name;
                     scores[index] = score;
-                    index++;
+                    index--;
                 }
-
                 // Agora, os arrays names e scores estão preenchidos com os dados do Firebase
                 // Faça o que você precisa com esses arrays aqui
                 DatabaseUsers[] users = new DatabaseUsers[8];

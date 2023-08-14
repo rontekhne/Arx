@@ -10,6 +10,7 @@
 #include "sound.h"
 #include "volume.h"
 #include "text.h"
+#include "databaseManager.h"
 
 /* add the extern global variables, constants and structures */
 extern App app;
@@ -24,6 +25,7 @@ extern bool isHelpOn;
 extern char lang;
 extern Volume soundVolume;
 extern Volume musicVolume;
+extern Users *users;
 
 /* prototypes of the static functions */
 static void logic(void);
@@ -52,55 +54,6 @@ static int        cursorBlink;
 static int helpTimer = 0;
 static int resetHelpTimer = 9;
 
-
-/* DB TEST */
-/* Files involved in database JNI interface
- * All build.gradle and firebase things
- * databaseManager.h, highscores.c, DatabaseManager.Java,
- * DatabaseUsers.Java, SDLActivity.java
- * */
-#include "databaseManager.h"
-
-typedef struct
-{
-    char *name;
-    int score;
-}Users;
-
-static Users *users;
-
-JNIEXPORT void JNICALL Java_org_libsdl_app_DatabaseManager_getData(JNIEnv *env, jobject thiz, jobjectArray usersArray) {
-    int numUsers = (*env)->GetArrayLength(env, usersArray);
-
-    users = (Users *)malloc(numUsers * sizeof(Users));
-
-    for (int i = 0; i < numUsers; i++) {
-        jobject userObject = (*env)->GetObjectArrayElement(env, usersArray, i);
-
-        jmethodID getNameMethod = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, userObject), "getName", "()Ljava/lang/String;");
-        jmethodID getScoreMethod = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, userObject), "getScore", "()I");
-
-        jstring name = (jstring)(*env)->CallObjectMethod(env, userObject, getNameMethod);
-        jint score = (*env)->CallIntMethod(env, userObject, getScoreMethod);
-
-        const char *cName = (*env)->GetStringUTFChars(env, name, NULL);
-
-        users[i].name = strdup(cName);
-        users[i].score = score;
-
-        (*env)->ReleaseStringUTFChars(env, name, cName);
-        (*env)->DeleteLocalRef(env, userObject);
-    }
-
-    /* Free the users array of structures
-     for (int i = 0; i < numUsers; i++) {
-            free(users[i].name);
-        }
-        free(users); */
-
-}
-
-
 /* this function initialize the score table with ANON if
  * there's no score recorded, otherwise it's populated
  * with the name and score of the player */
@@ -111,10 +64,6 @@ void initHighscoreTable(void)
     memset(&highscores, 0, sizeof(Highscores));
 
     for (i = 0; i < NUM_HIGHSCORES; i++) {
-        //highscores.highscore[i].score = NUM_HIGHSCORES - i;
-        //STRNCPY(highscores.highscore[i].name, "ANON", MAX_SCORE_NAME_LENGTH);
-
-        /* DB TEST */
         STRNCPY(highscores.highscore[i].name, users[i].name, MAX_SCORE_NAME_LENGTH);
         highscores.highscore[i].score = users[i].score;
     }
