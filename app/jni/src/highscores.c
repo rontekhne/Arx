@@ -53,6 +53,9 @@ static Highscore *newHighscore;
 static int        cursorBlink;
 static int helpTimer = 0;
 static int resetHelpTimer = 9;
+static int lastScore;
+
+extern JavaVM *jvm; // Ponter to JVM
 
 /* this function initialize the score table with ANON if
  * there's no score recorded, otherwise it's populated
@@ -262,6 +265,11 @@ static void doNameInput(void)
         if (strlen(newHighscore->name) == 0) {
             STRNCPY(newHighscore->name, "ANON", MAX_SCORE_NAME_LENGTH);
         }
+
+        /* save name and score into db */
+        JNIEnv *env = SDL_AndroidGetJNIEnv();
+        saveData(jvm, env, newHighscore->name, lastScore);
+
         newHighscore = NULL;
         loadMusic("msc/arx_main_theme.ogg");
         playMusic(1);
@@ -362,6 +370,8 @@ void addHighscore(int score)
 {
     Highscore newHighscores[NUM_HIGHSCORES + 1];
     int       i;
+
+    lastScore = score; // for database
 
     memset(newHighscores, 0, sizeof(Highscore) * (NUM_HIGHSCORES + 1));
 

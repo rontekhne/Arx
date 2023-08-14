@@ -13,8 +13,11 @@ extern "C" {
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_libsdl_app_DatabaseManager_getData(JNIEnv *env, jobject thiz, jobjectArray usersArray);
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved);
 
 #ifdef __cplusplus
 }
 #endif
 #endif
+
+void saveData(JavaVM *jvm, JNIEnv *env, char *name, int score);

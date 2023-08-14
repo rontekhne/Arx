@@ -336,8 +336,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             Log.v(TAG, "modify thread properties failed " + e.toString());
         }
 
-        /* DB TEST */
-
+        /* DB call */
         Context context = this;
         String[] names = new String[8];
         int[] scores = new int[8];
@@ -356,8 +355,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                     scores[index] = score;
                     index--;
                 }
-                // Agora, os arrays names e scores estão preenchidos com os dados do Firebase
-                // Faça o que você precisa com esses arrays aqui
+
                 DatabaseUsers[] users = new DatabaseUsers[8];
 
                 for (int i = 0; i < 8; i++) {
@@ -367,16 +365,17 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                 }
 
                 DatabaseManager dbManager = new DatabaseManager();
-                dbManager.getData(users);
+                dbManager.getData(users); // getData
+
+                DatabaseManager.initializeInstance(); // saveData
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("Error: " + databaseError.getMessage());
+                Log.e("Arx", "Error: " + databaseError.getMessage());
             }
         });
-
-        /* DB TEST */
+        /* DB call */
 
         // Load shared libraries
         String errorMsgBrokenLib = "";
