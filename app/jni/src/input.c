@@ -502,7 +502,7 @@ void doInput(void)
 {
     SDL_Event event;
 
-    memset(app.inputText, '\0', MAX_LINE_LENGTH);
+    // memset(app.inputText, '\0', MAX_LINE_LENGTH);
 
     // reads all inputs from SDL queue
     while (SDL_PollEvent(&event)) {
@@ -516,9 +516,9 @@ void doInput(void)
             case SDL_KEYUP:
                 doKeyUp(&event.key);
                 break;
-            case SDL_TEXTINPUT:
-                STRNCPY(app.inputText, event.text.text, MAX_LINE_LENGTH);
-                break;
+            //case SDL_TEXTINPUT:
+                // STRNCPY(app.inputText, event.text.text, MAX_LINE_LENGTH);
+                // break;
             case SDL_FINGERDOWN:
                 doSoundVolumeTouchDown(&event.tfinger, &soundVolume);
                 doMusicVolumeTouchDown(&event.tfinger, &musicVolume);

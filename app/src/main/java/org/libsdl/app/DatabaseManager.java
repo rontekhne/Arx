@@ -8,7 +8,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DatabaseManager {
     static {
@@ -26,6 +31,7 @@ public class DatabaseManager {
     }
 
     public native void getData(DatabaseUsers[] users);
+
     public void saveData(String name, int score) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -36,13 +42,15 @@ public class DatabaseManager {
                 newUserRef.child("name").setValue(name);
                 newUserRef.child("score").setValue(score);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("Arx", "Error: " + databaseError.getMessage());
             }
         });
     }
-    public static void callSaveData(String name, int score) {
+
+    public static void callSaveData (String name,int score){
         if (instance != null) {
             instance.saveData(name, score);
         }

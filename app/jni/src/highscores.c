@@ -54,7 +54,8 @@ static int        cursorBlink;
 static int helpTimer = 0;
 static int resetHelpTimer = 9;
 static int lastScore;
-
+static bool isUnique;
+static int res;
 extern JavaVM *jvm; // Ponter to JVM
 
 /* this function initialize the score table with ANON if
@@ -174,7 +175,7 @@ static void doNameInput(void)
 
     n = strlen(newHighscore->name);
 
-    for (i = 0; i < strlen(app.inputText); i++) {
+    /*for (i = 0; i < strlen(app.inputText); i++) {
         c = toupper(app.inputText[i]);
 
         if (n < MAX_SCORE_NAME_LENGTH - 1) {
@@ -183,9 +184,9 @@ static void doNameInput(void)
         }else {
             newHighscore->name[n] = '\0';
         }
-    }
+    }*/
 
-    if (n < MAX_SCORE_NAME_LENGTH) {
+    if (n < MAX_SCORE_NAME_LENGTH - 1) {
         /* get touch */
         // first row
         handleVirtualKeyboardTouch('0', SDL_SCANCODE_0, &n, newHighscore->name);
@@ -226,7 +227,7 @@ static void doNameInput(void)
         handleVirtualKeyboardTouch('K', SDL_SCANCODE_K, &n, newHighscore->name);
         handleVirtualKeyboardTouch('L', SDL_SCANCODE_L, &n, newHighscore->name);
         handleVirtualKeyboardTouch('\"', SDL_SCANCODE_DOUBLEQUOTE, &n, newHighscore->name);
-        handleVirtualKeyboardTouch(' ', SDL_SCANCODE_RETURN, &n, newHighscore->name);
+        handleVirtualKeyboardTouch('\0', SDL_SCANCODE_RETURN, &n, newHighscore->name);
         // fouth row
         handleVirtualKeyboardTouch('!', SDL_SCANCODE_KP_EXCLAM, &n, newHighscore->name);
         handleVirtualKeyboardTouch('Z', SDL_SCANCODE_Z, &n, newHighscore->name);
@@ -266,7 +267,6 @@ static void doNameInput(void)
             STRNCPY(newHighscore->name, "ANON", MAX_SCORE_NAME_LENGTH);
         }
 
-        /* save name and score into db */
         JNIEnv *env = SDL_AndroidGetJNIEnv();
         saveData(jvm, env, newHighscore->name, lastScore);
 
