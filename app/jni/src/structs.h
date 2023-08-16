@@ -31,7 +31,6 @@ typedef struct
     Delegate delegate;
     int keyboard[MAX_KEYBOARD_KEYS];
     Texture textureHead, *textureTail;
-    // char inputText[MAX_LINE_LENGTH];
 } App;
 
 /* represents an entity like the player and enemy */

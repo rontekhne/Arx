@@ -39,6 +39,7 @@ static void drawBtn(void);
 static void drawTextPresentation(void);
 static void drawHelpBtn(void);
 static void drawHelp(void);
+static void drawNameExists(void);
 
 /* declaration of static textures */
 static SDL_Texture *menuBtnTexture;
@@ -54,8 +55,9 @@ static int        cursorBlink;
 static int helpTimer = 0;
 static int resetHelpTimer = 9;
 static int lastScore;
+
 static bool isUnique;
-static int res;
+
 extern JavaVM *jvm; // Ponter to JVM
 
 /* this function initialize the score table with ANON if
@@ -86,6 +88,7 @@ void initHighscores(void)
     app.delegate.draw = draw;
 
     isScoreOn = true;
+    isUnique = true;
     helpTimer = resetHelpTimer;
 
     menuBtnTexture = loadTexture("img/menu_btn.png");
@@ -93,6 +96,7 @@ void initHighscores(void)
     helpBtnTexture = loadTexture("img/help_btn.png");
     helpTexture = loadTexture("img/help.png");
     trophyTexture = loadTexture("img/trophy.png");
+    virtualKeyboard = loadTexture("img/virtual_keyboard.png");
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 }
 
@@ -170,21 +174,9 @@ static void handleVirtualKeyboardTouch(char character, int keyboardCode, int* n,
  * is pressed. */
 static void doNameInput(void)
 {
-    int  i, n;
-    char c;
+    int  i, j, n;
 
     n = strlen(newHighscore->name);
-
-    /*for (i = 0; i < strlen(app.inputText); i++) {
-        c = toupper(app.inputText[i]);
-
-        if (n < MAX_SCORE_NAME_LENGTH - 1) {
-            if (c >= ' ' && c <= 'Z')
-                newHighscore->name[n++] = c;
-        }else {
-            newHighscore->name[n] = '\0';
-        }
-    }*/
 
     if (n < MAX_SCORE_NAME_LENGTH - 1) {
         /* get touch */
@@ -263,16 +255,30 @@ static void doNameInput(void)
     }
 
     if (app.keyboard[SDL_SCANCODE_RETURN]) {
-        if (strlen(newHighscore->name) == 0) {
-            STRNCPY(newHighscore->name, "ANON", MAX_SCORE_NAME_LENGTH);
+
+        isUnique = true;
+
+        /* manual iteration to find equal names in highscores */
+        for (i = 0; i < NUM_HIGHSCORES; i++) {
+            for (j = 0; users[i].name[j] == newHighscore->name[j]; j++) {
+                if (users[i].name[j] == '\0' && newHighscore->name[j] == '\0') {
+                    isUnique = false;
+                    break;
+                }
+            }
+            if (isUnique == false) {
+                break;
+            }
         }
 
-        JNIEnv *env = SDL_AndroidGetJNIEnv();
-        saveData(jvm, env, newHighscore->name, lastScore);
+        if (isUnique && strlen(newHighscore->name) != 0) {
+            JNIEnv *env = SDL_AndroidGetJNIEnv();
+            saveData(jvm, env, newHighscore->name, lastScore);
 
-        newHighscore = NULL;
-        loadMusic("msc/arx_main_theme.ogg");
-        playMusic(1);
+            newHighscore = NULL;
+            loadMusic("msc/arx_main_theme.ogg");
+            playMusic(1);
+        }
     }
 }
 
@@ -286,6 +292,10 @@ static void draw(void)
 
     if (newHighscore != NULL) {
         drawNameInput();
+        drawVirtualKeyboard();
+        if (isUnique == false) {
+            drawNameExists();
+        }
         drawSoundVolumeBtn(&soundVolume);
     }
     else {
@@ -306,7 +316,7 @@ static void drawNameInput(void)
 {
     SDL_Rect r;
 
-    drawVirtualKeyboard();
+    // drawVirtualKeyboard();
 
     drawText(SCREEN_WIDTH / 2, 70, 255, 255, 255, TEXT_CENTER, lang == 'P' ? "EXCELENTE! VOCE ENTROU PARA O PLACAR!" : "CONGRATULATIONS, YOU'VE GAINED A HIGHSCORE!");
     drawText(SCREEN_WIDTH / 2, 120, 255, 255, 255, TEXT_CENTER, lang == 'P' ? "DIGITE SEU NOME ABAIXO:" : "ENTER YOUR NAME BELOW:");
@@ -411,9 +421,6 @@ static int highscoreComparator(const void *a, const void *b)
 static void drawVirtualKeyboard(void)
 {
     SDL_Rect dest;
-    virtualKeyboard = loadTexture("img/virtual_keyboard.png");
-
-    blit(virtualKeyboard, dest.w, SCREEN_HEIGHT / 2);
 
     dest.x = 0;
     dest.y = SCREEN_HEIGHT / 2;
@@ -584,4 +591,9 @@ static void drawHelp(void)
             y++;
         }
     }
+}
+
+static void drawNameExists(void)
+{
+    drawText(SCREEN_WIDTH / 2, 340, 255, 255, 255, TEXT_CENTER, lang == 'P' ? "ESSE NOME EXISTE :(" : "THIS NAME EXISTS :(");
 }
