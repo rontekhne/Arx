@@ -333,30 +333,42 @@ void doTouchMenuDown(SDL_TouchFingerEvent* event)
         touch.play = 0;
         touch.lang = 0;
         touch.quit = 0;
+        touch.help = 0;
     } else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) && touchY >= (SCREEN_HEIGHT / 2) && touchY < (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT / 6)) {
         // Touched the "PLAY" button
         touch.score = 0;
         touch.play = 1;
         touch.lang = 0;
         touch.quit = 0;
-    } else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) + (SCREEN_HEIGHT / 6) && touchY >= (SCREEN_HEIGHT - SCREEN_HEIGHT / 6)) {
+        touch.help = 0;
+    }else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) + (SCREEN_HEIGHT / 6) && touchY >= (SCREEN_HEIGHT - SCREEN_HEIGHT / 6)) {
         // Touched the "Q" button
         touch.score = 0;
         touch.play = 0;
         touch.lang = 0;
         touch.quit = 1;
+        touch.help = 0;
     } else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) - (SCREEN_HEIGHT / 6) && touchY >= (SCREEN_HEIGHT - SCREEN_HEIGHT / 6)) {
         // Touched the language button
         touch.score = 0;
         touch.play = 0;
         touch.lang = 1;
         touch.quit = 0;
-    } else {
+        touch.help = 0;
+    }else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) - (SCREEN_HEIGHT / 6 * 3) && touchY >= (SCREEN_HEIGHT - SCREEN_HEIGHT / 6)) {
+        // Touched the "HELP" button
+        touch.score = 0;
+        touch.play = 0;
+        touch.lang = 0;
+        touch.quit = 0;
+        touch.help = 1;
+    }else {
         // Touched outside the touchable areas
         touch.score = 0;
         touch.play = 0;
         touch.lang = 0;
         touch.quit = 0;
+        touch.help = 0;
     }
 }
 
@@ -368,6 +380,7 @@ void doTouchMenuUp(SDL_TouchFingerEvent* event)
     touch.play = 0;
     touch.lang = 0;
     touch.quit = 0;
+    touch.help = 0;
 }
 
 /* This function handles the touch down of the buttons in the score screen */
@@ -381,22 +394,14 @@ void doTouchScoreDown(SDL_TouchFingerEvent* event)
         // Touched the "MENU" button
         touch.menu = 1;
         touch.quit = 0;
-        touch.help = 0;
     } else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) + (SCREEN_HEIGHT / 6) && touchY >= (SCREEN_HEIGHT - SCREEN_HEIGHT / 6)) {
         // Touched the "QUIT" button
         touch.menu = 0;
         touch.quit = 1;
-        touch.help = 0;
-    } else if (touchX >= (SCREEN_WIDTH - SCREEN_WIDTH / 4) - (SCREEN_HEIGHT / 6) && touchY >= (SCREEN_HEIGHT - SCREEN_HEIGHT / 6)) {
-        // Touched the "HELP" button
-        touch.menu = 0;
-        touch.quit = 0;
-        touch.help = 1;
     } else {
         // Touched outside the touchable areas
         touch.menu = 0;
         touch.quit = 0;
-        touch.help = 0;
     }
 }
 
@@ -406,7 +411,6 @@ void doTouchScoreUp(SDL_TouchFingerEvent* event)
     // Reset touch.menu and touch.quit
     touch.menu = 0;
     touch.quit = 0;
-    touch.help = 0;
 }
 
 /* This function handles the detona special power button touch down */

@@ -8,7 +8,7 @@
 /* Player and Enemy */
 #define PLAYER_SPEED 4
 #define PLAYER_POWER_SPEED 16
-#define PLAYER_INITIAL_ENERGY 50
+#define PLAYER_INITIAL_ENERGY 500 // turn 50 for debug
 #define PLAYER_INITIAL_MAGIC 500
 #define ENEMY_POWER_SPEED 8
 

@@ -15,6 +15,7 @@ extern Touch touch;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern bool isMenuOn;
+extern bool isHelpOn;
 extern int logoTimer;
 extern Volume soundVolume;
 extern Volume musicVolume;
@@ -24,13 +25,17 @@ static void draw(void);
 static void drawLogo(void);
 static void drawTitle(void);
 static void drawArx(void);
+static void drawHelpBtn(void);
 static void drawBtn(void);
+static void drawHelp(void);
 
 static SDL_Texture *logoTexture;
 static SDL_Texture *arxTitle;
 static SDL_Texture *arxTexture;
 static SDL_Texture *scoreBtnTexture;
 static SDL_Texture *playBtnTexture;
+static SDL_Texture *helpBtnTexture;
+static SDL_Texture *helpTexture;
 static SDL_Texture *ptBtnTexture;
 static SDL_Texture *enBtnTexture;
 static SDL_Texture *quitBtnTexture;
@@ -39,6 +44,8 @@ static int reveal = 0;
 static int arxX = -32;
 static int langTimer = 0;
 static int resetLangTimer = 9;
+static int helpTimer = 0;
+static int resetHelpTimer = 9;
 
 extern char lang;
 
@@ -55,6 +62,8 @@ void initMenu(void)
     touch.lang = 0;
     langTimer = resetLangTimer;
 
+    helpTimer = resetHelpTimer;
+
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 
     logoTexture = loadTexture("img/r.png");
@@ -62,6 +71,8 @@ void initMenu(void)
     arxTexture = loadTexture("img/arx_menu.png");
     scoreBtnTexture = loadTexture("img/score_btn.png");
     playBtnTexture = loadTexture("img/play_btn.png");
+    helpTexture = loadTexture("img/help.png");
+    helpBtnTexture = loadTexture("img/help_btn.png");
     ptBtnTexture = loadTexture("img/pt_btn.png");
     enBtnTexture = loadTexture("img/en_btn.png");
     quitBtnTexture = loadTexture("img/quit_btn.png");
@@ -100,6 +111,16 @@ static void logic(void)
         isMenuOn = false;
         initStage();
     }
+
+    if (touch.help == 1 && --helpTimer == 0) {
+        helpTimer = resetHelpTimer;
+        if (isHelpOn == false) {
+            isHelpOn = true;
+        }else {
+            isHelpOn = false;
+        }
+        playSound(SND_TAP, CH_ANY);
+    }
 }
 
 static void draw(void)
@@ -121,9 +142,13 @@ static void draw(void)
         drawStarfield();
         drawTitle();
         drawArx();
-        drawBtn();
         drawSoundVolumeBtn(&soundVolume);
         drawMusicVolumeBtn(&musicVolume);
+        if (isHelpOn) {
+            drawHelp();
+        }
+        drawBtn();
+        drawHelpBtn();
     }
 }
 
@@ -229,4 +254,81 @@ void drawBtn()
     }else {
         blit(enBtnTexture, lr.x, lr.y);
     }
+}
+
+/* Draw a help screen above the score screen
+ * to help the player to play the game */
+static void drawHelp(void)
+{
+    SDL_Rect r;
+
+    r.x = 0;
+    r.y = 0;
+    r.w = SCREEN_WIDTH;
+    r.h = SCREEN_HEIGHT;
+
+    SDL_RenderCopy(app.renderer, helpTexture, NULL, &r);
+
+    int x = GLYPH_WIDTH, y;
+    char pt[10][96] =
+            {
+                    "DEIXE O CONTROLE PRESSIONADO PARA DESVIAR DOS INIMIGOS.",
+                    "OBTENHA PONTOS E GARANTA SEU LUGAR NO PLACAR.",
+                    "PERDES ENERGIA QUANDO ATINGIDO OU COLIDES COM O INIMIGO.",
+                    "ELIMINE OS ARXS COLORIDOS. PEGUE ALMAS E GARANTIR PONTOS.",
+                    "QUANDO ELIMINAR O CHEFE, COLETE ALMA DO TEMPO POR PONTOS.",
+                    "COLETE GRUPOS DE OITO ALMAS DE CORES DIFERENTES.",
+                    "ACIONADOR DE DETONA APARECE QUANDO O DETONA FOR COLETADO.",
+                    "ECONOMIZE MAGIA E JAMAIS DEIXE-A ACABAR.",
+                    "DIVIRTA-SE!"
+            };
+    char en[10][96] =
+            {
+                    "HOLD DOWN THE CONTROLLER TO DODGE ENEMIES.",
+                    "YOU LOSES ENERGY WHEN HIT OR COLLIDING WITH THE ENEMY.",
+                    "GET POINTS AND SECURE YOUR PLACE ON THE LEADERBOARD.",
+                    "KILL THE COLORFUL ARXS. COLLECT THEIR SOULS TO GET POINTS.",
+                    "WHEN YOU KILL THE BOSS, GET THE SOUL OF TIME FOR POINTS.",
+                    "COLLECT GROUPS OF EIGHT SOULS OF DIFFERENT COLORS.",
+                    "THE WRECK TRIGGER APPEARS WHEN WRECK IS COLLECTED.",
+                    "SAVE MAGIC AND NEVER LET IT RUN OUT.",
+                    "HAVE FUN!"
+            };
+    if (lang == 'P') {
+        y = SCREEN_HEIGHT / 6 + 32;
+        for (int i = 0; i < 9; i++) {
+            drawText(x, y + ((GLYPH_HEIGHT * 2) * i), 200, 200, 200, TEXT_LEFT, "%s", pt[i]);
+            x++;
+            y++;
+        }
+    }else {
+        y = SCREEN_HEIGHT / 6 + 32;
+        for (int i = 0; i < 9; i++) {
+            drawText(x, y + ((GLYPH_HEIGHT * 2) * i), 200, 200, 200, TEXT_LEFT, "%s", en[i]);
+            x++;
+            y++;
+        }
+    }
+}
+
+
+/* Draw the help button */
+static void drawHelpBtn(void)
+{
+    SDL_Rect hr;
+
+    hr.x = (SCREEN_WIDTH - SCREEN_WIDTH / 4) - (SCREEN_HEIGHT / 6 * 3);
+    // hr.x = SCREEN_WIDTH - SCREEN_WIDTH / 4 - SCREEN_HEIGHT / 6;
+    hr.y = SCREEN_HEIGHT - SCREEN_HEIGHT / 6;
+    SDL_QueryTexture(helpBtnTexture, NULL, NULL, &hr.w, &hr.h);
+    blit(helpBtnTexture, hr.x, hr.y);
+    drawText(
+            hr.x + hr.w / 2,
+            hr.y + hr.h / 3,
+            255,
+            255,
+            255,
+            TEXT_CENTER,
+            !isHelpOn ? lang == 'P' ? "AJUDA" : "HELP" : lang == 'P' ? "VOLTAR" : "BACK"
+    );
 }
