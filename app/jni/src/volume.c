@@ -1,6 +1,7 @@
 /* volume.c: handles sound and music volume control */
 
 #include "common.h"
+#include "sound.h"
 #include "draw.h"
 
 extern App app;
@@ -28,13 +29,13 @@ void doSoundVolume(Volume *v)
                 Mix_Volume(-1, 0);
             break;
         case 1:
-                Mix_Volume(-1, MIX_MAX_VOLUME / 3);
+                Mix_Volume(-1, SDL_MIX_MAXVOLUME / 3);
             break;
         case 2:
-                Mix_Volume(-1, MIX_MAX_VOLUME / 3 * 2);
+                Mix_Volume(-1, SDL_MIX_MAXVOLUME / 3 * 2);
             break;
         case 3:
-                Mix_Volume(-1, MIX_MAX_VOLUME);
+                Mix_Volume(-1, SDL_MIX_MAXVOLUME);
             break;
     }
 }
@@ -46,13 +47,13 @@ void doMusicVolume(Volume *v)
             Mix_VolumeMusic(0);
             break;
         case 1:
-            Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
+            Mix_VolumeMusic(SDL_MIX_MAXVOLUME / 3);
             break;
         case 2:
-            Mix_VolumeMusic(MIX_MAX_VOLUME / 3 * 2);
+            Mix_VolumeMusic(SDL_MIX_MAXVOLUME / 3 * 2);
             break;
         case 3:
-            Mix_VolumeMusic(MIX_MAX_VOLUME);
+            Mix_VolumeMusic(SDL_MIX_MAXVOLUME);
             break;
     }
 }
@@ -96,7 +97,7 @@ void drawMusicVolumeBtn(Volume *v)
     SDL_Rect r;
 
     r.x = 10;
-    r.y = 104;
+    r.y = 126;
 
     SDL_QueryTexture(v->texture, NULL, NULL, &r.w, &r.h);
     blit(v->texture, r.x, r.y);

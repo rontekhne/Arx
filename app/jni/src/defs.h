@@ -57,8 +57,6 @@
 #define SDL_SCANCODE_HIFEN 348
 #define SDL_SCANCODE_DOLAR 349
 
-/* Audio channels */
-#define MIX_MAX_VOLUME 128
 enum
 {
     CH_ANY, // = -1,

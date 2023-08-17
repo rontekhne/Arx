@@ -446,8 +446,8 @@ void doSoundVolumeTouchDown(SDL_TouchFingerEvent *event, Volume *v)
     int touchX = event->x * SCREEN_WIDTH;
     int touchY = event->y * SCREEN_HEIGHT;
 
-    int btnWidth = 32;
-    int btnHeight = 32;
+    int btnWidth = 64;
+    int btnHeight = 64;
 
     if (touchX > 10 && touchX < 10 + btnWidth && touchY > 52 && touchY < 52 + btnHeight) {
         touch.sound++;
@@ -476,10 +476,10 @@ void doMusicVolumeTouchDown(SDL_TouchFingerEvent *event, Volume *v)
     int touchX = event->x * SCREEN_WIDTH;
     int touchY = event->y * SCREEN_HEIGHT;
 
-    int btnWidth = 32;
-    int btnHeight = 32;
+    int btnWidth = 64;
+    int btnHeight = 64;
 
-    if (touchX > 10 && touchX < 10 + btnWidth && touchY > 104 && touchY < 104 + btnHeight) {
+    if (touchX > 10 && touchX < 10 + btnWidth && touchY > 126 && touchY < 126 + btnHeight) {
         touch.music++;
         v->level = touch.music;
         v->isTouched = 1;

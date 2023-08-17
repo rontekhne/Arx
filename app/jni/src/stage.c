@@ -1231,7 +1231,7 @@ static void drawControl(Control *control) {
     control->radius = (r.w < r.h) ? r.w / 2 : r.h / 2;
 
     int controlX = 100 + control->radius;
-    int controlY = SCREEN_HEIGHT - r.h - control->radius - 50;
+    int controlY = SCREEN_HEIGHT - r.h - control->radius - 50 + 16;
 
     control->centerX = controlX;
     control->centerY = controlY;

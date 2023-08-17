@@ -23,7 +23,6 @@ extern bool isKeyboardOn;
 extern bool isScoreOn;
 extern char lang;
 extern Volume soundVolume;
-extern Volume musicVolume;
 extern Users *users;
 
 /* prototypes of the static functions */
