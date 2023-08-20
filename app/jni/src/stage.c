@@ -1112,8 +1112,8 @@ static void addDebris(Entity *e)
 
             d->a = 255;
 
-            d->x = e->x + x;
-            d->y = e->y + y;
+            d->x = (e->x + e->w / e->frames / 2) + x;
+            d->y = (e->y + e->h / 2) + y;
             // expansion rate 0.01, less is slower
             d->dx = (((rand() % 21) - 10) * 0.1) + (x - w / 2) * ((rand() % 10) * 0.01);
             d->dy = (((rand() % 21) - 10) * 0.1) + (y - h / 2) * ((rand() % 10) * 0.01);
