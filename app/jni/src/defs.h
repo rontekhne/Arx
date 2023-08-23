@@ -6,11 +6,27 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 /* Player and Enemy */
+#define PLAYER_ID 0
+#define PLAYER_FRAMES 8
+#define PLAYER_SPECIES 0
+#define PLAYER_FRAME_DELAY 6
 #define PLAYER_SPEED 4
 #define PLAYER_POWER_SPEED 16
 #define PLAYER_INITIAL_ENERGY 500 // turn 50 for debug
 #define PLAYER_INITIAL_MAGIC 500
 #define ENEMY_POWER_SPEED 8
+#define BOSS_SPAWN_TIMER 15000
+#define BOSS_FRAMES 8
+#define BOSS_ENERGY 100
+#define BOSS_SPECIES 9
+#define VIOLET_SPECIES 1
+#define BLUE_SPECIES 2
+#define CYAN_SPECIES 3
+#define GREEN_SPECIES 4
+#define YELLOW_SPECIES 5
+#define ORANGE_SPECIES 6
+#define RED_SPECIES 7
+#define PINK_SPECIES 8
 
 /* Game logic */
 #define SIDE_PLAYER 0
@@ -24,6 +40,8 @@
 #define MAX_ENERGY 500
 #define MAX_MAGIC 500
 #define MAX_DETONA 10
+#define STAGE_RESET_MULTIPLIER 5
+#define MAX_ELEMENTS_TO_SHUFFLE 8
 
 /* Keyboard, input and score */
 #define MAX_KEYBOARD_KEYS 350
@@ -56,6 +74,13 @@
 #define SDL_SCANCODE_DOUBLEQUOTE 346
 #define SDL_SCANCODE_HIFEN 348
 #define SDL_SCANCODE_DOLAR 349
+
+/* Points */
+#define BONUS_EIGHT_COLORS 15
+#define BONUS_BOSS_DEAD 50
+
+/* Colors */
+#define WHITE 255
 
 enum
 {

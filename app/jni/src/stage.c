@@ -157,8 +157,8 @@ static int playerRedSoul;
 static int playerPinkSoul;
 
 /* randomize species */
-static int specie[8] = {1, 2, 3, 4, 5, 6, 7, 8};
-static int energies[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+static int specie[MAX_ELEMENTS_TO_SHUFFLE] = {1, 2, 3, 4, 5, 6, 7, 8};
+static int energies[MAX_ELEMENTS_TO_SHUFFLE] = {1, 2, 3, 4, 5, 6, 7, 8};
 
 void initStage(void)
 {
@@ -222,8 +222,8 @@ void initStage(void)
     initPlayer();
     id = 1;
     initFireBtn(&fire);
-    stageResetTimer = FPS * 5;
-    bossSpawnTimer = 15000;
+    stageResetTimer = FPS * STAGE_RESET_MULTIPLIER;
+    bossSpawnTimer = BOSS_SPAWN_TIMER;
     *Timer = 0;
     stage.score = 0;
 
@@ -241,8 +241,8 @@ void initStage(void)
     isBlitedOnce = false;
     playerGotDrop = false;
 
-    shuffleArray(specie, 8); // shuffle enemy species
-    shuffleArray(energies, 8); // shuffle enemy energies
+    shuffleArray(specie, MAX_ELEMENTS_TO_SHUFFLE); // shuffle enemy species
+    shuffleArray(energies, MAX_ELEMENTS_TO_SHUFFLE); // shuffle enemy energies
 
     // play the first song
     stopMusic();
@@ -381,9 +381,9 @@ static void initPlayer(void)
     stage.fighterTail->next = player;
     stage.fighterTail = player;
 
-    player->id = 0;
-    player->frames = 8;
-    player->species = 0;
+    player->id = PLAYER_ID;
+    player->frames = PLAYER_FRAMES;
+    player->species = PLAYER_SPECIES;
     player->energy = PLAYER_INITIAL_ENERGY;
     player->magic = PLAYER_INITIAL_MAGIC;
     player->soulOfTheTime = 0;
@@ -429,7 +429,7 @@ static int calculateTotalScore(void) {
     for (i = 0; playerDrops[i] > 0; i++) {
         if (i == 7) {
             i = -1;
-            bonusPoints += 15;
+            bonusPoints += BONUS_EIGHT_COLORS;
             for (j = 0; j < 8; j++) {
                 playerDrops[j] -= 1;
             }
@@ -448,7 +448,7 @@ static int calculateTotalScore(void) {
 
     // check if boss is dead
     if (bossDead) {
-        totalScore += 50;
+        totalScore += BONUS_BOSS_DEAD;
     }
 
     // check if player got soulOfTheTime | convert the time in seconds into points
@@ -959,49 +959,49 @@ static void spawnEnemies(void)
         /* enemy attributes */
         switch (species) {
             case 1:
-                enemy->species = 1;
+                enemy->species = VIOLET_SPECIES;
                 enemy->texture = violetTexture;
                 enemy->textureDebris = violetDebrisTexture;
                 enemy->energy = energies[0];
                 break;
             case 2:
-                enemy->species = 2;
+                enemy->species = BLUE_SPECIES;
                 enemy->texture = blueTexture;
                 enemy->textureDebris = blueDebrisTexture;
                 enemy->energy = energies[1];
                 break;
             case 3:
-                enemy->species = 3;
+                enemy->species = CYAN_SPECIES;
                 enemy->texture = cyanTexture;
                 enemy->textureDebris = cyanDebrisTexture;
                 enemy->energy = energies[2];
                 break;
             case 4:
-                enemy->species = 4;
+                enemy->species = GREEN_SPECIES;
                 enemy->texture = greenTexture;
                 enemy->textureDebris = greenDebrisTexture;
                 enemy->energy = energies[3];
                 break;
             case 5:
-                enemy->species = 5;
+                enemy->species = YELLOW_SPECIES;
                 enemy->texture = yellowTexture;
                 enemy->textureDebris = yellowDebrisTexture;
                 enemy->energy = energies[4];
                 break;
             case 6:
-                enemy->species = 6;
+                enemy->species = ORANGE_SPECIES;
                 enemy->texture = orangeTexture;
                 enemy->textureDebris = orangeDebrisTexture;
                 enemy->energy = energies[5];
                 break;
             case 7:
-                enemy->species = 7;
+                enemy->species = RED_SPECIES;
                 enemy->texture = redTexture;
                 enemy->textureDebris = redDebrisTexture;
                 enemy->energy = energies[6];
                 break;
             case 8:
-                enemy->species = 8;
+                enemy->species = PINK_SPECIES;
                 enemy->texture = pinkTexture;
                 enemy->textureDebris = pinkDebrisTexture;
                 enemy->energy = energies[7];
@@ -1038,9 +1038,9 @@ static void spawnEnemies(void)
         stage.fighterTail = boss;
 
         boss->id = id;
-        boss->frames = 8;
-        boss->energy = 100;
-        boss->species = 9;
+        boss->frames = BOSS_FRAMES;
+        boss->energy = BOSS_ENERGY;
+        boss->species = BOSS_SPECIES;
         boss->texture = bossTexture;
         boss->textureDebris = bossDebrisTexture;
 
@@ -1192,7 +1192,7 @@ static void drawFighters(void)
 
         if (e == player) {
             if (playerGotDrop) {
-                isBlitedOnce = blitSprite(playerGotDropTexture, e->x, e->y, 24, PLAYER_GOT_DROP_ID, 6, 1);
+                isBlitedOnce = blitSprite(playerGotDropTexture, e->x, e->y, 24, PLAYER_GOT_DROP_ID, PLAYER_FRAME_DELAY, 1);
                 if (isBlitedOnce) {
                     isBlitedOnce = false;
                     playerGotDrop = false;
@@ -1297,14 +1297,14 @@ static void drawHud(void) {
     t = getTime(Timer);
 
     blitSprite(hourglassTexture, 10, 5, 6, HOURGLASS_ID, 3, 0);
-    drawText(30, 10, 255, 255, 255, TEXT_LEFT, " %02d:%02d", t.m, t.s);
+    drawText(30, 10, WHITE, WHITE, WHITE, TEXT_LEFT, " %02d:%02d", t.m, t.s);
 
     drawDetonaBar();
     drawEnergyBar();
     drawMagicBar();
 
     blitSprite(scoreTexture, SCREEN_WIDTH - 130, 10, 9, SCORE_ID, 4, 0);
-    drawText(SCREEN_WIDTH - 35, 10, 255, 255, 255, TEXT_RIGHT, " %03d", calculateTotalScore());
+    drawText(SCREEN_WIDTH - 35, 10, WHITE, WHITE, WHITE, TEXT_RIGHT, " %03d", calculateTotalScore());
 }
 
 static void drawDetonaBar(void)
@@ -1347,7 +1347,7 @@ static void drawEnergyBar(void)
     fillRect.w = (int)(barWidth * fillRatio);
     fillRect.h = barHeight;
 
-    SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(app.renderer, WHITE, WHITE, WHITE, 255);
     SDL_RenderFillRect(app.renderer, &fillRect);
 }
 
