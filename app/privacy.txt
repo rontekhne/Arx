@@ -1,0 +1,58 @@
+Política de Privacidade do Jogo Arx
+
+Publicado: 15/08/2023
+
+Bem-vindo ao jogo Arx, desenvolvido pela RonTekhne. Esta política de privacidade foi criada para informar
+você sobre como coletamos, usamos e protegemos os seus dados pessoais enquanto você joga o jogo Arx.
+A sua privacidade é importante para nós, por isso recomendamos que leia atentamente esta política.
+
+1. Coleta de Dados
+
+Ao jogar o jogo Arx, podemos coletar as seguintes informações:
+
+    Dados de Placar: Os dados do placar do jogo, como pontuações e posições na tabela de classificação,
+    serão armazenados em nosso servidor Firebase.
+
+2. Uso dos Dados
+
+Os dados coletados no jogo Arx são utilizados para os seguintes fins:
+
+    Placar e Competição: As informações do placar são compartilhadas na tela de classificação do jogo para
+    criar um ambiente competitivo e interativo entre os jogadores.
+    Suporte ao Jogador: Se você entrar em contato conosco através do email rontekhne@gmail.com para obter
+    suporte técnico ou relatar problemas, poderemos utilizar os dados coletados para ajudar a solucionar essas questões.
+
+3. Compartilhamento de Dados
+
+Garantimos que seus dados pessoais não serão compartilhados, vendidos, alugados ou divulgados a terceiros,
+exceto nas seguintes circunstâncias:
+
+    Placar de Líderes: As informações do placar, como pontuações e posições, serão compartilhadas na tela
+    de classificação do jogo com outros jogadores.
+
+4. Segurança de Dados
+
+Tomamos medidas de segurança adequadas para proteger seus dados pessoais contra acesso não autorizado,
+divulgação, alteração ou destruição. Seus dados de placar são armazenados em nosso servidor Firebase
+com medidas de segurança para evitar acessos não autorizados.
+
+5. Seus Direitos
+
+Você tem direito a acessar, retificar ou excluir os dados pessoais que coletamos. Se desejar exercer
+esses direitos, entre em contato conosco através do email rontekhne@gmail.com. Faremos o possível para
+atender sua solicitação dentro do prazo legal.
+
+6. Alterações na Política de Privacidade
+
+Podemos atualizar esta política de privacidade periodicamente para refletir mudanças
+em nossas práticas de coleta e uso de dados. Recomendamos que você reveja esta política
+regularmente para estar informado sobre como estamos protegendo suas informações.
+
+Ao continuar a jogar o jogo Arx, você concorda com os termos desta política de privacidade.
+
+Para quaisquer dúvidas ou preocupações relacionadas à privacidade, entre em contato conosco
+pelo email rontekhne@gmail.com.
+
+Atenciosamente,
+
+Equipe RonTekhne
