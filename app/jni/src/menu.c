@@ -296,14 +296,14 @@ static void drawHelp(void)
                     "HAVE FUN!"
             };
     if (lang == 'P') {
-        y = SCREEN_HEIGHT / 6 + 32;
+        y = SCREEN_HEIGHT / 8;
         for (int i = 0; i < 10; i++) {
             drawText(x, y + ((GLYPH_HEIGHT * 2) * i), 200, 200, 200, TEXT_LEFT, "%s", pt[i]);
             x++;
             y++;
         }
     }else {
-        y = SCREEN_HEIGHT / 6 + 32;
+        y = SCREEN_HEIGHT / 8;
         for (int i = 0; i < 9; i++) {
             drawText(x, y + ((GLYPH_HEIGHT * 2) * i), 200, 200, 200, TEXT_LEFT, "%s", en[i]);
             x++;
