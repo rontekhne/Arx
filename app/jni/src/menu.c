@@ -280,6 +280,7 @@ static void drawHelp(void)
                     "COLETE GRUPOS DE OITO ALMAS DE CORES DIFERENTES.",
                     "ACIONADOR DE DETONA APARECE QUANDO O DETONA FOR COLETADO.",
                     "ECONOMIZE MAGIA E JAMAIS DEIXE-A ACABAR.",
+                    "GOSTOU DO JOGO? AJUDE COM PIX: RONTEKHNE@GMAIL.COM",
                     "DIVIRTA-SE!"
             };
     char en[10][96] =
@@ -296,7 +297,7 @@ static void drawHelp(void)
             };
     if (lang == 'P') {
         y = SCREEN_HEIGHT / 6 + 32;
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             drawText(x, y + ((GLYPH_HEIGHT * 2) * i), 200, 200, 200, TEXT_LEFT, "%s", pt[i]);
             x++;
             y++;
