@@ -1303,8 +1303,8 @@ static void drawHud(void) {
     drawEnergyBar();
     drawMagicBar();
 
-    blitSprite(scoreTexture, SCREEN_WIDTH - 130, 10, 9, SCORE_ID, 4, 0);
-    drawText(SCREEN_WIDTH - 35, 10, WHITE, WHITE, WHITE, TEXT_RIGHT, " %03d", calculateTotalScore());
+    blitSprite(scoreTexture, SCREEN_WIDTH - 148, 10, 9, SCORE_ID, 4, 0);
+    drawText(SCREEN_WIDTH - 35, 10, WHITE, WHITE, WHITE, TEXT_RIGHT, " %04d", calculateTotalScore());
 }
 
 static void drawDetonaBar(void)
