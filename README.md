@@ -1,7 +1,4 @@
 # ARX!
-
-Jogo Arcade 2D desenvolvido utilizando a biblioteca SDL2 e a linguagem **C**. O jogo foi compilado com Gradle, JNI e Java no Android Studio, permitindo que seja executado em dispositivos **Android**.
-
 Visite https://rontekhne.github.io/ para mais informações
 
 # Rápido e Divertido
